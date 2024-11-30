@@ -3,36 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pre-Clustering</title>
+    <title>Pre-Clustering WebApp</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .form-container {
+            width: 60%;
+        }
+        .example-container {
+            width: 35%;
+            border-left: 1px solid #ccc;
+            padding-left: 20px;
+        }
+    </style>
 </head>
 <body>
-<h1>Pre-Clustering</h1>
-<form method="POST">
-    <label for="vehlist">Enter vehicle capacities (comma-separated):</label><br>
-    <textarea id="vehlist" name="vehlist" rows="8" cols="50" required>{{ vehlist }}</textarea><br><br>
+<div class="form-container">
+    <h1>Pre-Clustering WebApp</h1>
+    <form method="POST">
+        <label for="vehlist">Enter vehicle capacities (comma-separated):</label><br>
+        <textarea id="vehlist" name="vehlist" rows="10" cols="50" required>{{ vehlist }}</textarea><br><br>
 
-    <label for="pers5">Enter Number of 5-person Crews:</label><br>
-    <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required><br><br>
+        <label for="pers5">Enter Number of 5-person Crews:</label><br>
+        <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required><br><br>
 
-    <label for="pers6">Enter Number of 6-person Crews:</label><br>
-    <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required><br><br>
+        <label for="pers6">Enter Number of 6-person Crews:</label><br>
+        <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required><br><br>
 
-    <button type="submit">Submit</button>
-</form>
-{% if results is not none %}
-    <h2>You need room for one of the following:</h2>
-    <ul>
-        {% if results == [[0, 0]] %}
-            <li><strong>You're all good</strong></li>
-        {% else %}
-            {% for result in results %}
-                <li>{{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
-                {% if not loop.last %}
-                    <li><strong>OR</strong></li>
-                {% endif %}
+        <button type="submit">Submit</button>
+    </form>
+    {% if results is not none %}
+        <h2>You need room for one of the following:</h2>
+        <ul>
+            {% if results == [[0, 0]] %}
+                <li><strong>You're all good</strong></li>
+            {% else %}
+                {% for result in results %}
+                    <li>{{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
+                    {% if not loop.last %}
+                        <li><strong>OR</strong></li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
+<div class="example-container">
+    <h2>Example Configuration</h2>
+    {% if example_config is not none %}
+        <ul>
+            {% for config in example_config %}
+                <li>Vehicle {{ loop.index }}: {{ config[0] }} 5-person crews and {{ config[1] }} 6-person crews</li>
             {% endfor %}
-        {% endif %}
-    </ul>
-{% endif %}
+        </ul>
+    {% else %}
+        <p>No example configuration available.</p>
+    {% endif %}
+</div>
 </body>
 </html>
