@@ -43,6 +43,7 @@ def valid(vehlist,required):
 def validlist(vehlist,required):
     poss=find_all_combinations(findrange(vehlist))
     finposs=[]
+    possout=[]
     for item in poss:
         sum1=0
         sum2=0
@@ -52,20 +53,14 @@ def validlist(vehlist,required):
         if sum1>=required[0] and sum2>=required[1]:
             if [sum1,sum2] not in finposs:
                 finposs.append([sum1,sum2])
-    return finposs
-def maxin(vehlist):
-    vals=validlist(vehlist,[0,0])
-    maxs=0
-    maxout=[]
-    for item in vals:
-        trial=5*item[0]+6*item[1]
-        if trial>maxs:
-            maxs=trial
-            maxout=item
-    return maxout
+                possout.append(item)
+    return [finposs,possout]
+
 def needed(vehlist,pers5,pers6):
-    largelist=validlist(vehlist,[0,0])
+    largelist=validlist(vehlist,[0,0])[0]
     largelist1=[]
+    example=validlist(vehlist,[0,0])[1]
+    other=[]
     for elem in range(len(largelist)):
         largelist1.append([pers5-largelist[elem][0],pers6-largelist[elem][1]])
     for newelem in range(len(largelist)):
@@ -81,4 +76,5 @@ def needed(vehlist,pers5,pers6):
     for diff in range(len(singlelarge)):
         if singlelarge[diff]==currentmin and largelist1[diff] not in final:
             final.append(largelist1[diff])
-    return final
+            other=example[diff]
+    return [final,other]

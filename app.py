@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template
 
 from Calculations import needed
-from Calculations import closest
 
 app = Flask(__name__)
 
@@ -25,10 +24,10 @@ def index():
             pers6 = int(pers6)
 
             # Call the needed function
-            results = needed(vehlist, pers5, pers6)
+            results = needed(vehlist, pers5, pers6)[0]
 
             # Generate example configurations
-            example_config = closest(vehlist,[pers5,pers6])  # Replace with actual logic for example configurations
+            example_config = needed(vehlist, pers5, pers6)[1]  # Replace with actual logic for example configurations
     except Exception as e:
         # Log the error and provide user feedback
         app.logger.error(f"Error processing request: {e}")
