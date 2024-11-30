@@ -9,7 +9,7 @@
 <h1>Pre-Clustering WebApp</h1>
 <form method="POST">
     <label for="vehlist">Enter vehicle capacities (comma-separated):</label><br>
-    <input type="text" id="vehlist" name="vehlist" value="{{ vehlist }}" required><br><br>
+    <textarea id="vehlist" name="vehlist" rows="8" cols="50" required>{{ vehlist }}</textarea><br><br>
 
     <label for="pers5">Enter Number of 5-person Crews:</label><br>
     <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required><br><br>
