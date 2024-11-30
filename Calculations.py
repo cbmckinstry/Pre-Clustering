@@ -21,8 +21,8 @@ def closest(vehlist,required):
             sum2+=spec[1]
         new1=required[0]-sum1
         new2=required[1]-sum2
-        if abs(new1)*(new1>0)+abs(new2)*(new2>0)<offby:
-            offby=abs(new1)*(new1>0)+abs(new2)*(new2>0)
+        if abs(new1+new2)<offby:
+            offby=abs(new1+new2)
             finitem=item
     return finitem
 
