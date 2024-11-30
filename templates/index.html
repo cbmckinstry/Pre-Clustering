@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Needed Function WebApp</title>
+    <title>Pre-Clustering WebApp</title>
 </head>
 <body>
-<h1>Needed Function WebApp</h1>
+<h1>Pre-Clustering WebApp</h1>
 <form method="POST">
     <label for="vehlist">Enter vehicle capacities (comma-separated):</label><br>
     <input type="text" id="vehlist" name="vehlist" value="{{ vehlist }}" required><br><br>
 
-    <label for="pers5">Enter pers5:</label><br>
+    <label for="pers5">Enter Number of 5-person Crews:</label><br>
     <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required><br><br>
 
-    <label for="pers6">Enter pers6:</label><br>
+    <label for="pers6">Enter Number of 6-person Crews:</label><br>
     <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required><br><br>
 
     <button type="submit">Submit</button>
 </form>
 {% if results is not none %}
-    <h2>Results:</h2>
+    <h2>You need room for:</h2>
     <ul>
         {% for result in results %}
-            <li>You need room for: {{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
+            <li>{{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
+            {% if not loop.last %}
+                <li><strong>OR</strong></li>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endif %}
