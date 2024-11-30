@@ -6,15 +6,15 @@
     <title>Needed Function WebApp</title>
 </head>
 <body>
-<h1>Needed Function WebApp</h1>
+<h1>Pre-Clustering WebApp</h1>
 <form method="POST">
     <label for="vehlist">Enter vehicle capacities (comma-separated):</label><br>
     <input type="text" id="vehlist" name="vehlist" value="{{ vehlist }}" required><br><br>
 
-    <label for="pers5">Enter pers5:</label><br>
+    <label for="pers5">Enter Number of 5-person Crews:</label><br>
     <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required><br><br>
 
-    <label for="pers6">Enter pers6:</label><br>
+    <label for="pers6">Enter Number of 6-person Crews:</label><br>
     <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required><br><br>
 
     <button type="submit">Submit</button>
@@ -23,11 +23,15 @@
     <h2>Results:</h2>
     <table border="1">
         <tr>
-            <th>First Element</th>
-            <th>Second Element</th>
+            <th>#</th>
+            <th>Crew Space Needed</th>
+            <th>5-person Crews</th>
+            <th>6-person Crews</th>
         </tr>
-        {% for item in results %}
+        {% for index, item in enumerate(results, start=1) %}
             <tr>
+                <td>{{ index }}</td>
+                <td>Possibility {{ index }}</td>
                 <td>{{ item[0] }}</td>
                 <td>{{ item[1] }}</td>
             </tr>
