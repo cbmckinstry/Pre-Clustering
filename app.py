@@ -10,8 +10,8 @@ def index():
     vehlist = ""
     pers5 = ""
     pers6 = ""
-    if request.method == "POST":
-        try:
+    try:
+        if request.method == "POST":
             vehlist = request.form["vehlist"]
             pers5 = request.form["pers5"]
             pers6 = request.form["pers6"]
@@ -23,7 +23,8 @@ def index():
 
             # Call the needed function
             results = needed(vehlist, pers5, pers6)
-        except Exception as e:
-            results = [f"Error: {str(e)}"]
-
+    except Exception as e:
+        # Log the error and provide user feedback
+        app.logger.error(f"Error processing request: {e}")
+        results = [f"Error: {str(e)}"]
     return render_template("index.html", results=results, vehlist=request.form.get("vehlist", ""), pers5=request.form.get("pers5", ""), pers6=request.form.get("pers6", ""))
