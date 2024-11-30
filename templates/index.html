@@ -22,9 +22,16 @@
 {% if results is not none %}
     <h2>You need room for one of the following:</h2>
     <ul>
-        {% for result in results %}
-            <li>{{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
-        {% endfor %}
+        {% if results == [[0, 0]] %}
+            <li><strong>You're all good</strong></li>
+        {% else %}
+            {% for result in results %}
+                <li>{{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
+                {% if not loop.last %}
+                    <li><strong>OR</strong></li>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     </ul>
 {% endif %}
 </body>
