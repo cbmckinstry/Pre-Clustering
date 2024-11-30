@@ -20,7 +20,7 @@
     <button type="submit">Submit</button>
 </form>
 {% if results is not none %}
-    <h2>You need room for on of the following:</h2>
+    <h2>You need room for one of the following:</h2>
     <ul>
         {% for result in results %}
             <li>{{ result[0] }} 5-person crews and {{ result[1] }} 6-person crews</li>
