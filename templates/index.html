@@ -68,7 +68,7 @@
     {% if remaining_space is not none %}
         <ul>
             {% for space in remaining_space %}
-                <li>Vehicle {{ loop.index }}: {{ spaces }} spaces left</li>
+                <li>Vehicle {{ loop.index }}: {{ space }} spaces left</li>
             {% endfor %}
         </ul>
     {% else %}
