@@ -9,23 +9,6 @@ def findrange(vehlist):
         final.append(redo)
     return final
 
-def closest(vehlist,required):
-    poss=find_all_combinations(findrange(vehlist))
-    finitem=[]
-    offby=1000000
-    for item in poss:
-        sum1=0
-        sum2=0
-        for spec in item:
-            sum1+=spec[0]
-            sum2+=spec[1]
-        new1=required[0]-sum1
-        new2=required[1]-sum2
-        if abs(new1+new2)<offby:
-            offby=abs(new1+new2)
-            finitem=item
-    return finitem
-
 def find_all_combinations(ent):
     return list(itertools.product(*ent))
 
@@ -78,3 +61,9 @@ def needed(vehlist,pers5,pers6):
             final.append(largelist1[diff])
             other=example[diff]
     return [final,other]
+
+def spaces(examplelist,vehlist):
+    final=[]
+    for item in range(len(examplelist)):
+        final.append(vehlist[item]-(5*examplelist[item][0]+6*examplelist[item][1]))
+    return final
