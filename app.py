@@ -16,6 +16,7 @@ def index():
     vehlist = ""
     pers5 = ""
     pers6 = ""
+    more_vehicles_needed = False  # Flag to indicate if more vehicles are needed
     try:
         if request.method == "POST":
             # Get inputs from the form
@@ -31,6 +32,9 @@ def index():
             # Call the needed function
             results = Calculations.needed(vehlist, pers5, pers6)[0]
 
+            # Check if the configuration is valid
+            more_vehicles_needed = not Calculations.valid(vehlist, [pers5, pers6])
+
             # Generate example configurations
             example_config = Calculations.needed(vehlist, pers5, pers6)[1]  # Replace with actual logic for example configurations
 
@@ -40,7 +44,6 @@ def index():
                 total_used = (config[0] * 5) + (config[1] * 6)
                 remaining_space.append(vehlist[idx] - total_used)
     except Exception as e:
-        # Log the error and provide user feedback
         app.logger.error(f"Error processing request: {e}")
         results = [f"Error: {str(e)}"]
 
@@ -49,6 +52,7 @@ def index():
         results=results,
         example_config=example_config,
         remaining_space=remaining_space,
+        more_vehicles_needed=more_vehicles_needed,
         vehlist=request.form.get("vehlist", ""),
         pers5=request.form.get("pers5", ""),
         pers6=request.form.get("pers6", "")

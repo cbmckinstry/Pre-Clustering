@@ -38,7 +38,7 @@
     {% if results is not none %}
         <h2>You need room for one of the following:</h2>
         <ul>
-            {% if results == [[0, 0]] %}
+            {% if not more_vehicles_needed %}
                 <li><strong>You're all good</strong></li>
             {% else %}
                 {% for result in results %}
