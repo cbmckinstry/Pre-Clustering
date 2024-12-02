@@ -12,6 +12,7 @@ app = Flask(__name__)
 def index():
     results = None
     example_config = None
+    remaining_space = None
     vehlist = ""
     pers5 = ""
     pers6 = ""
@@ -31,12 +32,24 @@ def index():
             results = Calculations.needed(vehlist, pers5, pers6)[0]
 
             # Generate example configurations
-            example_config = Calculations.needed(vehlist, pers5, pers6)[1]
+            example_config = Calculations.needed(vehlist, pers5, pers6)[1]  # Replace with actual logic for example configurations
 
-            spaces=Calculations.spaces(example_config,vehlist)
+            # Calculate remaining space for each vehicle
+            remaining_space = []
+            for idx, config in enumerate(example_config):
+                total_used = (config[0] * 5) + (config[1] * 6)
+                remaining_space.append(vehlist[idx] - total_used)
     except Exception as e:
         # Log the error and provide user feedback
         app.logger.error(f"Error processing request: {e}")
         results = [f"Error: {str(e)}"]
 
-    return render_template("index.html", results=results, example_config=example_config, spaces=spaces, vehlist=request.form.get("vehlist", ""), pers5=request.form.get("pers5", ""), pers6=request.form.get("pers6", ""))
+    return render_template(
+        "index.html",
+        results=results,
+        example_config=example_config,
+        remaining_space=remaining_space,
+        vehlist=request.form.get("vehlist", ""),
+        pers5=request.form.get("pers5", ""),
+        pers6=request.form.get("pers6", "")
+    )
