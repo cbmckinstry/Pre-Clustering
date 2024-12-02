@@ -25,6 +25,7 @@ def valid(vehlist,required):
     return False
 def validlist(vehlist,required):
     poss=find_all_combinations(findrange(vehlist))
+    oneit=0
     finposs=[]
     possout=[]
     for item in poss:
@@ -36,7 +37,9 @@ def validlist(vehlist,required):
         if sum1>=required[0] and sum2>=required[1]:
             if [sum1,sum2] not in finposs:
                 finposs.append([sum1,sum2])
-                possout.append(item)
+                if oneit==0:
+                    possout.append(item)
+                    oneit=1
     return [finposs,possout]
 
 def needed(vehlist,pers5,pers6):

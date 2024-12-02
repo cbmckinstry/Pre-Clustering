@@ -53,7 +53,7 @@
 </div>
 <div class="example-container">
     <h2>Example Configuration</h2>
-    {% if example_config is not none %}
+    {% if example_config is not none and more_vehicles_needed%}
         <ul>
             {% for config in example_config %}
                 <li>Vehicle {{ loop.index }}: {{ config[0] }} 5-person crews and {{ config[1] }} 6-person crews</li>
@@ -65,7 +65,7 @@
 </div>
 <div class="remaining-container">
     <h2>Remaining Space in Example</h2>
-    {% if remaining_space is not none %}
+    {% if remaining_space is not none and more_vehicles_needed%}
         <ul>
             {% for space in remaining_space %}
                 <li>Vehicle {{ loop.index }}: {{ space }} spaces left</li>
