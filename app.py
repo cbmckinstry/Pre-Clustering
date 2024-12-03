@@ -51,7 +51,6 @@ def index():
 
             # Validate vehlist
             try:
-                # Split by commas, strip whitespace, and filter out empty values
                 vehlist_list = [
                     int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
                 ]
@@ -84,6 +83,11 @@ def index():
                 app.logger.error(f"Validation error for pers6: {ve}")
                 raise Exception(error_message)
 
+            # Debugging parsed values
+            app.logger.debug(f"Parsed vehlist: {vehlist_list}")
+            app.logger.debug(f"Parsed pers5: {pers5}, type: {type(pers5)}")
+            app.logger.debug(f"Parsed pers6: {pers6}, type: {type(pers6)}")
+
             # Calculate configurations
             results_data = needed(vehlist_list, pers5, pers6)
             results = results_data[0]
@@ -115,7 +119,6 @@ def index():
         pers6=pers6,
         error_message=error_message
     )
-
 @app.route("/next", methods=["GET"])
 def next_config():
     if "example_configs" in session:
