@@ -25,7 +25,6 @@ def valid(vehlist,required):
     return False
 def validlist(vehlist,required):
     poss=find_all_combinations(findrange(vehlist))
-    oneit=0
     finposs=[]
     possout=[]
     for item in poss:
@@ -34,19 +33,17 @@ def validlist(vehlist,required):
         for spec in item:
             sum1+=spec[0]
             sum2+=spec[1]
-        if sum1>=required[0] and sum2>=required[1]:
-            if [sum1,sum2] not in finposs:
-                finposs.append([sum1,sum2])
-                if oneit==0:
+            if sum1>=required[0] and sum2>=required[1]:
+                if [sum1,sum2] not in finposs:
+                    finposs.append([sum1,sum2])
                     possout.append(item)
-                    oneit=1
     return [finposs,possout]
 
 def needed(vehlist,pers5,pers6):
     largelist=validlist(vehlist,[0,0])[0]
     largelist1=[]
-    example=validlist(vehlist,[0,0])[1]
     other=[]
+    examples=validlist(vehlist,[0,0])[1]
     for elem in range(len(largelist)):
         largelist1.append([pers5-largelist[elem][0],pers6-largelist[elem][1]])
     for newelem in range(len(largelist)):
@@ -62,7 +59,7 @@ def needed(vehlist,pers5,pers6):
     for diff in range(len(singlelarge)):
         if singlelarge[diff]==currentmin and largelist1[diff] not in final:
             final.append(largelist1[diff])
-            other=example[diff]
+            other.append(examples[diff])
     return [final,other]
 
 def spaces(examplelist,vehlist):

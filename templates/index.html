@@ -38,7 +38,7 @@
     {% if results is not none %}
         <h2>You need room for one of the following:</h2>
         <ul>
-            {% if not more_vehicles_needed %}
+            {% if results == [[0, 0]] %}
                 <li><strong>You're all good</strong></li>
             {% else %}
                 {% for result in results %}
@@ -53,21 +53,25 @@
 </div>
 <div class="example-container">
     <h2>Example Configuration</h2>
-    {% if example_config is not none and more_vehicles_needed%}
+    {% if session.example_configs is not none %}
+        {% set current_index = session.get("current_index", 0) %}
         <ul>
-            {% for config in example_config %}
-                <li>Vehicle {{ loop.index }}: {{ config[0] }} 5-person crews and {{ config[1] }} 6-person crews</li>
+            {% for config in session.example_configs %}
+                <li>Vehicle {{ loop.index }}: {{ config[current_index][0] }} 5-person crews and {{ config[current_index][1] }} 6-person crews</li>
             {% endfor %}
         </ul>
+        <form action="{{ url_for('next_config') }}" method="GET">
+            <button type="submit">Next</button>
+        </form>
     {% else %}
         <p>No example configuration available.</p>
     {% endif %}
 </div>
 <div class="remaining-container">
-    <h2>Remaining Space in Example</h2>
-    {% if remaining_space is not none and more_vehicles_needed%}
+    <h2>Remaining Space</h2>
+    {% if session.remaining_spaces is not none %}
         <ul>
-            {% for space in remaining_space %}
+            {% for space in session.remaining_spaces %}
                 <li>Vehicle {{ loop.index }}: {{ space }} spaces left</li>
             {% endfor %}
         </ul>
