@@ -51,7 +51,6 @@ def index():
 
             # Validate vehlist
             try:
-                # Split by commas, strip whitespace, and filter out empty values
                 vehlist_list = [
                     int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
                 ]
@@ -83,6 +82,11 @@ def index():
                 error_message = "Please enter a nonnegative integer for the number of 6-person crews."
                 app.logger.error(f"Validation error for pers6: {ve}")
                 raise Exception(error_message)
+
+            # Debugging parsed values
+            app.logger.debug(f"Parsed vehlist: {vehlist_list}")
+            app.logger.debug(f"Parsed pers5: {pers5}, type: {type(pers5)}")
+            app.logger.debug(f"Parsed pers6: {pers6}, type: {type(pers6)}")
 
             # Calculate configurations
             results_data = needed(vehlist_list, pers5, pers6)
@@ -118,14 +122,42 @@ def index():
 
 @app.route("/next", methods=["GET"])
 def next_config():
-    if "example_configs" in session:
-        session["current_index"] += 1
-        if session["current_index"] >= len(session["example_configs"]):
-            session["current_index"] = 0  # Loop back to the first configuration
+    try:
+        # Check if necessary session data exists
+        if "example_configs" not in session or not session["example_configs"]:
+            raise Exception("No configurations available. Please submit the form first.")
 
-        # Update remaining space for the current configuration
-        current_index = session["current_index"]
-        vehlist = session.get("vehlist", [])
-        example_config = session["example_configs"][current_index]
-        session["remaining_space"] = spaces(example_config, vehlist)
+        if "vehlist" not in session or not session["vehlist"]:
+            raise Exception("Vehicle capacities are missing. Please submit the form first.")
+
+        # Retrieve session data
+        example_configs = session["example_configs"]
+        vehlist = session["vehlist"]
+        current_index = session.get("current_index", 0)
+
+        # Ensure vehlist is a list of integers
+        if isinstance(vehlist, str):
+            vehlist = [
+                int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
+            ]
+        elif isinstance(vehlist, list) and any(isinstance(v, str) for v in vehlist):
+            vehlist = list(map(int, vehlist))
+
+        # Increment current index
+        current_index += 1
+        if current_index >= len(example_configs):
+            current_index = 0  # Loop back to the first configuration
+
+        # Update remaining spaces for the current configuration
+        session["current_index"] = current_index
+        current_config = example_configs[current_index]
+        session["remaining_space"] = spaces(current_config, vehlist)
+
+        # Update the session vehlist in case it was converted
+        session["vehlist"] = vehlist
+
+    except Exception as e:
+        app.logger.error(f"An error occurred in next_config: {e}")
+        return redirect(url_for("index"))  # Redirect back to the main page with the form
+
     return redirect(url_for("index"))
