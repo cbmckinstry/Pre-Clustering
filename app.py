@@ -56,10 +56,11 @@ def index():
                 ]
                 if any(v < 0 for v in vehlist_list):
                     raise ValueError("All vehicle capacities must be nonnegative integers.")
-            except ValueError:
+            except ValueError as ve:
                 error_message = (
                     "Please enter a properly formatted comma-separated list of nonnegative integers for vehicle capacities."
                 )
+                app.logger.error(f"Validation error for vehlist: {ve}")
                 raise Exception(error_message)
 
             # Validate pers5
@@ -67,8 +68,9 @@ def index():
                 pers5 = int(pers5) if pers5 else 0
                 if pers5 < 0:
                     raise ValueError("The number of 5-person crews must be a nonnegative integer.")
-            except ValueError:
+            except ValueError as ve:
                 error_message = "Please enter a nonnegative integer for the number of 5-person crews."
+                app.logger.error(f"Validation error for pers5: {ve}")
                 raise Exception(error_message)
 
             # Validate pers6
@@ -76,8 +78,9 @@ def index():
                 pers6 = int(pers6) if pers6 else 0
                 if pers6 < 0:
                     raise ValueError("The number of 6-person crews must be a nonnegative integer.")
-            except ValueError:
+            except ValueError as ve:
                 error_message = "Please enter a nonnegative integer for the number of 6-person crews."
+                app.logger.error(f"Validation error for pers6: {ve}")
                 raise Exception(error_message)
 
             # Calculate configurations
