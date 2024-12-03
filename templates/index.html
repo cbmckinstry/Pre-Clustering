@@ -53,7 +53,7 @@
 </div>
 <div class="example-container">
     <h2>Example Configuration</h2>
-    {% if session.example_configs is not none and session.example_configs|length > 0 %}
+    {% if session.example_configs is not none %}
         {% set current_index = session.get("current_index", 0) %}
         <ul>
             {% for config in session.example_configs[current_index] %}
@@ -67,10 +67,9 @@
         <p>No example configuration available.</p>
     {% endif %}
 </div>
-
 <div class="remaining-container">
     <h2>Remaining Space</h2>
-    {% if session.remaining_space is not none and session.remaining_space|length > 0 %}
+    {% if session.remaining_space is not none %}
         <ul>
             {% for space in session.remaining_space %}
                 <li>Vehicle {{ loop.index + 1 }}: {{ space }} spaces left</li>

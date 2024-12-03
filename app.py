@@ -85,7 +85,4 @@ def next_config():
         vehlist = session.get("vehlist", [])
         example_config = session["example_configs"][current_index]
         session["remaining_space"] = spaces(example_config, vehlist)
-    else:
-        app.logger.warning("Attempted to access /next without valid session data.")
-        return redirect(url_for("index"))
     return redirect(url_for("index"))
