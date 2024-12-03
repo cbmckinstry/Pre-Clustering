@@ -29,7 +29,7 @@ def index():
         session["example_configs"] = []
         session["remaining_space"] = []
         session["current_index"] = 0
-        session["vehlist"] = ""
+        session["vehlist"] = []
         session["pers5"] = ""
         session["pers6"] = ""
         session["results"] = None
@@ -37,10 +37,13 @@ def index():
     example_configs = session.get("example_configs", [])
     remaining_spaces = session.get("remaining_space", [])
     results = session.get("results", None)
-    vehlist = session.get("vehlist", "")
+    vehlist = session.get("vehlist", [])
     pers5 = session.get("pers5", "")
     pers6 = session.get("pers6", "")
     error_message = None
+
+    # Convert vehlist to a string for display in the form
+    vehlist_display = ",".join(map(str, vehlist)) if vehlist else ""
 
     try:
         if request.method == "POST":
@@ -83,11 +86,6 @@ def index():
                 app.logger.error(f"Validation error for pers6: {ve}")
                 raise Exception(error_message)
 
-            # Debugging parsed values
-            app.logger.debug(f"Parsed vehlist: {vehlist_list}")
-            app.logger.debug(f"Parsed pers5: {pers5}, type: {type(pers5)}")
-            app.logger.debug(f"Parsed pers6: {pers6}, type: {type(pers6)}")
-
             # Calculate configurations
             results_data = needed(vehlist_list, pers5, pers6)
             results = results_data[0]
@@ -97,13 +95,14 @@ def index():
             remaining_spaces = [spaces(config, vehlist_list) for config in example_configs]
 
             # Store data in session
-            session["vehlist"] = vehlist
+            session["vehlist"] = vehlist_list
             session["pers5"] = pers5
             session["pers6"] = pers6
             session["example_configs"] = example_configs
             session["current_index"] = 0
             session["remaining_space"] = remaining_spaces[0] if remaining_spaces else []
             session["results"] = results
+
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
         if not error_message:
@@ -114,7 +113,7 @@ def index():
         results=results,
         example_configs=example_configs,
         remaining_spaces=remaining_spaces,
-        vehlist=vehlist,
+        vehlist=vehlist_display,
         pers5=pers5,
         pers6=pers6,
         error_message=error_message
@@ -130,7 +129,7 @@ def next_config():
         if "vehlist" not in session or not session["vehlist"]:
             raise Exception("Vehicle capacities are missing. Please submit the form first.")
 
-        # Retrieve session data
+        # Retrieve and validate session data
         example_configs = session["example_configs"]
         vehlist = session["vehlist"]
         current_index = session.get("current_index", 0)
@@ -138,7 +137,7 @@ def next_config():
         # Ensure vehlist is a list of integers
         if isinstance(vehlist, str):
             vehlist = [
-                int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
+                int(value.strip()) for value in vehlist.strip("[]").split(",") if value.strip() != ""
             ]
         elif isinstance(vehlist, list) and any(isinstance(v, str) for v in vehlist):
             vehlist = list(map(int, vehlist))
@@ -153,7 +152,7 @@ def next_config():
         current_config = example_configs[current_index]
         session["remaining_space"] = spaces(current_config, vehlist)
 
-        # Update the session vehlist in case it was converted
+        # Save the properly formatted vehlist back to the session
         session["vehlist"] = vehlist
 
     except Exception as e:
