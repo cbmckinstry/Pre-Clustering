@@ -54,7 +54,7 @@
 <div class="example-container">
     <h2>Example Configuration</h2>
     {% if results == [[0, 0]] %}
-        <p>No remaining space data available.</p>
+        <p>No example data available.</p>
     {% elif session.example_configs is not none and session.example_configs|length > 0 %}
         {% set current_index = session.get("current_index", 0) %}
         <ul>
