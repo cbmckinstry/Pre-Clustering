@@ -12,6 +12,11 @@ Session(app)
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    app.logger.error(f"An error occurred: {e}")
+    return "An internal error occurred. Please check the logs for details.", 500
+
 # Configure session to use filesystem
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"  # Replace with a strong key in production
@@ -46,15 +51,17 @@ def index():
 
             # Validate vehlist
             try:
+                # Split by commas, strip whitespace, and filter out empty values
                 vehlist_list = [
                     int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
                 ]
                 if any(v < 0 for v in vehlist_list):
                     raise ValueError("All vehicle capacities must be nonnegative integers.")
-            except ValueError:
+            except ValueError as ve:
                 error_message = (
                     "Please enter a properly formatted comma-separated list of nonnegative integers for vehicle capacities."
                 )
+                app.logger.error(f"Validation error for vehlist: {ve}")
                 raise Exception(error_message)
 
             # Validate pers5
@@ -62,8 +69,9 @@ def index():
                 pers5 = int(pers5) if pers5 else 0
                 if pers5 < 0:
                     raise ValueError("The number of 5-person crews must be a nonnegative integer.")
-            except ValueError:
+            except ValueError as ve:
                 error_message = "Please enter a nonnegative integer for the number of 5-person crews."
+                app.logger.error(f"Validation error for pers5: {ve}")
                 raise Exception(error_message)
 
             # Validate pers6
@@ -71,8 +79,9 @@ def index():
                 pers6 = int(pers6) if pers6 else 0
                 if pers6 < 0:
                     raise ValueError("The number of 6-person crews must be a nonnegative integer.")
-            except ValueError:
+            except ValueError as ve:
                 error_message = "Please enter a nonnegative integer for the number of 6-person crews."
+                app.logger.error(f"Validation error for pers6: {ve}")
                 raise Exception(error_message)
 
             # Calculate configurations
@@ -106,6 +115,7 @@ def index():
         pers6=pers6,
         error_message=error_message
     )
+
 @app.route("/next", methods=["GET"])
 def next_config():
     if "example_configs" in session:
@@ -118,4 +128,3 @@ def next_config():
         vehlist = session.get("vehlist", [])
         example_config = session["example_configs"][current_index]
         session["remaining_space"] = spaces(example_config, vehlist)
-    return redirect(url_for("index"))
