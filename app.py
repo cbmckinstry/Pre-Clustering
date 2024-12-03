@@ -56,10 +56,18 @@ def index():
         pers6=request.form.get("pers6", "")
     )
 
-@app.route("/next")
+@app.route("/next", methods=["GET"])
 def next_config():
     if "example_configs" in session:
+        # Increment the current index
         session["current_index"] += 1
+        # Loop back to the first configuration if at the end
         if session["current_index"] >= len(session["example_configs"]):
-            session["current_index"] = 0  # Loop back to the first configuration
+            session["current_index"] = 0
+
+        # Update remaining space for the current configuration
+        current_index = session["current_index"]
+        vehlist = session.get("vehlist", [])
+        example_config = session["example_configs"][current_index]
+        session["remaining_space"] = spaces(example_config, vehlist)
     return redirect(url_for("index"))

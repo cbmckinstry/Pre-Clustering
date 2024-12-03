@@ -56,8 +56,8 @@
     {% if session.example_configs is not none %}
         {% set current_index = session.get("current_index", 0) %}
         <ul>
-            {% for config in session.example_configs %}
-                <li>Vehicle {{ loop.index }}: {{ config[current_index][0] }} 5-person crews and {{ config[current_index][1] }} 6-person crews</li>
+            {% for config in session.example_configs[current_index] %}
+                <li>Vehicle {{ loop.index }}: {{ config[0] }} 5-person crews and {{ config[1] }} 6-person crews</li>
             {% endfor %}
         </ul>
         <form action="{{ url_for('next_config') }}" method="GET">
@@ -69,10 +69,10 @@
 </div>
 <div class="remaining-container">
     <h2>Remaining Space</h2>
-    {% if session.remaining_spaces is not none %}
+    {% if session.remaining_space is not none %}
         <ul>
-            {% for space in session.remaining_spaces %}
-                <li>Vehicle {{ loop.index }}: {{ space }} spaces left</li>
+            {% for space in session.remaining_space %}
+                <li>Vehicle {{ loop.index + 1 }}: {{ space }} spaces left</li>
             {% endfor %}
         </ul>
     {% else %}
