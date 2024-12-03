@@ -32,10 +32,11 @@ def index():
         session["vehlist"] = []
         session["pers5"] = 0
         session["pers6"] = 0
+        session["results"] = None
 
-    results = None
     example_configs = session.get("example_configs", [])
     remaining_spaces = session.get("remaining_space", [])
+    results = session.get("results", None)
     vehlist = session.get("vehlist", "")
     pers5 = session.get("pers5", 0)
     pers6 = session.get("pers6", 0)
@@ -67,9 +68,9 @@ def index():
             session["example_configs"] = example_configs
             session["current_index"] = 0
             session["remaining_space"] = remaining_spaces[0] if remaining_spaces else []
+            session["results"] = results
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
-        results = [f"Error: {str(e)}"]
 
     # Convert vehlist back to a comma-separated string for the template
     vehlist_str = ",".join(map(str, session.get("vehlist", [])))
@@ -80,8 +81,8 @@ def index():
         example_configs=example_configs,
         remaining_spaces=remaining_spaces,
         vehlist=vehlist_str,
-        pers5=session.get("pers5", ""),
-        pers6=session.get("pers6", "")
+        pers5=pers5,
+        pers6=pers6
     )
 
 @app.route("/next", methods=["GET"])
