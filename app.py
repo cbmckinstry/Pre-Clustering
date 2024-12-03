@@ -71,15 +71,19 @@ def index():
         app.logger.error(f"An error occurred: {e}")
         results = [f"Error: {str(e)}"]
 
+    # Convert vehlist back to a comma-separated string for the template
+    vehlist_str = ",".join(map(str, session.get("vehlist", [])))
+
     return render_template(
         "index.html",
         results=results,
         example_configs=example_configs,
         remaining_spaces=remaining_spaces,
-        vehlist=session.get("vehlist", ""),
+        vehlist=vehlist_str,
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", "")
     )
+
 @app.route("/next", methods=["GET"])
 def next_config():
     if "example_configs" in session:
