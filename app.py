@@ -83,11 +83,6 @@ def index():
                 app.logger.error(f"Validation error for pers6: {ve}")
                 raise Exception(error_message)
 
-            # Debugging parsed values
-            app.logger.debug(f"Parsed vehlist: {vehlist_list}")
-            app.logger.debug(f"Parsed pers5: {pers5}, type: {type(pers5)}")
-            app.logger.debug(f"Parsed pers6: {pers6}, type: {type(pers6)}")
-
             # Calculate configurations
             results_data = needed(vehlist_list, pers5, pers6)
             results = results_data[0]
