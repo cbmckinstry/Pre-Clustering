@@ -12,11 +12,6 @@ Session(app)
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
-@app.errorhandler(Exception)
-def handle_exception(e):
-    app.logger.error(f"An error occurred: {e}")
-    return "An internal error occurred. Please check the logs for details.", 500
-
 # Configure session to use filesystem
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"  # Replace with a strong key in production
