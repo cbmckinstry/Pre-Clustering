@@ -57,7 +57,7 @@
         {% set current_index = session.get("current_index", 0) %}
         <ul>
             {% for vehicle in session.example_configs[current_index] %}
-                <li>Vehicle {{ loop.index + 1 }}: {{ vehicle[0] }} 5-person crews and {{ vehicle[1] }} 6-person crews</li>
+                <li>Vehicle {{ loop.index0 + 1 }}: {{ vehicle[0] }} 5-person crews and {{ vehicle[1] }} 6-person crews</li>
             {% endfor %}
         </ul>
         <!-- Total Section -->
@@ -81,7 +81,7 @@
     {% if session.get('remaining_space') and session.remaining_space|length > 0 %}
         <ul>
             {% for space in session.remaining_space %}
-                <li>Vehicle {{ loop.index + 1 }}: {{ space }} spaces left</li>
+                <li>Vehicle {{ loop.index0 + 1 }}: {{ space }} spaces left</li>
             {% endfor %}
         </ul>
     {% else %}
