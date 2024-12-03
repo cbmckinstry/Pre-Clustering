@@ -34,6 +34,7 @@ def index():
         session["pers6"] = ""
         session["results"] = None
 
+    # Retrieve session data
     example_configs = session.get("example_configs", [])
     remaining_spaces = session.get("remaining_space", [])
     results = session.get("results", None)
@@ -47,7 +48,7 @@ def index():
 
     try:
         if request.method == "POST":
-            # Get inputs from the form
+            # Update form values only on Submit
             vehlist = request.form.get("vehlist", "").strip()
             pers5 = request.form.get("pers5", "").strip()
             pers6 = request.form.get("pers6", "").strip()
@@ -91,10 +92,10 @@ def index():
             results = results_data[0]
             example_configs = results_data[1]
 
-            # Calculate remaining space for each configuration
+            # Calculate remaining spaces for each configuration
             remaining_spaces = [spaces(config, vehlist_list) for config in example_configs]
 
-            # Store data in session
+            # Store updated data in session
             session["vehlist"] = vehlist_list
             session["pers5"] = pers5
             session["pers6"] = pers6
@@ -123,19 +124,19 @@ def index():
 @app.route("/next", methods=["GET"])
 def next_config():
     try:
-        # Check if necessary session data exists
+        # Ensure session data exists
         if "example_configs" not in session or not session["example_configs"]:
             raise Exception("No configurations available. Please submit the form first.")
 
         if "vehlist" not in session or not session["vehlist"]:
             raise Exception("Vehicle capacities are missing. Please submit the form first.")
 
-        # Retrieve and validate session data
+        # Retrieve session data
         example_configs = session["example_configs"]
         vehlist = session["vehlist"]
         current_index = session.get("current_index", 0)
 
-        # Increment current index
+        # Increment index
         current_index += 1
         if current_index >= len(example_configs):
             current_index = 0  # Loop back to the first configuration
@@ -145,8 +146,8 @@ def next_config():
         current_config = example_configs[current_index]
         session["remaining_space"] = spaces(current_config, vehlist)
 
-        # Do not modify vehlist, pers5, or pers6 in this route
-
     except Exception as e:
         app.logger.error(f"An error occurred in next_config: {e}")
-        return redirect(url_for("index"))  # Redirect back to the main page with the form
+        return redirect(url_for("index"))
+
+    return redirect(url_for("index"))
