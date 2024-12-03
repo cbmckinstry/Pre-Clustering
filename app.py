@@ -45,14 +45,15 @@ def index():
     try:
         if request.method == "POST":
             # Get inputs from the form
-            vehlist = request.form.get("vehlist", "")
-            pers5 = request.form.get("pers5", "")
-            pers6 = request.form.get("pers6", "")
+            vehlist = request.form.get("vehlist", "").strip()
+            pers5 = request.form.get("pers5", "").strip()
+            pers6 = request.form.get("pers6", "").strip()
 
             # Validate vehlist
             try:
-                # Check if input matches a comma-separated list of numbers
-                vehlist_list = list(map(int, vehlist.split(",")))
+                vehlist_list = [
+                    int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
+                ]
                 if any(v < 0 for v in vehlist_list):
                     raise ValueError("All vehicle capacities must be nonnegative integers.")
             except ValueError:
@@ -63,7 +64,7 @@ def index():
 
             # Validate pers5
             try:
-                pers5 = int(pers5)
+                pers5 = int(pers5) if pers5 else 0
                 if pers5 < 0:
                     raise ValueError("The number of 5-person crews must be a nonnegative integer.")
             except ValueError:
@@ -72,7 +73,7 @@ def index():
 
             # Validate pers6
             try:
-                pers6 = int(pers6)
+                pers6 = int(pers6) if pers6 else 0
                 if pers6 < 0:
                     raise ValueError("The number of 6-person crews must be a nonnegative integer.")
             except ValueError:
