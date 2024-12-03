@@ -128,3 +128,4 @@ def next_config():
         vehlist = session.get("vehlist", [])
         example_config = session["example_configs"][current_index]
         session["remaining_space"] = spaces(example_config, vehlist)
+    return redirect(url_for("index"))
