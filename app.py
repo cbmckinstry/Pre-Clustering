@@ -145,8 +145,8 @@ def next_config():
         current_config = example_configs[current_index]
         session["remaining_space"] = spaces(current_config, vehlist)
 
+        # Do not modify vehlist, pers5, or pers6 in this route
+
     except Exception as e:
         app.logger.error(f"An error occurred in next_config: {e}")
         return redirect(url_for("index"))  # Redirect back to the main page with the form
-
-    return redirect(url_for("index"))
