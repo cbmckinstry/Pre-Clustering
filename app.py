@@ -24,55 +24,62 @@ Session(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    if "example_configs" not in session:
+        # Initialize session keys to prevent KeyError
+        session["example_configs"] = []
+        session["remaining_space"] = []
+        session["current_index"] = 0
+        session["vehlist"] = []
+        session["pers5"] = 0
+        session["pers6"] = 0
+
     results = None
-    example_configs = None
-    remaining_spaces = None
+    example_configs = session.get("example_configs", [])
+    remaining_spaces = session.get("remaining_space", [])
     vehlist = session.get("vehlist", "")
-    pers5 = session.get("pers5", "")
-    pers6 = session.get("pers6", "")
+    pers5 = session.get("pers5", 0)
+    pers6 = session.get("pers6", 0)
+
     try:
         if request.method == "POST":
             # Get inputs from the form
-            vehlist = request.form["vehlist"]
-            pers5 = request.form["pers5"]
-            pers6 = request.form["pers6"]
+            vehlist = request.form.get("vehlist", "").split(",")
+            pers5 = request.form.get("pers5", 0)
+            pers6 = request.form.get("pers6", 0)
 
             # Parse inputs
-            vehlist_list = list(map(int, vehlist.split(",")))  # Convert to a list of integers
+            vehlist = list(map(int, vehlist))
             pers5 = int(pers5)
             pers6 = int(pers6)
 
-            # Store inputs in session
-            session["vehlist"] = vehlist_list
+            # Calculate configurations
+            results_data = needed(vehlist, pers5, pers6)
+            results = results_data[0]
+            example_configs = results_data[1]
+
+            # Calculate remaining space for each configuration
+            remaining_spaces = [spaces(config, vehlist) for config in example_configs]
+
+            # Store data in session
+            session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
-
-            # Call needed function
-            results_data = needed(vehlist_list, pers5, pers6)
-            results = results_data[0]  # [final, other]
-            example_configs = results_data[1]  # List of example configurations
-
-            # Calculate remaining spaces
-            remaining_spaces = [spaces(config, vehlist_list) for config in example_configs]
-
-            # Store in session for navigation
             session["example_configs"] = example_configs
             session["current_index"] = 0
             session["remaining_space"] = remaining_spaces[0] if remaining_spaces else []
     except Exception as e:
-        app.logger.error(f"Error processing request: {e}")
+        app.logger.error(f"An error occurred: {e}")
         results = [f"Error: {str(e)}"]
 
     return render_template(
         "index.html",
         results=results,
-        example_configs=session.get("example_configs"),
-        remaining_spaces=session.get("remaining_space"),
+        example_configs=example_configs,
+        remaining_spaces=remaining_spaces,
         vehlist=session.get("vehlist", ""),
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", "")
     )
-
 @app.route("/next", methods=["GET"])
 def next_config():
     if "example_configs" in session:
