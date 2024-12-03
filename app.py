@@ -119,6 +119,7 @@ def index():
         error_message=error_message
     )
 
+
 @app.route("/next", methods=["GET"])
 def next_config():
     try:
@@ -134,14 +135,6 @@ def next_config():
         vehlist = session["vehlist"]
         current_index = session.get("current_index", 0)
 
-        # Ensure vehlist is a list of integers
-        if isinstance(vehlist, str):
-            vehlist = [
-                int(value.strip()) for value in vehlist.strip("[]").split(",") if value.strip() != ""
-            ]
-        elif isinstance(vehlist, list) and any(isinstance(v, str) for v in vehlist):
-            vehlist = list(map(int, vehlist))
-
         # Increment current index
         current_index += 1
         if current_index >= len(example_configs):
@@ -151,9 +144,6 @@ def next_config():
         session["current_index"] = current_index
         current_config = example_configs[current_index]
         session["remaining_space"] = spaces(current_config, vehlist)
-
-        # Save the properly formatted vehlist back to the session
-        session["vehlist"] = vehlist
 
     except Exception as e:
         app.logger.error(f"An error occurred in next_config: {e}")
