@@ -54,7 +54,7 @@
 <div class="example-container">
     <h2>Example Configuration</h2>
     {% if results == [[0, 0]] %}
-        <li><strong>You're all good</strong></li>
+        <p>No remaining space data available.</p>
     {% elif session.example_configs is not none and session.example_configs|length > 0 %}
         {% set current_index = session.get("current_index", 0) %}
         <ul>
@@ -81,7 +81,7 @@
 <div class="remaining-container">
     <h2>Remaining Space</h2>
     {% if results == [[0, 0]] %}
-        <li><strong>You're all good</strong></li>
+        <p>No remaining space data available.</p>
     {% elif session.get('remaining_space') and session.remaining_space|length > 0 %}
         <ul>
             {% for space in session.remaining_space %}
