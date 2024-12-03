@@ -25,7 +25,7 @@ Session(app)
 @app.route("/", methods=["GET", "POST"])
 def index():
     if "example_configs" not in session:
-        # Initialize session keys to prevent KeyError
+        # Initialize session keys
         session["example_configs"] = []
         session["remaining_space"] = []
         session["current_index"] = 0
@@ -124,7 +124,7 @@ def index():
 @app.route("/next", methods=["GET"])
 def next_config():
     try:
-        # Ensure session data exists
+        # Ensure necessary session data exists
         if "example_configs" not in session or not session["example_configs"]:
             raise Exception("No configurations available. Please submit the form first.")
 
@@ -145,6 +145,8 @@ def next_config():
         session["current_index"] = current_index
         current_config = example_configs[current_index]
         session["remaining_space"] = spaces(current_config, vehlist)
+
+        # Do not modify vehlist, pers5, or pers6 in this route
 
     except Exception as e:
         app.logger.error(f"An error occurred in next_config: {e}")
