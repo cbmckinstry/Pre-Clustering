@@ -51,11 +51,14 @@ def index():
 
             # Validate vehlist
             try:
+                # Check if input matches a comma-separated list of numbers
                 vehlist_list = list(map(int, vehlist.split(",")))
                 if any(v < 0 for v in vehlist_list):
                     raise ValueError("All vehicle capacities must be nonnegative integers.")
             except ValueError:
-                error_message = "Please enter a comma-separated list of nonnegative integers for vehicle capacities."
+                error_message = (
+                    "Please enter a properly formatted comma-separated list of nonnegative integers for vehicle capacities."
+                )
                 raise Exception(error_message)
 
             # Validate pers5
