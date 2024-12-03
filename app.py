@@ -1,26 +1,15 @@
-import logging
 from flask import Flask, request, render_template, session, redirect, url_for
+import logging
 from flask_session import Session
 from Calculations import needed, spaces
 
 # Configure Flask and logging
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = "supersecretkey"  # Replace with a strong key in production
+app.config["SECRET_KEY"] = "supersecretkey"
 Session(app)
 
-# Configure logging
 logging.basicConfig(level=logging.DEBUG)
-
-@app.errorhandler(Exception)
-def handle_exception(e):
-    app.logger.error(f"An error occurred: {e}")
-    return "An internal error occurred. Please check the logs for details.", 500
-
-# Configure session to use filesystem
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = "supersecretkey"  # Replace with a strong key in production
-Session(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -48,7 +37,7 @@ def index():
 
     try:
         if request.method == "POST":
-            # Retrieve form inputs
+            # Update form values only on Submit
             vehlist_input = request.form.get("vehlist", "").strip()
             pers5_input = request.form.get("pers5", "").strip()
             pers6_input = request.form.get("pers6", "").strip()
@@ -119,6 +108,8 @@ def index():
         pers6=pers6,
         error_message=error_message
     )
+
+
 @app.route("/next", methods=["GET"])
 def next_config():
     try:
