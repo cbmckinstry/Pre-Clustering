@@ -24,8 +24,8 @@ Session(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    # Initialize session variables if not already set
     if "example_configs" not in session:
+        # Initialize session keys to prevent KeyError
         session["example_configs"] = []
         session["remaining_space"] = []
         session["current_index"] = 0
@@ -40,6 +40,7 @@ def index():
     vehlist = session.get("vehlist", "")
     pers5 = session.get("pers5", "")
     pers6 = session.get("pers6", "")
+    error_message = None
 
     try:
         if request.method == "POST":
@@ -48,10 +49,32 @@ def index():
             pers5 = request.form.get("pers5", "")
             pers6 = request.form.get("pers6", "")
 
-            # Parse inputs
-            vehlist_list = list(map(int, vehlist.split(","))) if vehlist else []
-            pers5 = int(pers5) if pers5 else 0
-            pers6 = int(pers6) if pers6 else 0
+            # Validate vehlist
+            try:
+                vehlist_list = list(map(int, vehlist.split(",")))
+                if any(v < 0 for v in vehlist_list):
+                    raise ValueError("All vehicle capacities must be nonnegative integers.")
+            except ValueError:
+                error_message = "Please enter a comma-separated list of nonnegative integers for vehicle capacities."
+                raise Exception(error_message)
+
+            # Validate pers5
+            try:
+                pers5 = int(pers5)
+                if pers5 < 0:
+                    raise ValueError("The number of 5-person crews must be a nonnegative integer.")
+            except ValueError:
+                error_message = "Please enter a nonnegative integer for the number of 5-person crews."
+                raise Exception(error_message)
+
+            # Validate pers6
+            try:
+                pers6 = int(pers6)
+                if pers6 < 0:
+                    raise ValueError("The number of 6-person crews must be a nonnegative integer.")
+            except ValueError:
+                error_message = "Please enter a nonnegative integer for the number of 6-person crews."
+                raise Exception(error_message)
 
             # Calculate configurations
             results_data = needed(vehlist_list, pers5, pers6)
@@ -71,7 +94,8 @@ def index():
             session["results"] = results
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
-        results = [f"Error: {str(e)}"]
+        if not error_message:
+            error_message = "An unexpected error occurred. Please check your input."
 
     return render_template(
         "index.html",
@@ -80,7 +104,8 @@ def index():
         remaining_spaces=remaining_spaces,
         vehlist=vehlist,
         pers5=pers5,
-        pers6=pers6
+        pers6=pers6,
+        error_message=error_message
     )
 
 @app.route("/next", methods=["GET"])

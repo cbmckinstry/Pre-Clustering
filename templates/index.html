@@ -24,6 +24,11 @@
 <div class="form-container">
     <h1>Pre-Clustering WebApp</h1>
     <form method="POST">
+        {% if error_message %}
+            <div style="color: red; font-weight: bold;">
+                {{ error_message }}
+            </div>
+        {% endif %}
         <label for="vehlist">Enter vehicle capacities (comma-separated):</label><br>
         <textarea id="vehlist" name="vehlist" rows="10" cols="50" required>{{ vehlist }}</textarea><br><br>
 
