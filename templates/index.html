@@ -53,12 +53,20 @@
 </div>
 <div class="example-container">
     <h2>Example Configuration</h2>
-    {% if session.get('example_configs') and session.example_configs|length > 0 %}
+    {% if session.example_configs is not none and session.example_configs|length > 0 %}
         {% set current_index = session.get("current_index", 0) %}
         <ul>
-            {% for config in session.example_configs[current_index] %}
-                <li>Vehicle {{ loop.index + 1 }}: {{ config[0] }} 5-person crews and {{ config[1] }} 6-person crews</li>
+            {% for vehicle in session.example_configs[current_index] %}
+                <li>Vehicle {{ loop.index + 1 }}: {{ vehicle[0] }} 5-person crews and {{ vehicle[1] }} 6-person crews</li>
             {% endfor %}
+        </ul>
+        <!-- Total Section -->
+        <h3>Total:</h3>
+        <ul>
+            {% set total_5 = session.example_configs[current_index] | map(attribute=0) | sum %}
+            {% set total_6 = session.example_configs[current_index] | map(attribute=1) | sum %}
+            <li>Total 5-person crews: {{ total_5 }}</li>
+            <li>Total 6-person crews: {{ total_6 }}</li>
         </ul>
         <form action="{{ url_for('next_config') }}" method="GET">
             <button type="submit">Next</button>
