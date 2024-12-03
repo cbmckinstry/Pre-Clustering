@@ -48,15 +48,15 @@ def index():
 
     try:
         if request.method == "POST":
-            # Update form values only on Submit
-            vehlist = request.form.get("vehlist", "").strip()
-            pers5 = request.form.get("pers5", "").strip()
-            pers6 = request.form.get("pers6", "").strip()
+            # Retrieve form inputs
+            vehlist_input = request.form.get("vehlist", "").strip()
+            pers5_input = request.form.get("pers5", "").strip()
+            pers6_input = request.form.get("pers6", "").strip()
 
             # Validate vehlist
             try:
                 vehlist_list = [
-                    int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
+                    int(value.strip()) for value in vehlist_input.split(",") if value.strip() != ""
                 ]
                 if any(v < 0 for v in vehlist_list):
                     raise ValueError("All vehicle capacities must be nonnegative integers.")
@@ -69,7 +69,7 @@ def index():
 
             # Validate pers5
             try:
-                pers5 = int(pers5) if pers5 else 0
+                pers5 = int(pers5_input) if pers5_input else 0
                 if pers5 < 0:
                     raise ValueError("The number of 5-person crews must be a nonnegative integer.")
             except ValueError as ve:
@@ -79,7 +79,7 @@ def index():
 
             # Validate pers6
             try:
-                pers6 = int(pers6) if pers6 else 0
+                pers6 = int(pers6_input) if pers6_input else 0
                 if pers6 < 0:
                     raise ValueError("The number of 6-person crews must be a nonnegative integer.")
             except ValueError as ve:
@@ -119,8 +119,6 @@ def index():
         pers6=pers6,
         error_message=error_message
     )
-
-
 @app.route("/next", methods=["GET"])
 def next_config():
     try:
