@@ -51,6 +51,7 @@ def index():
 
             # Validate vehlist
             try:
+                # Split by commas, strip whitespace, and filter out empty values
                 vehlist_list = [
                     int(value.strip()) for value in vehlist.split(",") if value.strip() != ""
                 ]
