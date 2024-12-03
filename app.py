@@ -24,42 +24,42 @@ Session(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    # Initialize session variables if not already set
     if "example_configs" not in session:
-        # Initialize session keys to prevent KeyError
         session["example_configs"] = []
         session["remaining_space"] = []
         session["current_index"] = 0
-        session["vehlist"] = []
-        session["pers5"] = 0
-        session["pers6"] = 0
+        session["vehlist"] = ""
+        session["pers5"] = ""
+        session["pers6"] = ""
         session["results"] = None
 
     example_configs = session.get("example_configs", [])
     remaining_spaces = session.get("remaining_space", [])
     results = session.get("results", None)
     vehlist = session.get("vehlist", "")
-    pers5 = session.get("pers5", 0)
-    pers6 = session.get("pers6", 0)
+    pers5 = session.get("pers5", "")
+    pers6 = session.get("pers6", "")
 
     try:
         if request.method == "POST":
             # Get inputs from the form
-            vehlist = request.form.get("vehlist", "").split(",")
-            pers5 = request.form.get("pers5", 0)
-            pers6 = request.form.get("pers6", 0)
+            vehlist = request.form.get("vehlist", "")
+            pers5 = request.form.get("pers5", "")
+            pers6 = request.form.get("pers6", "")
 
             # Parse inputs
-            vehlist = list(map(int, vehlist))
-            pers5 = int(pers5)
-            pers6 = int(pers6)
+            vehlist_list = list(map(int, vehlist.split(","))) if vehlist else []
+            pers5 = int(pers5) if pers5 else 0
+            pers6 = int(pers6) if pers6 else 0
 
             # Calculate configurations
-            results_data = needed(vehlist, pers5, pers6)
+            results_data = needed(vehlist_list, pers5, pers6)
             results = results_data[0]
             example_configs = results_data[1]
 
             # Calculate remaining space for each configuration
-            remaining_spaces = [spaces(config, vehlist) for config in example_configs]
+            remaining_spaces = [spaces(config, vehlist_list) for config in example_configs]
 
             # Store data in session
             session["vehlist"] = vehlist
@@ -71,16 +71,14 @@ def index():
             session["results"] = results
     except Exception as e:
         app.logger.error(f"An error occurred: {e}")
-
-    # Convert vehlist back to a comma-separated string for the template
-    vehlist_str = ",".join(map(str, session.get("vehlist", [])))
+        results = [f"Error: {str(e)}"]
 
     return render_template(
         "index.html",
         results=results,
         example_configs=example_configs,
         remaining_spaces=remaining_spaces,
-        vehlist=vehlist_str,
+        vehlist=vehlist,
         pers5=pers5,
         pers6=pers6
     )
