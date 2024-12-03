@@ -13,31 +13,12 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if "example_configs" not in session:
-        # Initialize session keys
-        session["example_configs"] = []
-        session["remaining_space"] = []
-        session["current_index"] = 0
-        session["vehlist"] = []
-        session["pers5"] = ""
-        session["pers6"] = ""
-        session["results"] = None
+    if request.method == "POST":
+        # Reset the session on submission
+        session.clear()
 
-    # Retrieve session data
-    example_configs = session.get("example_configs", [])
-    remaining_spaces = session.get("remaining_space", [])
-    results = session.get("results", None)
-    vehlist = session.get("vehlist", [])
-    pers5 = session.get("pers5", "")
-    pers6 = session.get("pers6", "")
-    error_message = None
-
-    # Convert vehlist to a string for display in the form
-    vehlist_display = ",".join(map(str, vehlist)) if vehlist else ""
-
-    try:
-        if request.method == "POST":
-            # Update form values only on Submit
+        try:
+            # Retrieve form inputs
             vehlist_input = request.form.get("vehlist", "").strip()
             pers5_input = request.form.get("pers5", "").strip()
             pers6_input = request.form.get("pers6", "").strip()
@@ -93,10 +74,25 @@ def index():
             session["remaining_space"] = remaining_spaces[0] if remaining_spaces else []
             session["results"] = results
 
-    except Exception as e:
-        app.logger.error(f"An error occurred: {e}")
-        if not error_message:
-            error_message = "An unexpected error occurred. Please check your input."
+        except Exception as e:
+            app.logger.error(f"An error occurred: {e}")
+            return render_template(
+                "index.html",
+                error_message="An error occurred. Please check your inputs and try again.",
+                vehlist=vehlist_input,
+                pers5=pers5_input,
+                pers6=pers6_input,
+                results=None,
+            )
+
+    # Retrieve session data for display
+    example_configs = session.get("example_configs", [])
+    remaining_spaces = session.get("remaining_space", [])
+    results = session.get("results", None)
+    vehlist = session.get("vehlist", [])
+    pers5 = session.get("pers5", "")
+    pers6 = session.get("pers6", "")
+    vehlist_display = ",".join(map(str, vehlist)) if vehlist else ""
 
     return render_template(
         "index.html",
@@ -106,7 +102,7 @@ def index():
         vehlist=vehlist_display,
         pers5=pers5,
         pers6=pers6,
-        error_message=error_message
+        error_message=None,
     )
 
 
@@ -122,7 +118,6 @@ def next_config():
 
         # Retrieve session data
         example_configs = session["example_configs"]
-        vehlist = session["vehlist"]
         current_index = session.get("current_index", 0)
 
         # Increment index
@@ -130,15 +125,12 @@ def next_config():
         if current_index >= len(example_configs):
             current_index = 0  # Loop back to the first configuration
 
-        # Update remaining spaces for the current configuration
+        # Update current index and remaining spaces
         session["current_index"] = current_index
         current_config = example_configs[current_index]
-        session["remaining_space"] = spaces(current_config, vehlist)
-
-        # Do not modify vehlist, pers5, or pers6 in this route
+        session["remaining_space"] = spaces(current_config, session["vehlist"])
 
     except Exception as e:
         app.logger.error(f"An error occurred in next_config: {e}")
-        return redirect(url_for("index"))
 
     return redirect(url_for("index"))
