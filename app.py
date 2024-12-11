@@ -62,7 +62,7 @@ def index():
 
     return render_template(
         "index.html",
-        vehlist=", ".join(map(str, session.get("vehlist", []))),  # Convert list to comma-separated string
+        vehlist=",".join(map(str, session.get("vehlist", []))),  # Convert list to comma-separated string
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         results=session.get("results"),
