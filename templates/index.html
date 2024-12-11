@@ -71,25 +71,28 @@
     {% if results %}
         <div class="results-section">
             <h2>Best Allocation</h2>
-            {% if results and results[0] %}
-                <p><strong>Shortfall:</strong>
-                    5-person groups: {{ results[1][0] }},
-                    6-person groups: {{ results[1][1] }}
-                </p>
-                <h3>Allocation Details</h3>
-                <ul>
-                    {% for vehicle, space in zip(results[0][1], results[0][2]) %}
-                        <li>
-                            Vehicle: {{ vehicle[0] }} 5-person groups, {{ vehicle[1] }} 6-person groups
-                            <br>
-                            Remaining Space: {{ space }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No results to display. Please check your inputs and try again.</p>
-            {% endif %}
+            <p><strong>Shortfall:</strong>
+                5-person groups: {{ results[1][0] }},
+                6-person groups: {{ results[1][1] }}
+            </p>
+            <h3>Allocation Details</h3>
+            <ul>
+                {% for assignment in results[0][1] %}
+                    <li>Vehicle {{ loop.index }}:
+                        {{ assignment[1] }} 5-person groups,
+                        {{ assignment[0] }} 6-person groups
+                    </li>
+                {% endfor %}
+            </ul>
+            <h3>Remaining Spaces</h3>
+            <ul>
+                {% for space in results[0][2] %}
+                    <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
+                {% endfor %}
+            </ul>
         </div>
+    {% else %}
+        <p>No results to display. Please check your input and try again.</p>
+    {% endif %}
 </div>
 </body>
-</html>
