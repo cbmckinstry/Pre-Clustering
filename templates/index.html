@@ -10,40 +10,15 @@
             margin: 20px;
             padding: 20px;
         }
-
         .container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
-
-        .column {
-            flex: 1;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
+        .error-message {
+            color: red;
+            font-weight: bold;
             margin-bottom: 10px;
         }
-
-        .shortfall {
-            font-weight: bold;
-            color: #333;
-        }
-
         textarea, input {
             width: 100%;
             margin-bottom: 10px;
@@ -52,78 +27,69 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
         button {
-            width: 100%;
             background-color: #007BFF;
             color: #fff;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
         }
-
         button:hover {
             background-color: #0056b3;
+        }
+        .results-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
     </style>
 </head>
 <body>
-<h1>Group Allocation App</h1>
-<form method="POST">
-    <label for="vehlist">Enter Vehicle Capacities (comma-separated):</label>
-    <textarea id="vehlist" name="vehlist" rows="4" required>{{ vehlist }}</textarea>
+<div class="container">
+    <h1>Group Allocation App</h1>
+    <form method="POST">
+        {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+        {% endif %}
+        <label for="vehlist">Enter Vehicle Capacities (comma-separated):</label>
+        <textarea id="vehlist" name="vehlist" rows="4" required>{{ vehlist }}</textarea>
 
-    <label for="pers5">Enter Number of 5-person Groups:</label>
-    <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required>
+        <label for="pers5">Enter Number of 5-person Groups:</label>
+        <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required>
 
-    <label for="pers6">Enter Number of 6-person Groups:</label>
-    <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required>
+        <label for="pers6">Enter Number of 6-person Groups:</label>
+        <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required>
 
-    <button type="submit">Submit</button>
-</form>
+        <button type="submit">Submit</button>
+    </form>
 
-{% if results %}
-    <div class="container">
-        <!-- Inputs Column -->
-        <div class="column">
-            <h2>Inputs</h2>
-            <ul>
-                <li><strong>Vehicle Capacities:</strong> {{ vehlist }}</li>
-                <li><strong>5-person Groups:</strong> {{ pers5 }}</li>
-                <li><strong>6-person Groups:</strong> {{ pers6 }}</li>
-            </ul>
-        </div>
-
-        <!-- Best Allocation Column -->
-        <div class="column">
+    {% if results %}
+        <div class="results-section">
             <h2>Best Allocation</h2>
-            <p class="shortfall">Shortfall: 5-person groups: {{ results[1][0] }}, 6-person groups: {{ results[1][1] }}</p>
-            <ul>
-                {% for vehicle, space in zip(results[0][1], results[0][2]) %}
-                    <li>
-                        Vehicle: {{ vehicle[0] }} 5-person groups, {{ vehicle[1] }} 6-person groups
-                    </li>
-                {% endfor %}
-            </ul>
-            <h3>Totals</h3>
-            <ul>
-                <li>Total 5-person groups: {{ results[0][1] | map(attribute=0) | sum }}</li>
-                <li>Total 6-person groups: {{ results[0][1] | map(attribute=1) | sum }}</li>
-            </ul>
+            {% if results and results[0] %}
+                <p><strong>Shortfall:</strong>
+                    5-person groups: {{ results[1][0] }},
+                    6-person groups: {{ results[1][1] }}
+                </p>
+                <h3>Allocation Details</h3>
+                <ul>
+                    {% for vehicle, space in zip(results[0][1], results[0][2]) %}
+                        <li>
+                            Vehicle: {{ vehicle[0] }} 5-person groups, {{ vehicle[1] }} 6-person groups
+                            <br>
+                            Remaining Space: {{ space }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No results to display. Please check your inputs and try again.</p>
+            {% endif %}
         </div>
-
-        <!-- Space Remaining Column -->
-        <div class="column">
-            <h2>Space Remaining</h2>
-            <ul>
-                {% for vehicle, space in zip(results[0][1], results[0][2]) %}
-                    <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-{% endif %}
+</div>
 </body>
 </html>
