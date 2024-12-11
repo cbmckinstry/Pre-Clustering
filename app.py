@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 import logging
 from flask_session import Session
-from Calculations import needed, spaces
+import Calculations
 
 # Configure Flask and logging
 app = Flask(__name__)
@@ -58,12 +58,13 @@ def index():
                 raise Exception(error_message)
 
             # Calculate configurations
-            results_data = needed(vehlist_list, pers5, pers6)
-            results = results_data[0]
-            example_configs = results_data[1]
-
-            # Calculate remaining spaces for each configuration
-            remaining_spaces = [spaces(config, vehlist_list) for config in example_configs]
+            alg1=Calculations.allocate_groups_simultaneous(vehlist_list, pers5, pers6)
+            alg2=Calculations.allocate_groups(vehlist_list, pers5, pers6,0)
+            alg3=Calculations.allocate_groups(vehlist_list, pers5, pers6,1)
+            results_data = Calculations.closestalg([pers5,pers6],[alg1,alg2,alg3])
+            results = results_data[1]
+            example_configs = results_data[0][1]
+            remaining_spaces = results_data[0][2]
 
             # Store updated data in session
             session["vehlist"] = vehlist_list
@@ -104,33 +105,3 @@ def index():
         pers6=pers6,
         error_message=None,
     )
-
-
-@app.route("/next", methods=["GET"])
-def next_config():
-    try:
-        # Ensure necessary session data exists
-        if "example_configs" not in session or not session["example_configs"]:
-            raise Exception("No configurations available. Please submit the form first.")
-
-        if "vehlist" not in session or not session["vehlist"]:
-            raise Exception("Vehicle capacities are missing. Please submit the form first.")
-
-        # Retrieve session data
-        example_configs = session["example_configs"]
-        current_index = session.get("current_index", 0)
-
-        # Increment index
-        current_index += 1
-        if current_index >= len(example_configs):
-            current_index = 0  # Loop back to the first configuration
-
-        # Update current index and remaining spaces
-        session["current_index"] = current_index
-        current_config = example_configs[current_index]
-        session["remaining_space"] = spaces(current_config, session["vehlist"])
-
-    except Exception as e:
-        app.logger.error(f"An error occurred in next_config: {e}")
-
-    return redirect(url_for("index"))

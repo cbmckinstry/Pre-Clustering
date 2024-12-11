@@ -61,6 +61,100 @@ def needed(vehlist, pers5, pers6):
 
     return [results, examples]
 
+def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers):
+    vehicle_assignments=[]
+    for i in range(len(vehicle_capacities)):
+        vehicle_assignments.append([0,0])
+    totals = [0, 0]
+
+    if vers == 1:
+        cap1, cap2 = 6, 5
+        iter1, iter2 = six_person_groups, five_person_groups
+    else:
+        cap1, cap2 = 5, 6
+        iter1, iter2 = five_person_groups, six_person_groups
+
+    for _ in range(iter1):
+        placed = False
+        for i, capacity in enumerate(vehicle_capacities):
+            if capacity >= cap1 and (capacity % cap1 <= capacity % cap2):
+                vehicle_assignments[i][1] += 1
+                totals[vers] += 1
+                vehicle_capacities[i] -= cap1
+                placed = True
+                break
+        if not placed:
+            for i, capacity in enumerate(vehicle_capacities):
+                if capacity >= cap1:
+                    vehicle_assignments[i][1] += 1
+                    totals[vers] += 1
+                    vehicle_capacities[i] -= cap1
+                    break
+    for _ in range(iter2):
+        for i, capacity in enumerate(vehicle_capacities):
+            if capacity >= cap2:
+                vehicle_assignments[i][0] += 1
+                totals[vers == 0] += 1
+                vehicle_capacities[i] -= cap2
+                break
+
+    space_remaining = vehicle_capacities.copy()
+
+    return [totals, vehicle_assignments,space_remaining]
+
+def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups):
+    vehicle_assignments=[]
+    for i in range(len(vehicle_capacities)):
+        vehicle_assignments.append([0,0])
+    totals = [0, 0]
+
+    while five_person_groups > 0 or six_person_groups > 0:
+        progress = False  # Track if any group was placed in this iteration
+
+        for i, capacity in enumerate(vehicle_capacities):
+            if capacity < 5:  # Skip if the vehicle has less than 5 capacity
+                continue
+
+            # Determine which group to place based on the smaller remainder
+            remainder_6 = capacity % 6
+            remainder_5 = capacity % 5
+
+            if six_person_groups > 0 and (remainder_6 < remainder_5 or five_person_groups == 0):
+                if capacity >= 6:
+                    vehicle_assignments[i][1] += 1  # Place a 6-person group
+                    totals[1] += 1
+                    vehicle_capacities[i] -= 6
+                    six_person_groups -= 1
+                    progress = True
+                    continue  # Move to the next vehicle after placing
+            if five_person_groups > 0 and capacity >= 5:
+                vehicle_assignments[i][0] += 1  # Place a 5-person group
+                totals[0] += 1
+                vehicle_capacities[i] -= 5
+                five_person_groups -= 1
+                progress = True
+                continue  # Move to the next vehicle after placing
+
+        if not progress:
+            break
+    space_remaining = vehicle_capacities.copy()
+
+    return [totals, vehicle_assignments,space_remaining]
+def closestalg(inlist,outlist):
+    outcomp=[]
+    final=[]
+    offby=[]
+    for output in outlist:
+        outcomp.append(output[0])
+    for elem in range(len(outcomp)):
+        calc=[max(inlist[0]-outcomp[elem][0],0),max(inlist[1]-outcomp[elem][1],0)]
+        offby.append(calc)
+        final.append(sum(calc))
+    outind=final.index(min(final))
+    needed=offby[outind]
+    best=outlist[outind]
+    return [best,needed]
+
 
 def spaces(examplelist, vehlist):
     """

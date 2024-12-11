@@ -75,9 +75,6 @@
             <li>Total 5-person crews: {{ total_5 }}</li>
             <li>Total 6-person crews: {{ total_6 }}</li>
         </ul>
-        <form action="{{ url_for('next_config') }}" method="GET">
-            <button type="submit">Next</button>
-        </form>
     {% else %}
         <p>No example configuration available. Please submit the form.</p>
     {% endif %}
