@@ -11,19 +11,6 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups):
         raise ValueError("Six-person groups must be a non-negative integer.")
 
 def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers, sort_order="none"):
-    """
-    Allocate groups to vehicles based on capacities and group sizes.
-
-    Parameters:
-        vehicle_capacities (list[int]): List of vehicle capacities.
-        five_person_groups (int): Number of 5-person groups.
-        six_person_groups (int): Number of 6-person groups.
-        vers (int): Determines whether to prioritize 6-person or 5-person groups.
-        sort_order (str): Sorting order for vehicle capacities. Options: "none", "asc", "desc".
-
-    Returns:
-        list: [totals, vehicle_assignments, space_remaining], in original input order.
-    """
     validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
 
     # Store original indices for restoring order
@@ -91,18 +78,7 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
     return [totals, vehicle_assignments, space_remaining]
 
 def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none"):
-    """
-    Simultaneously allocate 5-person and 6-person groups to vehicles based on capacities.
 
-    Parameters:
-        vehicle_capacities (list[int]): List of vehicle capacities.
-        five_person_groups (int): Number of 5-person groups.
-        six_person_groups (int): Number of 6-person groups.
-        sort_order (str): Sorting order for vehicle capacities. Options: "none", "asc", "desc".
-
-    Returns:
-        list: [totals, vehicle_assignments, space_remaining], in original input order.
-    """
     # Store original indices for restoring order
     original_indices = list(range(len(vehicle_capacities)))
 
