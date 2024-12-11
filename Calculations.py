@@ -51,51 +51,72 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
     return [totals, vehicle_assignments, space_remaining]
 
 def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups):
-    validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
+    """
+    Allocate 5-person and 6-person groups simultaneously to vehicles for balanced allocation.
 
-    vehicle_assignments = [[0, 0] for _ in vehicle_capacities]
-    totals = [0, 0]
+    Parameters:
+    vehicle_capacities (list): List of vehicle capacities.
+    five_person_groups (int): Number of 5-person groups to allocate.
+    six_person_groups (int): Number of 6-person groups to allocate.
+
+    Returns:
+    list: [totals, vehicle_assignments, remaining_spaces]
+    """
+    vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
+    totals = [0, 0]  # Total [5-person groups, 6-person groups] assigned
 
     while five_person_groups > 0 or six_person_groups > 0:
         progress = False
-        for i, capacity in enumerate(vehicle_capacities):
-            if capacity < 5:
-                continue
-            remainder_6, remainder_5 = capacity % 6, capacity % 5
 
-            if six_person_groups > 0 and (remainder_6 < remainder_5 or five_person_groups == 0):
-                if capacity >= 6:
+        for i, capacity in enumerate(vehicle_capacities):
+            if capacity < 5:  # Skip vehicles with insufficient capacity
+                continue
+
+            # Check whether to place a 6-person group or a 5-person group
+            can_place_6 = capacity >= 6 and six_person_groups > 0
+            can_place_5 = capacity >= 5 and five_person_groups > 0
+
+            if can_place_6 and can_place_5:
+                # Choose the group that minimizes remaining capacity
+                if (capacity - 6) % 6 <= (capacity - 5) % 5:
+                    # Place a 6-person group
                     vehicle_assignments[i][1] += 1
                     totals[1] += 1
                     vehicle_capacities[i] -= 6
                     six_person_groups -= 1
-                    progress = True
-                    continue
-            if five_person_groups > 0 and capacity >= 5:
+                else:
+                    # Place a 5-person group
+                    vehicle_assignments[i][0] += 1
+                    totals[0] += 1
+                    vehicle_capacities[i] -= 5
+                    five_person_groups -= 1
+                progress = True
+            elif can_place_6:
+                # Place a 6-person group if only it can fit
+                vehicle_assignments[i][1] += 1
+                totals[1] += 1
+                vehicle_capacities[i] -= 6
+                six_person_groups -= 1
+                progress = True
+            elif can_place_5:
+                # Place a 5-person group if only it can fit
                 vehicle_assignments[i][0] += 1
                 totals[0] += 1
                 vehicle_capacities[i] -= 5
                 five_person_groups -= 1
                 progress = True
-                continue
 
         if not progress:
+            # Stop if no groups can be placed
             break
 
-    space_remaining = vehicle_capacities.copy()
+    # Remaining space in each vehicle
+    space_remaining = vehicle_capacities[:]
+
     return [totals, vehicle_assignments, space_remaining]
 
 def closestalg(required_groups, allocations):
-    """
-    Find the allocation closest to the required groups, prioritizing 6-person groups in case of ties.
 
-    Parameters:
-    required_groups (list[int]): Required [5-person, 6-person] groups.
-    allocations (list): List of allocation results.
-
-    Returns:
-    list: Closest allocation and the shortfall.
-    """
     offby = []
     total_shortfalls = []
 
