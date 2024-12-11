@@ -11,18 +11,6 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups):
         raise ValueError("Six-person groups must be a non-negative integer.")
 
 def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers):
-    """
-    Allocate 5-person and 6-person groups to vehicles, distributing them evenly.
-
-    Parameters:
-    vehicle_capacities (list): List of vehicle capacities.
-    five_person_groups (int): Number of 5-person groups to allocate.
-    six_person_groups (int): Number of 6-person groups to allocate.
-    vers (int): Determines prioritization (0: prioritize 5-person, 1: prioritize 6-person).
-
-    Returns:
-    list: [totals, vehicle_assignments, space_remaining]
-    """
     validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
 
     vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
@@ -72,18 +60,6 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
     return [totals, vehicle_assignments, space_remaining]
 
 def allocate_groups_fill(vehicle_capacities, five_person_groups, six_person_groups, vers):
-    """
-    Allocate 5-person and 6-person groups to vehicles, filling each vehicle as much as possible.
-
-    Parameters:
-    vehicle_capacities (list): List of vehicle capacities.
-    five_person_groups (int): Number of 5-person groups to allocate.
-    six_person_groups (int): Number of 6-person groups to allocate.
-    vers (int): Determines prioritization (0: prioritize 5-person, 1: prioritize 6-person).
-
-    Returns:
-    list: [totals, vehicle_assignments, space_remaining]
-    """
     validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
 
     vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
@@ -119,17 +95,6 @@ def allocate_groups_fill(vehicle_capacities, five_person_groups, six_person_grou
     return [totals, vehicle_assignments, space_remaining]
 
 def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups):
-    """
-    Allocate 5-person and 6-person groups simultaneously to vehicles for balanced allocation.
-
-    Parameters:
-    vehicle_capacities (list): List of vehicle capacities.
-    five_person_groups (int): Number of 5-person groups to allocate.
-    six_person_groups (int): Number of 6-person groups to allocate.
-
-    Returns:
-    list: [totals, vehicle_assignments, remaining_spaces]
-    """
     vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
     totals = [0, 0]  # Total [5-person groups, 6-person groups] assigned
 
@@ -183,6 +148,42 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
 
     return [totals, vehicle_assignments, space_remaining]
 
+def allocate_groups_simultaneous_remainder(vehicle_capacities, five_person_groups, six_person_groups):
+    validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
+
+    vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
+    totals = [0, 0]  # Total [5-person, 6-person] groups assigned
+
+    for i in range(len(vehicle_capacities)):
+        while vehicle_capacities[i] >= 5:  # Stop when capacity is less than 5
+            if five_person_groups == 0 and six_person_groups == 0:
+                break  # Stop if no groups are left to allocate
+
+            # Calculate remainders for 5-person and 6-person groups
+            remainder_5 = vehicle_capacities[i] % 5
+            remainder_6 = vehicle_capacities[i] % 6
+
+            # Decide which group to place based on minimum remainder
+            if six_person_groups > 0 and (remainder_6 < remainder_5 or five_person_groups == 0):
+                # Place a 6-person group
+                vehicle_assignments[i][1] += 1
+                totals[1] += 1
+                vehicle_capacities[i] -= 6
+                six_person_groups -= 1
+            elif five_person_groups > 0 and vehicle_capacities[i] >= 5:
+                # Place a 5-person group
+                vehicle_assignments[i][0] += 1
+                totals[0] += 1
+                vehicle_capacities[i] -= 5
+                five_person_groups -= 1
+            else:
+                break  # If neither group fits, stop
+
+    # Remaining space in each vehicle
+    space_remaining = vehicle_capacities[:]
+
+    return [totals, vehicle_assignments, space_remaining]
+
 def closestalg(required_groups, allocations):
 
     offby = []
@@ -208,6 +209,17 @@ def closestalg(required_groups, allocations):
     best_index = best_indices[0]
     return [allocations[best_index], offby[best_index]]
 capacity=[10,12,13,14]
+cap1=capacity.copy()
+cap2=capacity.copy()
+cap3=capacity.copy()
+cap4=capacity.copy()
+cap5=capacity.copy()
+cap6=capacity.copy()
 five=4
 six=6
-print(allocate_groups_fill(capacity,five,six,0))
+print(allocate_groups(cap1,five,six,0))
+print(allocate_groups(cap2,five,six,1))
+print(allocate_groups_fill(cap3,five,six,0))
+print(allocate_groups_fill(cap4,five,six,1))
+print(allocate_groups_simultaneous_remainder(cap6,five,six))
+print(allocate_groups_simultaneous(cap5,five,six))
