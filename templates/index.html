@@ -7,12 +7,24 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            flex: 1;
+            max-width: 600px;
+            padding: 20px;
+        }
+        .results-section {
+            flex: 1;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
         .error-message {
             color: red;
@@ -38,12 +50,25 @@
         button:hover {
             background-color: #0056b3;
         }
-        .results-section {
-            margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+        .columns {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        .column {
+            flex: 1;
+        }
+        .column ul li {
+            margin-bottom: 10px;
+        }
+        /* Optional: Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .columns {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -67,34 +92,38 @@
 
         <button type="submit">Submit</button>
     </form>
-
+</div>
+<div class="results-section">
     {% if results %}
-        <div class="results-section">
-            <h2>Best Allocation</h2>
-            <p><strong>Totals:</strong>
-                Total 5-person groups: {{ results[0][0][0] }},
-                Total 6-person groups: {{ results[0][0][1] }}
-            </p>
-            <p><strong>Shortfall:</strong>
-                5-person groups: {{ results[1][0] }},
-                6-person groups: {{ results[1][1] }}
-            </p>
-            <!-- Totals Section -->
-            <h3>Allocation Details</h3>
-            <ul>
-                {% for assignment in results[0][1] %}
-                    <li>Vehicle {{ loop.index }}:
-                        {{ assignment[0] }} 5-person groups,
-                        {{ assignment[1] }} 6-person groups
-                    </li>
-                {% endfor %}
-            </ul>
-            <h3>Remaining Spaces</h3>
-            <ul>
-                {% for space in results[0][2] %}
-                    <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
-                {% endfor %}
-            </ul>
+        <h2>Best Allocation</h2>
+        <p><strong>Totals:</strong>
+            Total 5-person groups: {{ results[0][0][0] }},
+            Total 6-person groups: {{ results[0][0][1] }}
+        </p>
+        <p><strong>Shortfall:</strong>
+            5-person groups: {{ results[1][0] }},
+            6-person groups: {{ results[1][1] }}
+        </p>
+        <div class="columns">
+            <div class="column">
+                <h3>Allocation Details</h3>
+                <ul>
+                    {% for assignment in results[0][1] %}
+                        <li>Vehicle {{ loop.index }}:
+                            {{ assignment[0] }} 5-person groups,
+                            {{ assignment[1] }} 6-person groups
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Remaining Spaces</h3>
+                <ul>
+                    {% for space in results[0][2] %}
+                        <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     {% else %}
         <p>No results to display. Please check your input and try again.</p>
