@@ -71,11 +71,10 @@
     {% if results %}
         <div class="results-section">
             <h2>Best Allocation</h2>
-            <h3>Totals</h3>
-            <ul>
-                <li><strong>Total 5-person groups:</strong> {{ results[0][0][0] }}</li>
-                <li><strong>Total 6-person groups:</strong> {{ results[0][0][1] }}</li>
-            </ul>
+            <p><strong>Totals</strong>
+                Total 5-person groups: {{ results[0][0][0] }},
+                Total 6-person groups: {{ results[0][0][1] }}
+            </p>
             <p><strong>Shortfall:</strong>
                 5-person groups: {{ results[1][0] }},
                 6-person groups: {{ results[1][1] }}
