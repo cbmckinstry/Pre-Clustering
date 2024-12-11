@@ -86,13 +86,23 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
     return [totals, vehicle_assignments, space_remaining]
 
 def closestalg(required_groups, allocations):
+    """
+    Find the allocation closest to the required groups, prioritizing 6-person groups in case of ties.
+
+    Parameters:
+    required_groups (list[int]): Required [5-person, 6-person] groups.
+    allocations (list): List of allocation results.
+
+    Returns:
+    list: Closest allocation and the shortfall.
+    """
     offby = []
     total_shortfalls = []
 
     for allocation in allocations:
         shortfall = [
-            max(0, required_groups[0] - allocation[0][0]),  # 5-person shortfall
-            max(0, required_groups[1] - allocation[0][1])   # 6-person shortfall
+            max(0, required_groups[0] - allocation[0][0]),  # Shortfall of 5-person groups
+            max(0, required_groups[1] - allocation[0][1])   # Shortfall of 6-person groups
         ]
         offby.append(shortfall)
         total_shortfalls.append(sum(shortfall))
@@ -101,5 +111,10 @@ def closestalg(required_groups, allocations):
     min_shortfall = min(total_shortfalls)
     best_indices = [i for i, total in enumerate(total_shortfalls) if total == min_shortfall]
 
-    # Return all tied allocations
-    return [allocations[best_indices[0]], offby[best_indices[0]]]
+    # If there's a tie, choose the allocation with the most 6-person groups
+    if len(best_indices) > 1:
+        best_indices.sort(key=lambda i: allocations[i][0][1], reverse=True)  # Sort by 6-person groups
+
+    # Return the best allocation
+    best_index = best_indices[0]
+    return [allocations[best_index], offby[best_index]]
