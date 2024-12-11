@@ -77,8 +77,8 @@
             </p>
             <h3>Allocation Details</h3>
             <ul>
-                {% for i, assignment in enumerate(results[0][1]) %}
-                    <li>Vehicle {{ i + 1 }}: {{ assignment[0] }} 5-person groups, {{ assignment[1] }} 6-person groups</li>
+                {% for assignment in results[0][1] %}
+                    <li>Vehicle {{ loop.index }}: {{ assignment[0] }} 5-person groups, {{ assignment[1] }} 6-person groups</li>
                 {% endfor %}
             </ul>
             <h3>Remaining Spaces</h3>
@@ -88,6 +88,8 @@
                 {% endfor %}
             </ul>
         </div>
+    {% else %}
+        <p>No results to display. Please check your input and try again.</p>
     {% endif %}
 </div>
 </body>
