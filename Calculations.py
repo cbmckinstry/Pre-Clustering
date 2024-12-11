@@ -10,8 +10,34 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups):
     if not isinstance(six_person_groups, int) or six_person_groups < 0:
         raise ValueError("Six-person groups must be a non-negative integer.")
 
-def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers):
+def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers, sort_order="none"):
+    """
+    Allocate groups to vehicles based on capacities and group sizes.
+
+    Parameters:
+        vehicle_capacities (list[int]): List of vehicle capacities.
+        five_person_groups (int): Number of 5-person groups.
+        six_person_groups (int): Number of 6-person groups.
+        vers (int): Determines whether to prioritize 6-person or 5-person groups.
+        sort_order (str): Sorting order for vehicle capacities. Options: "none", "asc", "desc".
+
+    Returns:
+        list: [totals, vehicle_assignments, space_remaining], in original input order.
+    """
     validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
+
+    # Store original indices for restoring order
+    original_indices = list(range(len(vehicle_capacities)))
+
+    # Apply sorting based on `sort_order`
+    if sort_order == "asc":
+        sorted_data = sorted(zip(vehicle_capacities, original_indices))
+        vehicle_capacities, original_indices = zip(*sorted_data)
+    elif sort_order == "desc":
+        sorted_data = sorted(zip(vehicle_capacities, original_indices), reverse=True)
+        vehicle_capacities, original_indices = zip(*sorted_data)
+
+    vehicle_capacities = list(vehicle_capacities)  # Ensure it is mutable
 
     vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
     totals = [0, 0]  # Total [5-person, 6-person] groups assigned
@@ -55,11 +81,41 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
             break
 
     # Remaining space in each vehicle
-    space_remaining = vehicle_capacities[:]
+    space_remaining = list(vehicle_capacities)
+
+    # Restore original order of outputs
+    restored_order = sorted(zip(original_indices, vehicle_assignments, space_remaining), key=lambda x: x[0])
+    vehicle_assignments = [x[1] for x in restored_order]
+    space_remaining = [x[2] for x in restored_order]
 
     return [totals, vehicle_assignments, space_remaining]
 
-def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups):
+def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none"):
+    """
+    Simultaneously allocate 5-person and 6-person groups to vehicles based on capacities.
+
+    Parameters:
+        vehicle_capacities (list[int]): List of vehicle capacities.
+        five_person_groups (int): Number of 5-person groups.
+        six_person_groups (int): Number of 6-person groups.
+        sort_order (str): Sorting order for vehicle capacities. Options: "none", "asc", "desc".
+
+    Returns:
+        list: [totals, vehicle_assignments, space_remaining], in original input order.
+    """
+    # Store original indices for restoring order
+    original_indices = list(range(len(vehicle_capacities)))
+
+    # Apply sorting based on `sort_order`
+    if sort_order == "asc":
+        sorted_data = sorted(zip(vehicle_capacities, original_indices))
+        vehicle_capacities, original_indices = zip(*sorted_data)
+    elif sort_order == "desc":
+        sorted_data = sorted(zip(vehicle_capacities, original_indices), reverse=True)
+        vehicle_capacities, original_indices = zip(*sorted_data)
+
+    vehicle_capacities = list(vehicle_capacities)  # Ensure it is mutable
+
     vehicle_assignments = [[0, 0] for _ in vehicle_capacities]  # [5-person, 6-person]
     totals = [0, 0]  # Total [5-person groups, 6-person groups] assigned
 
@@ -109,7 +165,12 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
             break
 
     # Remaining space in each vehicle
-    space_remaining = vehicle_capacities[:]
+    space_remaining = list(vehicle_capacities)
+
+    # Restore original order of outputs
+    restored_order = sorted(zip(original_indices, vehicle_assignments, space_remaining), key=lambda x: x[0])
+    vehicle_assignments = [x[1] for x in restored_order]
+    space_remaining = [x[2] for x in restored_order]
 
     return [totals, vehicle_assignments, space_remaining]
 
@@ -137,15 +198,15 @@ def closestalg(required_groups, allocations):
     # Return the best allocation
     best_index = best_indices[0]
     return [allocations[best_index], offby[best_index]]
-capacity=[23, 12, 14, 15, 11, 7, 7, 8, 5, 5]
+capacity=[23, 12, 14, 15, 11, 7, 7, 8, 5, 5,8,12,13,14,19,12,38,22,14,16,19,22,13]
 cap1=capacity.copy()
 cap2=capacity.copy()
 cap3=capacity.copy()
 cap4=capacity.copy()
 cap5=capacity.copy()
 cap6=capacity.copy()
-five=5
-six=13
+five=28
+six=30
 print(allocate_groups(cap1,five,six,0))
 print(allocate_groups(cap2,five,six,1))
 print(allocate_groups_simultaneous(cap5,five,six))
