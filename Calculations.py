@@ -86,19 +86,20 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
     return [totals, vehicle_assignments, space_remaining]
 
 def closestalg(required_groups, allocations):
-    logging.debug(f"Required groups: {required_groups}")
-    logging.debug(f"Allocations: {allocations}")
-
     offby = []
     total_shortfalls = []
 
     for allocation in allocations:
         shortfall = [
-            max(0, required_groups[0] - allocation[0][0]),
-            max(0, required_groups[1] - allocation[0][1])
+            max(0, required_groups[0] - allocation[0][0]),  # 5-person shortfall
+            max(0, required_groups[1] - allocation[0][1])   # 6-person shortfall
         ]
         offby.append(shortfall)
         total_shortfalls.append(sum(shortfall))
 
-    min_index = total_shortfalls.index(min(total_shortfalls))
-    return [allocations[min_index], offby[min_index]]
+    # Find the minimum shortfall
+    min_shortfall = min(total_shortfalls)
+    best_indices = [i for i, total in enumerate(total_shortfalls) if total == min_shortfall]
+
+    # Return all tied allocations
+    return [allocations[best_indices[0]], offby[best_indices[0]]]

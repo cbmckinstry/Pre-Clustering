@@ -71,7 +71,10 @@
     {% if results %}
         <div class="results-section">
             <h2>Best Allocation</h2>
-            <p><strong>Shortfall:</strong> 5-person groups: {{ results[1][0] }}, 6-person groups: {{ results[1][1] }}</p>
+            <p><strong>Shortfall:</strong>
+                5-person groups: {{ results[1][0] }},
+                6-person groups: {{ results[1][1] }}
+            </p>
             <h3>Allocation Details</h3>
             <ul>
                 {% for i, assignment in enumerate(results[0][1]) %}
