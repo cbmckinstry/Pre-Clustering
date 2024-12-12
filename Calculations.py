@@ -183,6 +183,6 @@ cap5=capacity.copy()
 cap6=capacity.copy()
 five=28
 six=30
-print(allocate_groups(cap1,five,six,0))
-print(allocate_groups(cap2,five,six,1))
-print(allocate_groups_simultaneous(cap5,five,six))
+#print(allocate_groups(cap1,five,six,0))
+#print(allocate_groups(cap2,five,six,1))
+#print(allocate_groups_simultaneous(cap5,five,six))

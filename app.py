@@ -30,13 +30,23 @@ def index():
 
             # Perform calculations
             allocation1 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0)
+            allocation3 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"asc")
+            allocation4 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"desc")
             allocation2 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1)
+            allocation5 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"asc")
+            allocation6 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"desc")
             simultaneous_allocation = Calculations.allocate_groups_simultaneous(
                 vehlist[:], pers5, pers6
             )
+            simultaneous_allocation1 = Calculations.allocate_groups_simultaneous(
+                vehlist[:], pers5, pers6, "asc"
+            )
+            simultaneous_allocation2 = Calculations.allocate_groups_simultaneous(
+                vehlist[:], pers5, pers6, "desc"
+            )
 
             results = Calculations.closestalg(
-                [pers5, pers6], [allocation1, allocation2, simultaneous_allocation]
+                [pers5, pers6], [allocation1, allocation2, simultaneous_allocation, simultaneous_allocation1, allocation3, allocation5, allocation4, allocation6, simultaneous_allocation2]
             )
 
             # Ensure results are valid
