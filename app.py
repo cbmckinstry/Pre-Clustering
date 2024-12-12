@@ -31,11 +31,13 @@ def index():
             for priority in range(2):
                 for order in [None, "asc", "desc"]:
                     for opt2 in [False, True]:
-                        allocations.append(Calculations.allocate_groups(vehlist[:].copy(), pers5, pers6, priority, order, opt2))
+                        for opt1 in [False, True]:
+                            allocations.append(Calculations.allocate_groups(vehlist[:].copy(), pers5, pers6, priority, order, opt2, opt1))
 
             for order in [None, "asc", "desc"]:
                 for opt2 in [False, True]:
-                    allocations.append(Calculations.allocate_groups_simultaneous(vehlist[:].copy(), pers5, pers6, order, opt2))
+                    for opt1 in [False,True]:
+                        allocations.append(Calculations.allocate_groups_simultaneous(vehlist[:].copy(), pers5, pers6, order, opt2, opt1))
 
             results = Calculations.closestalg([pers5, pers6], allocations)
 
