@@ -10,7 +10,7 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups):
     if not isinstance(six_person_groups, int) or six_person_groups < 0:
         raise ValueError("Six-person groups must be a non-negative integer.")
 
-def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers, sort_order="none", fill_before_next=False, minimize_remainder=False):
+def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers, sort_order="none", minimize_remainder=False):
     validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
 
     original_indices = list(range(len(vehicle_capacities)))
@@ -57,8 +57,6 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
             vehicle_capacities[vehicle_idx] -= group_size
             group_count -= 1
             progress = True
-            if fill_before_next:
-                return group_count, progress
 
         return group_count, progress
 
@@ -84,8 +82,6 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
             vehicle_capacities[vehicle_idx] -= group_size
             group_count -= 1
             progress = True
-            if fill_before_next:
-                return group_count, progress
 
         return group_count, progress
 
@@ -110,7 +106,7 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
 
     return [totals, vehicle_assignments, space_remaining]
 
-def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none", fill_before_next=False, minimize_remainder=False):
+def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none",  minimize_remainder=False):
     original_indices = list(range(len(vehicle_capacities)))
 
     # Apply sorting based on `sort_order`
@@ -175,9 +171,6 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
                 five_person_groups -= 1
 
             progress = True
-            if fill_before_next:
-                # Focus on filling one vehicle completely
-                break
 
         if not progress:
             break
