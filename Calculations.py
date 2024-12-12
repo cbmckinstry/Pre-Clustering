@@ -104,7 +104,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
     current_vehicle = 0  # Start with the first vehicle
 
     while five_person_groups > 0 or six_person_groups > 0:
-        progress = False
+        global_progress = False
 
         if fill_before_next:
             # Start with the vehicle with the smallest remainder if minimize_remainder is True
@@ -124,6 +124,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
 
             # Fill the selected vehicle completely
             while vehicle_capacities[current_vehicle] >= 5 and (five_person_groups > 0 or six_person_groups > 0):
+                progress_in_vehicle = False
                 remainder_5 = vehicle_capacities[current_vehicle] % 5 if five_person_groups > 0 else float('inf')
                 remainder_6 = vehicle_capacities[current_vehicle] % 6 if six_person_groups > 0 else float('inf')
 
@@ -132,13 +133,18 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
                     totals[1] += 1
                     vehicle_capacities[current_vehicle] -= 6
                     six_person_groups -= 1
+                    progress_in_vehicle = True
                 elif five_person_groups > 0 and vehicle_capacities[current_vehicle] >= 5:
                     vehicle_assignments[current_vehicle][0] += 1
                     totals[0] += 1
                     vehicle_capacities[current_vehicle] -= 5
                     five_person_groups -= 1
-                else:
+                    progress_in_vehicle = True
+
+                if not progress_in_vehicle:
                     break
+
+                global_progress = True
 
             current_vehicle = (current_vehicle + 1) % len(vehicle_capacities)  # Move to the next vehicle
         else:
@@ -187,10 +193,10 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
                     vehicle_capacities[vehicle_idx] -= 5
                     five_person_groups -= 1
 
-                progress = True
+                global_progress = True
 
-            if not progress:
-                break
+        if not global_progress:
+            break
 
     space_remaining = list(vehicle_capacities)
     restored_order = sorted(zip(original_indices, vehicle_assignments, space_remaining), key=lambda x: x[0])
@@ -198,6 +204,8 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
     space_remaining = [x[2] for x in restored_order]
 
     return [totals, vehicle_assignments, space_remaining]
+
+
 
 def closestalg(required_groups, allocations):
     offby = []
