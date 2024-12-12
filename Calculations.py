@@ -10,7 +10,7 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups):
     if not isinstance(six_person_groups, int) or six_person_groups < 0:
         raise ValueError("Six-person groups must be a non-negative integer.")
 
-def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers, sort_order="none", fill_before_next=False):
+def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, vers, sort_order="none", fill_before_next=False, minimize_remainder=False):
     validate_inputs(vehicle_capacities, five_person_groups, six_person_groups)
 
     original_indices = list(range(len(vehicle_capacities)))
@@ -35,31 +35,71 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
         primary_groups, secondary_groups = five_person_groups, six_person_groups
 
     # Function to distribute groups
-    def distribute_groups(group_count, group_size, index_list):
+    def distribute_primary_groups(group_count, group_size, index_list):
         progress = False
+        best_choice = None  # To store the best vehicle and group size
+
         for i in index_list:
-            if group_count > 0 and vehicle_capacities[i] >= group_size:
-                vehicle_assignments[i][group_size == 6] += 1
-                totals[group_size == 6] += 1
-                vehicle_capacities[i] -= group_size
-                group_count -= 1
-                progress = True
-                if fill_before_next:
-                    # Break early to focus on one vehicle
-                    break
+            if vehicle_capacities[i] < group_size:
+                continue
+
+            if minimize_remainder:
+                remainder = (vehicle_capacities[i] - group_size) % group_size
+                if best_choice is None or remainder < best_choice[2]:
+                    best_choice = (i, group_size, remainder)
+            else:
+                best_choice = (i, group_size, 0)
+
+        if best_choice:
+            vehicle_idx, group_size, _ = best_choice
+            vehicle_assignments[vehicle_idx][group_size == 6] += 1
+            totals[group_size == 6] += 1
+            vehicle_capacities[vehicle_idx] -= group_size
+            group_count -= 1
+            progress = True
+            if fill_before_next:
+                return group_count, progress
+
+        return group_count, progress
+
+    def distribute_secondary_groups(group_count, group_size, index_list):
+        progress = False
+        best_choice = None  # To store the best vehicle and group size
+
+        for i in index_list:
+            if vehicle_capacities[i] < group_size:
+                continue
+
+            if minimize_remainder:
+                remainder = (vehicle_capacities[i] - group_size) % group_size
+                if best_choice is None or remainder < best_choice[2]:
+                    best_choice = (i, group_size, remainder)
+            else:
+                best_choice = (i, group_size, 0)
+
+        if best_choice:
+            vehicle_idx, group_size, _ = best_choice
+            vehicle_assignments[vehicle_idx][group_size == 6] += 1
+            totals[group_size == 6] += 1
+            vehicle_capacities[vehicle_idx] -= group_size
+            group_count -= 1
+            progress = True
+            if fill_before_next:
+                return group_count, progress
+
         return group_count, progress
 
     vehicle_indices = list(range(len(vehicle_capacities)))
 
-    # Distribute primary groups
+    # Distribute primary groups first
     while primary_groups > 0:
-        primary_groups, progress = distribute_groups(primary_groups, primary_size, vehicle_indices)
+        primary_groups, progress = distribute_primary_groups(primary_groups, primary_size, vehicle_indices)
         if not progress:
             break
 
     # Distribute secondary groups
     while secondary_groups > 0:
-        secondary_groups, progress = distribute_groups(secondary_groups, secondary_size, vehicle_indices)
+        secondary_groups, progress = distribute_secondary_groups(secondary_groups, secondary_size, vehicle_indices)
         if not progress:
             break
 
@@ -70,7 +110,7 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
 
     return [totals, vehicle_assignments, space_remaining]
 
-def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none", fill_before_next=False):
+def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none", fill_before_next=False, minimize_remainder=False):
     original_indices = list(range(len(vehicle_capacities)))
 
     # Apply sorting based on `sort_order`
@@ -89,44 +129,55 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
 
     while five_person_groups > 0 or six_person_groups > 0:
         progress = False
+        best_choice = None  # To store the best vehicle and group size
 
-        for i in vehicle_indices:
-            if vehicle_capacities[i] < 5:
+        for i, capacity in enumerate(vehicle_capacities):
+            if capacity < 5:
                 continue
 
-            can_place_6 = vehicle_capacities[i] >= 6 and six_person_groups > 0
-            can_place_5 = vehicle_capacities[i] >= 5 and five_person_groups > 0
+            if minimize_remainder:
+                # Check remainder for placing a 6-person group
+                if capacity >= 6 and six_person_groups > 0:
+                    remainder_6 = (capacity - 6) % 6
+                    if best_choice is None or remainder_6 < best_choice[2]:
+                        best_choice = (i, 6, remainder_6)
 
-            if can_place_6 and can_place_5:
-                if (vehicle_capacities[i] - 6) % 6 <= (vehicle_capacities[i] - 5) % 5:
-                    vehicle_assignments[i][1] += 1
-                    totals[1] += 1
-                    vehicle_capacities[i] -= 6
-                    six_person_groups -= 1
-                else:
-                    vehicle_assignments[i][0] += 1
-                    totals[0] += 1
-                    vehicle_capacities[i] -= 5
-                    five_person_groups -= 1
-                progress = True
-                if fill_before_next:
-                    break
-            elif can_place_6:
-                vehicle_assignments[i][1] += 1
+                # Check remainder for placing a 5-person group
+                if capacity >= 5 and five_person_groups > 0:
+                    remainder_5 = (capacity - 5) % 5
+                    if best_choice is None or remainder_5 < best_choice[2]:
+                        best_choice = (i, 5, remainder_5)
+            else:
+                can_place_6 = capacity >= 6 and six_person_groups > 0
+                can_place_5 = capacity >= 5 and five_person_groups > 0
+
+                if can_place_6 and can_place_5:
+                    if (capacity - 6) % 6 <= (capacity - 5) % 5:
+                        best_choice = (i, 6, (capacity - 6) % 6)
+                    else:
+                        best_choice = (i, 5, (capacity - 5) % 5)
+                elif can_place_6:
+                    best_choice = (i, 6, (capacity - 6) % 6)
+                elif can_place_5:
+                    best_choice = (i, 5, (capacity - 5) % 5)
+
+        if best_choice:
+            vehicle_idx, group_size, _ = best_choice
+            if group_size == 6:
+                vehicle_assignments[vehicle_idx][1] += 1
                 totals[1] += 1
-                vehicle_capacities[i] -= 6
+                vehicle_capacities[vehicle_idx] -= 6
                 six_person_groups -= 1
-                progress = True
-                if fill_before_next:
-                    break
-            elif can_place_5:
-                vehicle_assignments[i][0] += 1
+            else:
+                vehicle_assignments[vehicle_idx][0] += 1
                 totals[0] += 1
-                vehicle_capacities[i] -= 5
+                vehicle_capacities[vehicle_idx] -= 5
                 five_person_groups -= 1
-                progress = True
-                if fill_before_next:
-                    break
+
+            progress = True
+            if fill_before_next:
+                # Focus on filling one vehicle completely
+                break
 
         if not progress:
             break
@@ -137,6 +188,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
     space_remaining = [x[2] for x in restored_order]
 
     return [totals, vehicle_assignments, space_remaining]
+
 
 
 def closestalg(required_groups, allocations):

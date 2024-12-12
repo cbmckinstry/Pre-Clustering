@@ -31,21 +31,35 @@ def index():
             # Perform calculations
             allocation1 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0)
             allocation7 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"none",True)
+            allocation13 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"none",False,True)
+            allocation14 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"none",True,True)
+
             allocation3 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"asc")
             allocation8 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"asc",True)
             allocation4 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"desc")
             allocation9 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 0,"desc",True)
+
             allocation2 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1)
             allocation10 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"none",True)
+            allocation15 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"none",False,True)
+            allocation16 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"none",True,True)
+
             allocation5 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"asc")
             allocation11 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"asc",True)
             allocation6 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"desc")
             allocation12 = Calculations.allocate_groups(vehlist[:], pers5, pers6, 1,"desc",True)
+
             simultaneous_allocation = Calculations.allocate_groups_simultaneous(
                 vehlist[:], pers5, pers6
             )
             simultaneous_allocation3 = Calculations.allocate_groups_simultaneous(
                 vehlist[:], pers5, pers6,"none",True
+            )
+            simultaneous_allocation6 = Calculations.allocate_groups_simultaneous(
+                vehlist[:], pers5, pers6,"none",False,True
+            )
+            simultaneous_allocation7 = Calculations.allocate_groups_simultaneous(
+                vehlist[:], pers5, pers6,"none",True,True
             )
             simultaneous_allocation1 = Calculations.allocate_groups_simultaneous(
                 vehlist[:], pers5, pers6, "asc"
@@ -61,7 +75,7 @@ def index():
             )
 
             results = Calculations.closestalg(
-                [pers5, pers6], [allocation1, allocation2, simultaneous_allocation, simultaneous_allocation1, allocation3, allocation5, allocation4, allocation6, simultaneous_allocation2,allocation7,allocation8,allocation9,allocation10,allocation11,allocation12,simultaneous_allocation3,simultaneous_allocation4,simultaneous_allocation5]
+                [pers5, pers6], [allocation1, allocation2, simultaneous_allocation, simultaneous_allocation1, allocation3, allocation5, allocation4, allocation6, simultaneous_allocation2,allocation7,allocation8,allocation9,allocation10,allocation11,allocation12,allocation13,allocation14,allocation15,allocation16,simultaneous_allocation3,simultaneous_allocation4,simultaneous_allocation5,simultaneous_allocation6,simultaneous_allocation7]
             )
 
             # Ensure results are valid
