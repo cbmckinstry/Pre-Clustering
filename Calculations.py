@@ -57,9 +57,9 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
 
     current_vehicle = 0
 
-    # Distribute primary groups
+    # Distribute primary and secondary groups
     while primary_groups > 0 or secondary_groups > 0:
-        progress_made = False
+        progress_in_iteration = False  # Track progress for the entire iteration
 
         if minimize_remainder:
             if fill_before_next:
@@ -85,7 +85,7 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
                         primary_groups -= 1
                     else:
                         secondary_groups -= 1
-                    progress_made = True
+                    progress_in_iteration = True
 
             else:
                 # Find the best vehicle and place one group
@@ -109,56 +109,47 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
                         primary_groups -= 1
                     else:
                         secondary_groups -= 1
-                    progress_made = True
+                    progress_in_iteration = True
 
         else:
             if fill_before_next:
                 # Sequentially fill each vehicle
-                if current_vehicle >= len(vehicle_capacities):
-                    current_vehicle = 0
+                for current_vehicle in range(len(vehicle_capacities)):
+                    while vehicle_capacities[current_vehicle] >= primary_size and primary_groups > 0:
+                        vehicle_assignments[current_vehicle][primary_size == 6] += 1
+                        totals[primary_size == 6] += 1
+                        vehicle_capacities[current_vehicle] -= primary_size
+                        primary_groups -= 1
+                        progress_in_iteration = True
 
-                while vehicle_capacities[current_vehicle] >= primary_size and primary_groups > 0:
-                    vehicle_assignments[current_vehicle][primary_size == 6] += 1
-                    totals[primary_size == 6] += 1
-                    vehicle_capacities[current_vehicle] -= primary_size
-                    primary_groups -= 1
-                    progress_made = True
-
-                while vehicle_capacities[current_vehicle] >= secondary_size and secondary_groups > 0:
-                    vehicle_assignments[current_vehicle][secondary_size == 6] += 1
-                    totals[secondary_size == 6] += 1
-                    vehicle_capacities[current_vehicle] -= secondary_size
-                    secondary_groups -= 1
-                    progress_made = True
-
-                current_vehicle += 1
+                    while vehicle_capacities[current_vehicle] >= secondary_size and secondary_groups > 0:
+                        vehicle_assignments[current_vehicle][secondary_size == 6] += 1
+                        totals[secondary_size == 6] += 1
+                        vehicle_capacities[current_vehicle] -= secondary_size
+                        secondary_groups -= 1
+                        progress_in_iteration = True
             else:
                 # Sequentially place one group per vehicle
-                if current_vehicle >= len(vehicle_capacities):
-                    current_vehicle = 0
-
-                if vehicle_capacities[current_vehicle] >= primary_size and primary_groups > 0:
-                    group_size = primary_size
-                elif vehicle_capacities[current_vehicle] >= secondary_size and secondary_groups > 0:
-                    group_size = secondary_size
-                else:
-                    current_vehicle += 1
-                    continue
-
-                if vehicle_capacities[current_vehicle] >= group_size:
-                    vehicle_assignments[current_vehicle][group_size == 6] += 1
-                    totals[group_size == 6] += 1
-                    vehicle_capacities[current_vehicle] -= group_size
-                    if group_size == primary_size:
-                        primary_groups -= 1
+                for current_vehicle in range(len(vehicle_capacities)):
+                    if vehicle_capacities[current_vehicle] >= primary_size and primary_groups > 0:
+                        group_size = primary_size
+                    elif vehicle_capacities[current_vehicle] >= secondary_size and secondary_groups > 0:
+                        group_size = secondary_size
                     else:
-                        secondary_groups -= 1
-                    progress_made = True
+                        continue
 
-                current_vehicle += 1
+                    if vehicle_capacities[current_vehicle] >= group_size:
+                        vehicle_assignments[current_vehicle][group_size == 6] += 1
+                        totals[group_size == 6] += 1
+                        vehicle_capacities[current_vehicle] -= group_size
+                        if group_size == primary_size:
+                            primary_groups -= 1
+                        else:
+                            secondary_groups -= 1
+                        progress_in_iteration = True
 
-        if not progress_made and not can_place_any_group():
-            # Terminate if no progress is made and no group can fit in any vehicle
+        if not progress_in_iteration:
+            # Terminate if no progress is made in a full iteration
             break
 
     # Restore original order and prepare output
@@ -168,7 +159,6 @@ def allocate_groups(vehicle_capacities, five_person_groups, six_person_groups, v
     space_remaining = [x[2] for x in restored_order]
 
     return [totals, vehicle_assignments, space_remaining]
-
 
 def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_person_groups, sort_order="none", minimize_remainder=False, fill_before_next=False):
     # Validate and sort vehicle capacities based on `sort_order`
