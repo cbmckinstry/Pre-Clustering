@@ -199,7 +199,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
 
     # Distribute groups based on minimize_remainder and fill_before_next
     while five_person_groups > 0 or six_person_groups > 0:
-        progress_made = False  # Track progress in each iteration
+        progress_in_iteration = False  # Track progress for the entire iteration
 
         if minimize_remainder:
             if fill_before_next:
@@ -227,7 +227,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
                         six_person_groups -= 1
                     else:
                         five_person_groups -= 1
-                    progress_made = True
+                    progress_in_iteration = True
 
                 while vehicle_capacities[best_vehicle] >= secondary_group_size and (six_person_groups > 0 if secondary_group_size == 6 else five_person_groups > 0):
                     vehicle_assignments[best_vehicle][secondary_group_size == 6] += 1
@@ -237,7 +237,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
                         six_person_groups -= 1
                     else:
                         five_person_groups -= 1
-                    progress_made = True
+                    progress_in_iteration = True
             else:
                 # Find the best vehicle and place one group
                 best_vehicle_6 = find_best_vehicle(6) if six_person_groups > 0 else None
@@ -260,60 +260,47 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
                         six_person_groups -= 1
                     else:
                         five_person_groups -= 1
-                    progress_made = True
+                    progress_in_iteration = True
 
         else:
             if fill_before_next:
                 # Sequentially fill each vehicle
-                if current_vehicle >= len(vehicle_capacities):
-                    current_vehicle = 0
+                for current_vehicle in range(len(vehicle_capacities)):
+                    while vehicle_capacities[current_vehicle] >= 6 and six_person_groups > 0:
+                        vehicle_assignments[current_vehicle][1] += 1
+                        totals[1] += 1
+                        vehicle_capacities[current_vehicle] -= 6
+                        six_person_groups -= 1
+                        progress_in_iteration = True
 
-                # Fill with the primary group size first
-                while vehicle_capacities[current_vehicle] >= 6 and six_person_groups > 0:
-                    vehicle_assignments[current_vehicle][1] += 1
-                    totals[1] += 1
-                    vehicle_capacities[current_vehicle] -= 6
-                    six_person_groups -= 1
-                    progress_made = True
-
-                while vehicle_capacities[current_vehicle] >= 5 and five_person_groups > 0:
-                    vehicle_assignments[current_vehicle][0] += 1
-                    totals[0] += 1
-                    vehicle_capacities[current_vehicle] -= 5
-                    five_person_groups -= 1
-                    progress_made = True
-
-                current_vehicle += 1
+                    while vehicle_capacities[current_vehicle] >= 5 and five_person_groups > 0:
+                        vehicle_assignments[current_vehicle][0] += 1
+                        totals[0] += 1
+                        vehicle_capacities[current_vehicle] -= 5
+                        five_person_groups -= 1
+                        progress_in_iteration = True
             else:
                 # Sequentially place one group per vehicle
-                if current_vehicle >= len(vehicle_capacities):
-                    current_vehicle = 0
-
-                remainder_5 = vehicle_capacities[current_vehicle] % 5 if five_person_groups > 0 and vehicle_capacities[current_vehicle] >= 5 else float('inf')
-                remainder_6 = vehicle_capacities[current_vehicle] % 6 if six_person_groups > 0 and vehicle_capacities[current_vehicle] >= 6 else float('inf')
-
-                if remainder_5 < remainder_6 and five_person_groups > 0:
-                    group_size = 5
-                elif six_person_groups > 0:
-                    group_size = 6
-                else:
-                    current_vehicle += 1
-                    continue
-
-                if vehicle_capacities[current_vehicle] >= group_size:
-                    vehicle_assignments[current_vehicle][group_size == 6] += 1
-                    totals[group_size == 6] += 1
-                    vehicle_capacities[current_vehicle] -= group_size
-                    if group_size == 6:
-                        six_person_groups -= 1
+                for current_vehicle in range(len(vehicle_capacities)):
+                    if vehicle_capacities[current_vehicle] >= 6 and six_person_groups > 0:
+                        group_size = 6
+                    elif vehicle_capacities[current_vehicle] >= 5 and five_person_groups > 0:
+                        group_size = 5
                     else:
-                        five_person_groups -= 1
-                    progress_made = True
+                        continue
 
-                current_vehicle += 1
+                    if vehicle_capacities[current_vehicle] >= group_size:
+                        vehicle_assignments[current_vehicle][group_size == 6] += 1
+                        totals[group_size == 6] += 1
+                        vehicle_capacities[current_vehicle] -= group_size
+                        if group_size == 6:
+                            six_person_groups -= 1
+                        else:
+                            five_person_groups -= 1
+                        progress_in_iteration = True
 
-        if not progress_made and not can_place_any_group():
-            # Terminate if no progress is made and no group can fit in any vehicle
+        if not progress_in_iteration:
+            # Terminate if no progress is made in a full iteration
             break
 
     # Restore original order and prepare output
@@ -323,6 +310,7 @@ def allocate_groups_simultaneous(vehicle_capacities, five_person_groups, six_per
     space_remaining = [x[2] for x in restored_order]
 
     return [totals, vehicle_assignments, space_remaining]
+
 
 
 def closestalg(required_groups, allocations):
