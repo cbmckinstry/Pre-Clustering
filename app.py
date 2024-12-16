@@ -27,7 +27,7 @@ def index():
             pers6 = int(pers6_input) if pers6_input else 0
 
             Calculations.validate_inputs(vehlist, pers5, pers6)
-            allocations=[]
+            allocations = []
             for priority in range(2):
                 for order in [None, "asc", "desc"]:
                     for opt2 in [False, True]:
@@ -36,7 +36,7 @@ def index():
 
             for order in [None, "asc", "desc"]:
                 for opt2 in [False, True]:
-                    for opt1 in [False,True]:
+                    for opt1 in [False, True]:
                         allocations.append(Calculations.allocate_groups_simultaneous(vehlist[:].copy(), pers5, pers6, order, opt2, opt1))
 
             results = Calculations.closestalg([pers5, pers6], allocations)
@@ -45,10 +45,15 @@ def index():
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
+            # Sort the results using the new sort_closestalg_output function
+            sorted_allocations, sorted_spaces = Calculations.sort_closestalg_output(results)
+
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
             session["results"] = results
+            session["sorted_allocations"] = sorted_allocations
+            session["sorted_spaces"] = sorted_spaces
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -60,6 +65,8 @@ def index():
                 pers5=pers5_input,
                 pers6=pers6_input,
                 results=None,
+                sorted_allocations=None,
+                sorted_spaces=None
             )
 
     return render_template(
@@ -68,5 +75,7 @@ def index():
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         results=session.get("results"),
+        sorted_allocations=session.get("sorted_allocations"),
+        sorted_spaces=session.get("sorted_spaces"),
         error_message=None,
     )
