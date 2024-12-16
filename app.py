@@ -45,15 +45,10 @@ def index():
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
-            # Sort the results using the new sort_closestalg_output function
-            sorted_allocations, sorted_spaces = Calculations.sort_closestalg_output(results)
-
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
-            session["results"] = results
-            session["sorted_allocations"] = sorted_allocations
-            session["sorted_spaces"] = sorted_spaces
+            session["results"] = Calculations.sort_closestalg_output(results)
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -64,9 +59,7 @@ def index():
                 vehlist=vehlist_input,
                 pers5=pers5_input,
                 pers6=pers6_input,
-                results=None,
-                sorted_allocations=None,
-                sorted_spaces=None
+                results=None
             )
 
     return render_template(
@@ -75,7 +68,5 @@ def index():
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         results=session.get("results"),
-        sorted_allocations=session.get("sorted_allocations"),
-        sorted_spaces=session.get("sorted_spaces"),
-        error_message=None,
+        error_message=None
     )
