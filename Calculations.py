@@ -339,3 +339,19 @@ def closestalg(required_groups, allocations):
     # Return the best allocation
     best_index = best_indices[0]
     return [allocations[best_index], offby[best_index]]
+
+def sort_closestalg_output(closestalg_output):
+    allocation, _ = closestalg_output  # Extract allocation and remaining spaces
+    remaining_spaces = allocation[2]
+
+    # Pair remaining spaces with allocations
+    paired = list(zip(remaining_spaces, allocation[1]))
+
+    # Sort paired list by remaining spaces in descending order
+    paired.sort(reverse=True, key=lambda x: x[0])
+
+    # Unzip the sorted pairs
+    sorted_remaining_spaces, sorted_allocations = zip(*paired)
+
+    # Return sorted allocations and remaining spaces
+    return list(sorted_allocations), list(sorted_remaining_spaces)
