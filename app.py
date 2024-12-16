@@ -39,7 +39,7 @@ def index():
                     for opt1 in [False,True]:
                         allocations.append(Calculations.allocate_groups_simultaneous(vehlist[:].copy(), pers5, pers6, order, opt2, opt1))
 
-            results = Calculations.sort_closestalg_output(Calculations.closestalg([pers5, pers6], allocations))
+            results = Calculations.closestalg([pers5, pers6], allocations)
 
             # Ensure results are valid
             if not results or not isinstance(results, list) or len(results) < 2:
