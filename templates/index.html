@@ -109,27 +109,37 @@
                 6-person groups: {{ results[1][1] }}
             </p>
         {% endif %}
-        <div class="columns">
-            <div class="column">
-                <h3>Allocation Details</h3>
-                <ul>
-                    {% for assignment in results[0][1] %}
-                        <li>Vehicle {{ loop.index }}:
-                            {{ assignment[0] }} 5-person groups,
-                            {{ assignment[1] }} 6-person groups
-                        </li>
-                    {% endfor %}
-                </ul>
+        {% if sorted_allocations and sorted_spaces %}
+            <div class="columns">
+                <div class="column">
+                    <h3>Vehicle Size</h3>
+                    <ul>
+                        {% for size in session.get("sorted_sizes", []) %}
+                            <li>Vehicle {{ loop.index }}: {{ size }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Allocation Details</h3>
+                    <ul>
+                        {% for assignment in sorted_allocations %}
+                            <li>Vehicle {{ loop.index }}:
+                                {{ assignment[0] }} 5-person groups,
+                                {{ assignment[1] }} 6-person groups
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Remaining Spaces</h3>
+                    <ul>
+                        {% for space in sorted_spaces %}
+                            <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <div class="column">
-                <h3>Remaining Spaces</h3>
-                <ul>
-                    {% for space in results[0][2] %}
-                        <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
+        {% endif %}
     {% else %}
         <p>No results to display. Please check your input and try again.</p>
     {% endif %}
