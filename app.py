@@ -48,7 +48,12 @@ def index():
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
-            session["results"] = Calculations.sort_closestalg_output(results)
+            session["results"] = results
+
+            sorted_allocations, sorted_spaces, sorted_sizes = Calculations.sort_closestalg_output(results)
+            session["sorted_allocations"] = sorted_allocations
+            session["sorted_spaces"] = sorted_spaces
+            session["sorted_sizes"] = sorted_sizes
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -59,7 +64,10 @@ def index():
                 vehlist=vehlist_input,
                 pers5=pers5_input,
                 pers6=pers6_input,
-                results=None
+                results=None,
+                sorted_allocations=None,
+                sorted_spaces=None,
+                sorted_sizes=None
             )
 
     return render_template(
@@ -68,5 +76,8 @@ def index():
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         results=session.get("results"),
-        error_message=None
+        sorted_allocations=session.get("sorted_allocations"),
+        sorted_spaces=session.get("sorted_spaces"),
+        sorted_sizes=session.get("sorted_sizes"),
+        error_message=None,
     )

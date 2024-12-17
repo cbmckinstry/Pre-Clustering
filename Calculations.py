@@ -343,15 +343,22 @@ def closestalg(required_groups, allocations):
 def sort_closestalg_output(closestalg_output):
     allocation, _ = closestalg_output  # Extract allocation and remaining spaces
     remaining_spaces = allocation[2]
+    allocations = allocation[1]
 
-    # Pair remaining spaces with allocations
-    paired = list(zip(remaining_spaces, allocation[1]))
+    # Calculate vehicle sizes dynamically
+    vehicle_sizes = [
+        remaining_space + (5 * allocation[0]) + (6 * allocation[1])
+        for remaining_space, allocation in zip(remaining_spaces, allocations)
+    ]
+
+    # Pair remaining spaces, allocations, and vehicle sizes
+    paired = list(zip(vehicle_sizes, remaining_spaces, allocations))
 
     # Sort paired list by remaining spaces in descending order
-    paired.sort(reverse=True, key=lambda x: x[0])
+    paired.sort(reverse=True, key=lambda x: x[1])
 
     # Unzip the sorted pairs
-    sorted_remaining_spaces, sorted_allocations = zip(*paired)
+    sorted_vehicle_sizes, sorted_remaining_spaces, sorted_allocations = zip(*paired)
 
-    # Return sorted allocations and remaining spaces
-    return list(sorted_allocations), list(sorted_remaining_spaces)
+    return [list(sorted_allocations), list(sorted_remaining_spaces), list(sorted_vehicle_sizes)]
+
