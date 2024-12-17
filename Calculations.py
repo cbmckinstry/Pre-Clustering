@@ -341,24 +341,48 @@ def closestalg(required_groups, allocations):
     return [allocations[best_index], offby[best_index]]
 
 def sort_closestalg_output(closestalg_output):
-    allocation, _ = closestalg_output  # Extract allocation and remaining spaces
-    remaining_spaces = allocation[2]
-    allocations = allocation[1]
+    """
+    Sorts the allocation output by remaining spaces while calculating vehicle sizes dynamically.
+
+    Args:
+        closestalg_output (list): Output from closestalg function.
+                                  Expected structure: [[totals, allocations, remaining_spaces], shortfall]
+
+    Returns:
+        tuple: (sorted_allocations, sorted_remaining_spaces, sorted_sizes)
+    """
+    # Safely extract the allocation details
+    try:
+        allocation = closestalg_output[0]  # First element contains totals, allocations, and remaining spaces
+        remaining_spaces = allocation[2]   # Remaining spaces in vehicles
+        allocations = allocation[1]        # Group allocations (5-person, 6-person)
+    except (IndexError, TypeError, ValueError) as e:
+        raise ValueError("Invalid closestalg_output structure") from e
 
     # Calculate vehicle sizes dynamically
-    vehicle_sizes = [
-        remaining_space + (5 * allocation[0]) + (6 * allocation[1])
-        for remaining_space, allocation in zip(remaining_spaces, allocations)
-    ]
+    vehicle_sizes = []
+    for remaining_space, assignment in zip(remaining_spaces, allocations):
+        size = remaining_space + (5 * assignment[0]) + (6 * assignment[1])
+        vehicle_sizes.append(size)
 
-    # Pair remaining spaces, allocations, and vehicle sizes
-    paired = list(zip(vehicle_sizes, remaining_spaces, allocations))
+    # Combine sizes, allocations, and remaining spaces into a list of tuples
+    combined_data = []
+    for i in range(len(remaining_spaces)):
+        combined_data.append((vehicle_sizes[i], allocations[i], remaining_spaces[i]))
 
-    # Sort paired list by remaining spaces in descending order
-    paired.sort(reverse=True, key=lambda x: x[1])
+    # Sort the combined data by remaining spaces in descending order
+    combined_data.sort(key=lambda x: x[2], reverse=True)
 
-    # Unzip the sorted pairs
-    sorted_vehicle_sizes, sorted_remaining_spaces, sorted_allocations = zip(*paired)
+    # Separate the sorted data into three lists
+    sorted_sizes = [entry[0] for entry in combined_data]
+    sorted_allocations = [entry[1] for entry in combined_data]
+    sorted_remaining_spaces = [entry[2] for entry in combined_data]
 
-    return [list(sorted_allocations), list(sorted_remaining_spaces), list(sorted_vehicle_sizes)]
+    return sorted_allocations, sorted_remaining_spaces, sorted_sizes
 
+optout=[[[2,2],[[1,1],[0,1],[1,1]],[1,2,3]],[1,1]]
+sorted_allocations, sorted_spaces, sorted_sizes = sort_closestalg_output(optout)
+combined_sorted_data = []
+for i in range(len(sorted_sizes)):
+    combined_sorted_data.append((sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]))
+print(combined_sorted_data)

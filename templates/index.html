@@ -109,36 +109,29 @@
                 6-person groups: {{ results[1][1] }}
             </p>
         {% endif %}
-        {% if sorted_allocations and sorted_spaces %}
-            <div class="columns">
-                <div class="column">
-                    <h3>Vehicle Size</h3>
-                    <ul>
-                        {% for size in session.get("sorted_sizes", []) %}
-                            <li>Vehicle {{ loop.index }}: {{ size }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="column">
-                    <h3>Allocation Details</h3>
-                    <ul>
-                        {% for assignment in sorted_allocations %}
-                            <li>Vehicle {{ loop.index }}:
-                                {{ assignment[0] }} 5-person groups,
-                                {{ assignment[1] }} 6-person groups
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="column">
-                    <h3>Remaining Spaces</h3>
-                    <ul>
-                        {% for space in sorted_spaces %}
-                            <li>Vehicle {{ loop.index }}: {{ space }} spaces remaining</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+        {% if sorted_allocations %}
+            <h2>Sorted Allocation</h2>
+            <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse; text-align: center;">
+                <thead>
+                <tr>
+                    <th>Vehicle Size</th>
+                    <th>Sorted Allocation Details</th>
+                    <th>Sorted Remaining Spaces</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for size, assignment, space in sorted_allocations %}
+                    <tr>
+                        <td>{{ size }}</td>
+                        <td>
+                            {{ assignment[0] }} 5-person groups, {{ assignment[1] }} 6-person groups
+                            {% if space == 0 %}<strong>(Full)</strong>{% endif %}
+                        </td>
+                        <td>{{ space }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     {% else %}
         <p>No results to display. Please check your input and try again.</p>

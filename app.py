@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session
 import logging
 from flask_session import Session
 import traceback
-import Calculations
+import Calculations  # Import your module
 
 # Configure Flask and Logging
 app = Flask(__name__)
@@ -11,7 +11,6 @@ app.config["SECRET_KEY"] = "supersecretkey"
 Session(app)
 
 logging.basicConfig(level=logging.DEBUG)
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -26,7 +25,10 @@ def index():
             pers5 = int(pers5_input) if pers5_input else 0
             pers6 = int(pers6_input) if pers6_input else 0
 
+            # Validate inputs
             Calculations.validate_inputs(vehlist, pers5, pers6)
+
+            # Generate allocations
             allocations = []
             for priority in range(2):
                 for order in [None, "asc", "desc"]:
@@ -39,21 +41,28 @@ def index():
                     for opt1 in [False, True]:
                         allocations.append(Calculations.allocate_groups_simultaneous(vehlist[:].copy(), pers5, pers6, order, opt2, opt1))
 
+            # Find the closest allocation
             results = Calculations.closestalg([pers5, pers6], allocations)
 
             # Ensure results are valid
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
+            sorted_allocations, sorted_spaces, sorted_sizes = Calculations.sort_closestalg_output(results)
+
+# Combine the sorted data into tuples of (size, allocation, space) for the template
+            combined_sorted_data = []
+            for i in range(len(sorted_sizes)):
+                combined_sorted_data.append((sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]))
+
+            session["sorted_allocations"] = combined_sorted_data
+
+
+# Store results in the session
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
             session["results"] = results
-
-            sorted_allocations, sorted_spaces, sorted_sizes = Calculations.sort_closestalg_output(results)
-            session["sorted_allocations"] = sorted_allocations
-            session["sorted_spaces"] = sorted_spaces
-            session["sorted_sizes"] = sorted_sizes
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -65,9 +74,7 @@ def index():
                 pers5=pers5_input,
                 pers6=pers6_input,
                 results=None,
-                sorted_allocations=None,
-                sorted_spaces=None,
-                sorted_sizes=None
+                sorted_allocations=None
             )
 
     return render_template(
@@ -77,7 +84,8 @@ def index():
         pers6=session.get("pers6", ""),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
-        sorted_spaces=session.get("sorted_spaces"),
-        sorted_sizes=session.get("sorted_sizes"),
         error_message=None,
     )
+
+if __name__ == "__main__":
+    app.run(debug=True)
