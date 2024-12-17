@@ -53,7 +53,7 @@ def index():
 # Combine the sorted data into tuples of (size, allocation, space) for the template
             combined_sorted_data = []
             for i in range(len(sorted_sizes)):
-                combined_sorted_data.append((sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]))
+                combined_sorted_data.append([sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]])
 
             session["sorted_allocations"] = combined_sorted_data
 

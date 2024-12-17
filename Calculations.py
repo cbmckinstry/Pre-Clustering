@@ -380,9 +380,9 @@ def sort_closestalg_output(closestalg_output):
 
     return sorted_allocations, sorted_remaining_spaces, sorted_sizes
 
-optout=[[[2,2],[[1,1],[0,1],[1,1]],[1,2,3]],[1,1]]
-sorted_allocations, sorted_spaces, sorted_sizes = sort_closestalg_output(optout)
-combined_sorted_data = []
-for i in range(len(sorted_sizes)):
-    combined_sorted_data.append((sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]))
-print(combined_sorted_data)
+#optout=[[[2,2],[[1,1],[0,1],[1,1]],[1,2,3]],[1,1]]
+#sorted_allocations, sorted_spaces, sorted_sizes = sort_closestalg_output(optout)
+#combined_sorted_data = []
+#for i in range(len(sorted_sizes)):
+#    combined_sorted_data.append([sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]])
+#print(combined_sorted_data)

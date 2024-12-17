@@ -120,18 +120,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for size, assignment, space in sorted_allocations %}
+                {% for entry in sorted_allocations %}
                     <tr>
-                        <td>{{ size }}</td>
+                        <td>{{ entry[0] }}</td> <!-- Vehicle size -->
                         <td>
-                            {{ assignment[0] }} 5-person groups, {{ assignment[1] }} 6-person groups
-                            {% if space == 0 %}<strong>(Full)</strong>{% endif %}
+                            {{ entry[1][0] }} 5-person groups, {{ entry[1][1] }} 6-person groups
                         </td>
-                        <td>{{ space }}</td>
+                        <td>{{ entry[2] }} spaces remaining</td> <!-- Remaining space -->
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
+        {% else %}
+            <p>No sorted allocations to display.</p>
         {% endif %}
     {% else %}
         <p>No results to display. Please check your input and try again.</p>
