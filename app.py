@@ -48,21 +48,23 @@ def index():
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
-            sorted_allocations, sorted_spaces, sorted_sizes = Calculations.sort_closestalg_output(results)
+            sorted_allocations, sorted_spaces, sorted_sizes, number = Calculations.sort_closestalg_output(results)
 
-# Combine the sorted data into tuples of (size, allocation, space) for the template
+            # Combine the sorted data into tuples of (size, allocation, space) for the template
             combined_sorted_data = []
             for i in range(len(sorted_sizes)):
-                combined_sorted_data.append([sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]])
+                combined_sorted_data.append([sorted_sizes[i], sorted_allocations[i], sorted_spaces[i],number[i]])
 
             session["sorted_allocations"] = combined_sorted_data
+            combos=Calculations.combine([sorted_allocations.copy(),sorted_spaces.copy()],results[1].copy())
+            session["combos"]=combos
+            # Store results in the session
 
-
-# Store results in the session
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
             session["results"] = results
+            session["number"]=number
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -74,7 +76,10 @@ def index():
                 pers5=pers5_input,
                 pers6=pers6_input,
                 results=None,
-                sorted_allocations=None
+                sorted_allocations=None,
+                combos=None,
+                number=None
+
             )
 
     return render_template(
@@ -85,6 +90,11 @@ def index():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
+        combos=session.get("combos"),
+        zip=zip,
+        enumerate=enumerate,
+        indeces=session.get("number")
+
     )
 
 if __name__ == "__main__":

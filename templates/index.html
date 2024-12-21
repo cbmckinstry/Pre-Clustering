@@ -108,12 +108,21 @@
                 5-person groups: {{ results[1][0] }},
                 6-person groups: {{ results[1][1] }}
             </p>
+            {% if combos %}
+                <p><strong>Combinations:</strong></p>
+                {% for vehicle in combos %}
+                    <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
+                {% endfor %}
+            {% else %}
+                <p>No combinations available.</p>
+            {% endif %}
         {% endif %}
         {% if sorted_allocations %}
             <h2>Sorted Allocation</h2>
             <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse; text-align: center;">
                 <thead>
                 <tr>
+                    <th>Vehicle Number</th>
                     <th>Vehicle Size</th>
                     <th>Sorted Allocation Details</th>
                     <th>Sorted Remaining Spaces</th>
@@ -122,6 +131,7 @@
                 <tbody>
                 {% for entry in sorted_allocations %}
                     <tr>
+                        <td>{{ entry[3] }}</td>
                         <td>{{ entry[0] }}</td> <!-- Vehicle size -->
                         <td>
                             {{ entry[1][0] }} 5-person groups, {{ entry[1][1] }} 6-person groups

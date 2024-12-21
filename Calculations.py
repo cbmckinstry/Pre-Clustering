@@ -341,16 +341,6 @@ def closestalg(required_groups, allocations):
     return [allocations[best_index], offby[best_index]]
 
 def sort_closestalg_output(closestalg_output):
-    """
-    Sorts the allocation output by remaining spaces while calculating vehicle sizes dynamically.
-
-    Args:
-        closestalg_output (list): Output from closestalg function.
-                                  Expected structure: [[totals, allocations, remaining_spaces], shortfall]
-
-    Returns:
-        tuple: (sorted_allocations, sorted_remaining_spaces, sorted_sizes)
-    """
     # Safely extract the allocation details
     try:
         allocation = closestalg_output[0]  # First element contains totals, allocations, and remaining spaces
@@ -377,12 +367,151 @@ def sort_closestalg_output(closestalg_output):
     sorted_sizes = [entry[0] for entry in combined_data]
     sorted_allocations = [entry[1] for entry in combined_data]
     sorted_remaining_spaces = [entry[2] for entry in combined_data]
+    number=[]
+    for i in range(len(sorted_sizes)):
+        number.append(i+1)
 
-    return sorted_allocations, sorted_remaining_spaces, sorted_sizes
+    return sorted_allocations, sorted_remaining_spaces, sorted_sizes, number
 
-#optout=[[[2,2],[[1,1],[0,1],[1,1]],[1,2,3]],[1,1]]
-#sorted_allocations, sorted_spaces, sorted_sizes = sort_closestalg_output(optout)
-#combined_sorted_data = []
-#for i in range(len(sorted_sizes)):
-#    combined_sorted_data.append([sorted_sizes[i], sorted_allocations[i], sorted_spaces[i]])
-#print(combined_sorted_data)
+def combine(sorted_output,shortfall):
+    allocations=sorted_output[0]
+    space=sorted_output[1]
+    five=shortfall[0]
+    six=shortfall[1]
+
+    allocations0=[]
+    space0=[]
+    for i in range(len(space)):
+        if space[i]!=0:
+            allocations0.append(allocations[i])
+            space0.append(space[i])
+    used1=set()
+    five1=five
+    six1=six
+    combos1=[]
+    for bound in range(0,5):
+        if five1==0 and six1==0:
+            break
+        for m in range(len(space0)):
+            if five1==0 and six1==0:
+                break
+            for n in range(len(space0)-1,m,-1):
+                if five1==0 and six1==0:
+                    break
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five1 or six1)>0 and (m not in used1) and (n not in used1):
+                    if space0[m]+space0[n]>=6:
+                        used1.add(m)
+                        used1.add(n)
+                        combos1.append([m+1,n+1])
+                        six1-=1
+                    elif space0[m]+space0[n]==5:
+                        used1.add(m)
+                        used1.add(n)
+                        combos1.append([m+1,n+1])
+                        five1-=1
+    if five1==0 and six1==0:
+        return combos1
+    used2=set()
+    five2=five
+    six2=six
+    combos2=[]
+    for bound in range(0,5):
+        if six2==0:
+            break
+        for m in range(len(space0)):
+            if six2==0:
+                break
+            for n in range(len(space0)-1,m,-1):
+                if six2==0:
+                    break
+                if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
+                    used2.add(m)
+                    used2.add(n)
+                    combos2.append([m+1,n+1])
+                    six2-=1
+    for bound in range(0,5):
+        if five2==0:
+            break
+        for m in range(len(space0)):
+            if five2==0:
+                break
+            for n in range(len(space0)-1,m,-1):
+                if five2==0:
+                    break
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
+                    used2.add(m)
+                    used2.add(n)
+                    combos2.append([m+1,n+1])
+                    five2-=1
+    if five2==0 and six2==0:
+        return combos2
+    for bound in range(0,5):
+        used3=set()
+        five3=five
+        six3=six
+        combos3=[]
+        if five3==0 and six3==0:
+            break
+        for m in range(len(space0)):
+            if five3==0 and six3==0:
+                break
+            for n in range(len(space0)-1,m,-1):
+                if five3==0 and six3==0:
+                    break
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five3 or six3)>0 and (m not in used3) and (n not in used3):
+                    if space0[m]+space0[n]>=6:
+                        used3.add(m)
+                        used3.add(n)
+                        combos3.append([m+1,n+1])
+                        six3-=1
+                    elif space0[m]+space0[n]==5:
+                        used3.add(m)
+                        used3.add(n)
+                        combos3.append([m+1,n+1])
+                        five3-=1
+    if five3==0 and six3==0:
+        return combos3
+    six4=six
+    used4=set()
+    combos4=[]
+    five4=five
+    for bound in range(0,5):
+        if six4==0:
+            break
+        used4=set()
+        six4=six
+        combos4=[]
+        for m in range(len(space0)):
+            if six4==0:
+                break
+            for n in range(len(space0)-1,m,-1):
+                if six4==0:
+                    break
+                if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used4) and (n not in used4):
+                    used4.add(m)
+                    used4.add(n)
+                    combos4.append([m+1,n+1])
+                    six4-=1
+    for bound in range(0,5):
+        if five4==0:
+            break
+        used5=used4
+        five4=five
+        combos5=combos4
+        for m in range(len(space0)):
+            if five4==0:
+                break
+            for n in range(len(space0)-1,m,-1):
+                if five4==0:
+                    break
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used5) and (n not in used5):
+                    used5.add(m)
+                    used5.add(n)
+                    combos5.append([m+1,n+1])
+                    five4-=1
+    if five4==0 and six4==0:
+        return combos5
+    return []
+out=[[[0,1],[1,1],[1,0],[0,0]],[4,3,3,1]]
+short=[1,1]
+print(combine(out,short))
