@@ -64,7 +64,6 @@ def index():
             session["pers5"] = pers5
             session["pers6"] = pers6
             session["results"] = results
-            session["number"]=number
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -78,7 +77,8 @@ def index():
                 results=None,
                 sorted_allocations=None,
                 combos=None,
-                number=None
+                zip=zip,
+                enumerate=enumerate
 
             )
 
@@ -92,8 +92,7 @@ def index():
         error_message=None,
         combos=session.get("combos"),
         zip=zip,
-        enumerate=enumerate,
-        indeces=session.get("number")
+        enumerate=enumerate
 
     )
 

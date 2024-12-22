@@ -514,4 +514,4 @@ def combine(sorted_output,shortfall):
     return []
 out=[[[0,1],[1,1],[1,0],[0,0]],[4,3,3,1]]
 short=[1,1]
-print(combine(out,short))
+#print(combine(out,short))
