@@ -108,21 +108,18 @@
                 5-person groups: {{ results[1][0] }},
                 6-person groups: {{ results[1][1] }}
             </p>
-            {% if pairs or threes%}
-                <p><strong>Combinations:</strong></p>
-                {% if pairs %}
-                    {% for vehicle in pairs %}
-                        <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
-                    {% endfor %}
-                {% endif %}
-                {% if threes %}
-                    {% for elem in threes %}
-                        <p>Combine Vehicle {{ elem[0] }} and Vehicle {{ elem[1] }} and Vehicle {{ elem[2] }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% else %}
-                <p>No combinations available.</p>
+            <p><strong>Combinations:</strong></p>
+            {% if pairs %}
+                {% for vehicle in pairs %}
+                    <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
+                {% endfor %}
             {% endif %}
+            {% if threes %}
+                {% for elem in threes %}
+                    <p>Combine Vehicle {{ elem[0] }}, Vehicle {{ elem[1] }}, and Vehicle {{ elem[2] }}</p>
+                {% endfor %}
+            {% endif %}
+
         {% endif %}
         {% if sorted_allocations %}
             <h2>Sorted Allocation</h2>
