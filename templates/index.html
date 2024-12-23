@@ -109,16 +109,21 @@
                 6-person groups: {{ results[1][1] }}
             </p>
             <p><strong>Combinations:</strong></p>
-            {% if pairs %}
-                {% for vehicle in pairs %}
-                    <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
-                {% endfor %}
+            {% if pairs or threes %}
+                {% if pairs %}
+                    {% for vehicle in pairs %}
+                        <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
+                    {% endfor %}
+                {% endif %}
+                {% if threes %}
+                    {% for elem in threes %}
+                        <p>Combine Vehicle {{ elem[0] }}, Vehicle {{ elem[1] }}, and Vehicle {{ elem[2] }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <p> No combination data available.</p>
             {% endif %}
-            {% if threes %}
-                {% for elem in threes %}
-                    <p>Combine Vehicle {{ elem[0] }}, Vehicle {{ elem[1] }}, and Vehicle {{ elem[2] }}</p>
-                {% endfor %}
-            {% endif %}
+
 
         {% endif %}
         {% if sorted_allocations %}
