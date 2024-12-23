@@ -57,7 +57,12 @@ def index():
 
             session["sorted_allocations"] = combined_sorted_data
             combos=Calculations.combine([sorted_allocations.copy(),sorted_spaces.copy()],results[1].copy())
-            session["combos"]=combos
+            splitvers=Calculations.splitting(combos)
+            pairs=splitvers[0]
+            threes=splitvers[1]
+
+            session["pairs"]=pairs
+            session["threes"]=threes
             # Store results in the session
 
             session["vehlist"] = vehlist
@@ -76,7 +81,8 @@ def index():
                 pers6=pers6_input,
                 results=None,
                 sorted_allocations=None,
-                combos=None,
+                pairs=None,
+                threes=None,
                 zip=zip,
                 enumerate=enumerate
 
@@ -90,7 +96,8 @@ def index():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
-        combos=session.get("combos"),
+        pairs=session.get("combos"),
+        threes=session.get("threes"),
         zip=zip,
         enumerate=enumerate
 
