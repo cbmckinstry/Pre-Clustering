@@ -96,7 +96,7 @@ def index():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
-        pairs=session.get("combos"),
+        pairs=session.get("pairs"),
         threes=session.get("threes"),
         zip=zip,
         enumerate=enumerate
