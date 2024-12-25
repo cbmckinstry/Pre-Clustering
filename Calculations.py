@@ -531,7 +531,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used1=used.copy()
         triplecombos1=triplecombos
         if len(space)>=3:
-            for bound in range(0,6):
+            for bound in range(0,7):
                 if shortfall1[0]==0 and shortfall1[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -570,7 +570,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used2=used.copy()
         triplecombos2=triplecombos
         if len(space)>=3:
-            for bound in range(0,6):
+            for bound in range(0,7):
                 if shortfall2[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -588,7 +588,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
                                 used2.add(k)
                                 shortfall2[1]-=1
                                 triplecombos2.append([i+1,k+1,j+1])
-            for bound in range(0,6):
+            for bound in range(0,7):
                 if shortfall2[0]==0:
                     break
                 for i in range(len(space)-2):
@@ -619,7 +619,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used3=used.copy()
         triplecombos3=triplecombos
         if len(space)>=3:
-            for bound in range(0,6):
+            for bound in range(0,7):
                 if shortfall3[0]==0 and shortfall3[1]==0:
                     break
                 shortfall3=shortfall.copy()
@@ -663,7 +663,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         shortfall5=shortfall.copy()
         triplecombos4=triplecombos
         if len(space)>=3:
-            for bound in range(0,6):
+            for bound in range(0,7):
                 if shortfall4[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -684,7 +684,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
             shortfall5=shortfall4
             used5=used4
             triplecombos5=triplecombos4
-            for bound in range(0,6):
+            for bound in range(0,7):
                 shortfall5=shortfall4
                 used5=used4
                 triplecombos5=triplecombos4
