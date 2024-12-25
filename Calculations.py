@@ -387,7 +387,7 @@ def combine(sorted_output,shortfall):
     five1=five
     six1=six
     combos1=[]
-    for bound in range(0,6):
+    for bound in range(0,7):
         if five1==0 and six1==0:
             break
         for m in range(len(space0)):
@@ -413,7 +413,7 @@ def combine(sorted_output,shortfall):
     five2=five
     six2=six
     combos2=[]
-    for bound in range(0,6):
+    for bound in range(0,7):
         if six2==0:
             break
         for m in range(len(space0)):
@@ -427,7 +427,7 @@ def combine(sorted_output,shortfall):
                     used2.add(n)
                     combos2.append([m+1,n+1])
                     six2-=1
-    for bound in range(0,6):
+    for bound in range(0,7):
         if five2==0:
             break
         for m in range(len(space0)):
@@ -443,7 +443,7 @@ def combine(sorted_output,shortfall):
                     five2-=1
     if five2==0 and six2==0:
         return combos2
-    for bound in range(0,6):
+    for bound in range(0,7):
         used3=set()
         five3=five
         six3=six
@@ -473,7 +473,7 @@ def combine(sorted_output,shortfall):
     used4=set()
     combos4=[]
     five4=five
-    for bound in range(0,6):
+    for bound in range(0,7):
         if six4==0:
             break
         used4=set()
@@ -492,7 +492,7 @@ def combine(sorted_output,shortfall):
                     six4-=1
     combos5=[]
     used5=set()
-    for bound in range(0,6):
+    for bound in range(0,7):
         if five4==0:
             break
         used5=used4
