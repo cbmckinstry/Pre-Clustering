@@ -718,8 +718,8 @@ def splitting(combolist):
             threes.append(elem)
     return [pairs,threes]
 
-allocate=[[0,0],[0,0],[0,0]]
-space=[3,3,1]
-short=[0,1]
-y=combine([allocate,space],short)
-print(splitting(y))
+#allocate=[[0,0],[0,0],[0,0]]
+#space=[3,3,1]
+#short=[0,1]
+#y=combine([allocate,space],short)
+#print(splitting(y))
