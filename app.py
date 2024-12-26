@@ -56,7 +56,7 @@ def index():
                 combined_sorted_data.append([sorted_sizes[i], sorted_allocations[i], sorted_spaces[i],number[i]])
 
             session["sorted_allocations"] = combined_sorted_data
-            combos=Calculations.combine([sorted_allocations.copy(),sorted_spaces.copy()],results[1].copy())
+            combos=Calculations.bestone([sorted_allocations.copy(),sorted_spaces.copy()],results[1].copy(),10)
             splitvers=Calculations.splitting(combos)
             pairs=splitvers[0]
             threes=splitvers[1]

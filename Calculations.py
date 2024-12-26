@@ -371,7 +371,7 @@ def sort_closestalg_output(closestalg_output):
 
     return sorted_allocations, sorted_remaining_spaces, sorted_sizes, number
 
-def combine(sorted_output,shortfall):
+def combine(sorted_output,shortfall,upperbound):
     allocations=sorted_output[0]
     space=sorted_output[1]
     five=shortfall[0]
@@ -383,7 +383,6 @@ def combine(sorted_output,shortfall):
         if space[i]!=0:
             allocations0.append(allocations[i])
             space0.append(space[i])
-    upperbound=10
     used1=set()
     five1=five
     six1=six
@@ -665,7 +664,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound):
         triplecombos4=triplecombos
         used5=used
         shortfall5=shortfall
-        triplecombos4=triplecombos
+        triplecombos5=triplecombos4
         if len(space)>=3:
             for bound in range(0,upperbound):
                 if shortfall4[1]==0:
@@ -703,7 +702,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound):
                         for k in range(j-1, i, -1):
                             if shortfall5[0]==0:
                                 break
-                            if space[i]+space[j]+space[k]>=5 and (shortfall5[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                            if space[i]+space[j]+space[k]>=5 and (shortfall5[0]>0) and (i not in used5 and j not in used5 and k not in used5) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
                                 used5.add(i)
                                 used5.add(j)
                                 used5.add(k)
@@ -712,6 +711,12 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound):
         if shortfall5[0]==0 and shortfall5[1]==0:
             return combos+triplecombos5
     return []
+
+def bestone(sorted_output,shortfall,upper):
+    for x in range(1,upper):
+        y=combine(sorted_output,shortfall,x)
+        if y:
+            return y
 def splitting(combolist):
     pairs=[]
     threes=[]
