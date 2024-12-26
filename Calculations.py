@@ -386,8 +386,7 @@ def combine(sorted_output,shortfall):
     running=0
     for elem in range(len(allocations0)):
         running+=allocations0[elem][0]+allocations0[elem][1]
-    upperbound=running+1
-
+    upperbound=7
     used1=set()
     five1=five
     six1=six
