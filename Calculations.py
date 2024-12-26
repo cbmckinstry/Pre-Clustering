@@ -515,7 +515,7 @@ def combine(sorted_output,shortfall,upperbound):
                     five4-=1
     if five4==0 and six4==0:
         return combos5
-    if upperbound>=4:
+    if upperbound>=5:
         outer=[combos1,combos2,combos3,combos5]
         spent=[used1,used2,used3,used5]
         shorts=[[five1,six1],[five2,six2],[five3,six3],[five4,six4]]
