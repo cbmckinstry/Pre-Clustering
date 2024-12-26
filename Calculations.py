@@ -372,14 +372,14 @@ def sort_closestalg_output(closestalg_output):
     return sorted_allocations, sorted_remaining_spaces, sorted_sizes, number
 
 def combine(sorted_output,shortfall):
-    running=0
-    for elem in range(len(sorted_output)):
-        running+=sorted_output[elem][0]+sorted_output[elem][1]
-    upperbound=running+1
     allocations=sorted_output[0]
     space=sorted_output[1]
     five=shortfall[0]
     six=shortfall[1]
+    running=0
+    for elem in range(len(allocations)):
+        running+=allocations[elem][0]+allocations[elem][1]
+    upperbound=running+1
 
     allocations0=[]
     space0=[]
