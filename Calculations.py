@@ -720,11 +720,12 @@ def bestone(sorted_output,shortfall,upper):
 def splitting(combolist):
     pairs=[]
     threes=[]
-    for elem in combolist:
-        if len(elem)==2:
-            pairs.append(elem)
-        else:
-            threes.append(elem)
+    if combolist:
+        for elem in combolist:
+            if len(elem)==2:
+                pairs.append(elem)
+            else:
+                threes.append(elem)
     return [pairs,threes]
 
 #allocate=[[1,1],[0,2],[0,2],[0,2],[2,0],[0,2]]
