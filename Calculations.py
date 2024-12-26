@@ -372,6 +372,10 @@ def sort_closestalg_output(closestalg_output):
     return sorted_allocations, sorted_remaining_spaces, sorted_sizes, number
 
 def combine(sorted_output,shortfall):
+    running=0
+    for elem in range(len(sorted_output)):
+        running+=sorted_output[elem][0]+sorted_output[elem][1]
+    upperbound=running
     allocations=sorted_output[0]
     space=sorted_output[1]
     five=shortfall[0]
@@ -387,7 +391,7 @@ def combine(sorted_output,shortfall):
     five1=five
     six1=six
     combos1=[]
-    for bound in range(0,7):
+    for bound in range(0,upperbound):
         if five1==0 and six1==0:
             break
         for m in range(len(space0)):
@@ -413,7 +417,7 @@ def combine(sorted_output,shortfall):
     five2=five
     six2=six
     combos2=[]
-    for bound in range(0,7):
+    for bound in range(0,upperbound):
         if six2==0:
             break
         for m in range(len(space0)):
@@ -427,7 +431,7 @@ def combine(sorted_output,shortfall):
                     used2.add(n)
                     combos2.append([m+1,n+1])
                     six2-=1
-    for bound in range(0,7):
+    for bound in range(0,upperbound):
         if five2==0:
             break
         for m in range(len(space0)):
@@ -443,7 +447,7 @@ def combine(sorted_output,shortfall):
                     five2-=1
     if five2==0 and six2==0:
         return combos2
-    for bound in range(0,7):
+    for bound in range(0,upperbound):
         used3=set()
         five3=five
         six3=six
@@ -473,7 +477,7 @@ def combine(sorted_output,shortfall):
     used4=set()
     combos4=[]
     five4=five
-    for bound in range(0,7):
+    for bound in range(0,upperbound):
         if six4==0:
             break
         used4=set()
@@ -492,7 +496,7 @@ def combine(sorted_output,shortfall):
                     six4-=1
     combos5=combos4
     used5=used4
-    for bound in range(0,7):
+    for bound in range(0,upperbound):
         if five4==0:
             break
         used5=used4
@@ -514,12 +518,12 @@ def combine(sorted_output,shortfall):
     outer=[combos1,combos2,combos3,combos5]
     spent=[used1,used2,used3,used5]
     shorts=[[five1,six1],[five2,six2],[five3,six3],[five4,six4]]
-    finaltry=lastresort(outer,shorts,spent,allocations0,space0)
+    finaltry=lastresort(outer,shorts,spent,allocations0,space0,upperbound)
     if finaltry!=[]:
         return finaltry
     return []
 
-def lastresort(combolist,shortfalllist,usedlist,allocations,space):
+def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound):
     for elem in range(len(shortfalllist)):
         combos=combolist[elem]
         shortfall=shortfalllist[elem]
@@ -530,7 +534,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used1=used
         triplecombos1=triplecombos
         if len(space)>=3:
-            for bound in range(0,7):
+            for bound in range(0,upperbound):
                 if shortfall1[0]==0 and shortfall1[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -569,7 +573,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used2=used.copy()
         triplecombos2=triplecombos
         if len(space)>=3:
-            for bound in range(0,7):
+            for bound in range(0,upperbound):
                 if shortfall2[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -587,7 +591,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
                                 used2.add(k)
                                 shortfall2[1]-=1
                                 triplecombos2.append([i+1,k+1,j+1])
-            for bound in range(0,7):
+            for bound in range(0,upperbound):
                 if shortfall2[0]==0:
                     break
                 for i in range(len(space)-2):
@@ -618,7 +622,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used3=used
         triplecombos3=triplecombos
         if len(space)>=3:
-            for bound in range(0,7):
+            for bound in range(0,upperbound):
                 if shortfall3[0]==0 and shortfall3[1]==0:
                     break
                 shortfall3=shortfall.copy()
@@ -662,7 +666,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         shortfall5=shortfall
         triplecombos4=triplecombos
         if len(space)>=3:
-            for bound in range(0,7):
+            for bound in range(0,upperbound):
                 if shortfall4[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -683,7 +687,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
             shortfall5=shortfall4
             used5=used4
             triplecombos5=triplecombos4
-            for bound in range(0,7):
+            for bound in range(0,upperbound):
                 shortfall5=shortfall4
                 used5=used4
                 triplecombos5=triplecombos4
