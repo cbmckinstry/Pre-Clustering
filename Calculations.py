@@ -376,10 +376,6 @@ def combine(sorted_output,shortfall):
     space=sorted_output[1]
     five=shortfall[0]
     six=shortfall[1]
-    running=0
-    for elem in range(len(allocations)):
-        running+=allocations[elem][0]+allocations[elem][1]
-    upperbound=running+1
 
     allocations0=[]
     space0=[]
@@ -387,6 +383,11 @@ def combine(sorted_output,shortfall):
         if space[i]!=0:
             allocations0.append(allocations[i])
             space0.append(space[i])
+    running=0
+    for elem in range(len(allocations0)):
+        running+=allocations0[elem][0]+allocations0[elem][1]
+    upperbound=running+1
+
     used1=set()
     five1=five
     six1=six
