@@ -375,7 +375,7 @@ def combine(sorted_output,shortfall):
     running=0
     for elem in range(len(sorted_output)):
         running+=sorted_output[elem][0]+sorted_output[elem][1]
-    upperbound=running
+    upperbound=running+1
     allocations=sorted_output[0]
     space=sorted_output[1]
     five=shortfall[0]
