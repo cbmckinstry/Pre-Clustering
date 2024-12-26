@@ -383,7 +383,7 @@ def combine(sorted_output,shortfall):
         if space[i]!=0:
             allocations0.append(allocations[i])
             space0.append(space[i])
-    upperbound=7
+    upperbound=10
     used1=set()
     five1=five
     six1=six
