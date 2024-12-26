@@ -374,14 +374,8 @@ def sort_closestalg_output(closestalg_output):
 def combine(sorted_output,shortfall):
     allocations=sorted_output[0]
     space=sorted_output[1]
-
     five=shortfall[0]
     six=shortfall[1]
-
-    five1=five2=five3=five4=five
-    six1=six2=six3=six4=six
-    used1=used2=used3=used4=used5=set()
-    combos1=combos2=combos3=combos4=combos5=[]
 
     allocations0=[]
     space0=[]
@@ -389,331 +383,331 @@ def combine(sorted_output,shortfall):
         if space[i]!=0:
             allocations0.append(allocations[i])
             space0.append(space[i])
-    for upperbound in range(1,10):
-        used1=set()
-        five1=five
-        six1=six
-        combos1=[]
-        for bound in range(0,upperbound):
+    upperbound=7
+    upperbound=10
+    used1=set()
+    five1=five
+    six1=six
+    combos1=[]
+    for bound in range(0,upperbound):
+        if five1==0 and six1==0:
+            break
+        for m in range(len(space0)):
             if five1==0 and six1==0:
                 break
-            for m in range(len(space0)):
+            for n in range(len(space0)-1,m,-1):
                 if five1==0 and six1==0:
                     break
-                for n in range(len(space0)-1,m,-1):
-                    if five1==0 and six1==0:
-                        break
-                    if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five1 or six1)>0 and (m not in used1) and (n not in used1):
-                        if space0[m]+space0[n]>=6 and six1>0:
-                            used1.add(m)
-                            used1.add(n)
-                            combos1.append([m+1,n+1])
-                            six1-=1
-                        elif space0[m]+space0[n]==5 and five1>0:
-                            used1.add(m)
-                            used1.add(n)
-                            combos1.append([m+1,n+1])
-                            five1-=1
-        if five1==0 and six1==0:
-            return combos1
-        used2=set()
-        five2=five
-        six2=six
-        combos2=[]
-        for bound in range(0,upperbound):
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five1 or six1)>0 and (m not in used1) and (n not in used1):
+                    if space0[m]+space0[n]>=6 and six1>0:
+                        used1.add(m)
+                        used1.add(n)
+                        combos1.append([m+1,n+1])
+                        six1-=1
+                    elif space0[m]+space0[n]==5 and five1>0:
+                        used1.add(m)
+                        used1.add(n)
+                        combos1.append([m+1,n+1])
+                        five1-=1
+    if five1==0 and six1==0:
+        return combos1
+    used2=set()
+    five2=five
+    six2=six
+    combos2=[]
+    for bound in range(0,upperbound):
+        if six2==0:
+            break
+        for m in range(len(space0)):
             if six2==0:
                 break
-            for m in range(len(space0)):
+            for n in range(len(space0)-1,m,-1):
                 if six2==0:
                     break
-                for n in range(len(space0)-1,m,-1):
-                    if six2==0:
-                        break
-                    if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
-                        used2.add(m)
-                        used2.add(n)
-                        combos2.append([m+1,n+1])
-                        six2-=1
-        for bound in range(0,upperbound):
+                if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
+                    used2.add(m)
+                    used2.add(n)
+                    combos2.append([m+1,n+1])
+                    six2-=1
+    for bound in range(0,upperbound):
+        if five2==0:
+            break
+        for m in range(len(space0)):
             if five2==0:
                 break
-            for m in range(len(space0)):
+            for n in range(len(space0)-1,m,-1):
                 if five2==0:
                     break
-                for n in range(len(space0)-1,m,-1):
-                    if five2==0:
-                        break
-                    if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
-                        used2.add(m)
-                        used2.add(n)
-                        combos2.append([m+1,n+1])
-                        five2-=1
-        if five2==0 and six2==0:
-            return combos2
-        for bound in range(0,upperbound):
-            used3=set()
-            five3=five
-            six3=six
-            combos3=[]
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
+                    used2.add(m)
+                    used2.add(n)
+                    combos2.append([m+1,n+1])
+                    five2-=1
+    if five2==0 and six2==0:
+        return combos2
+    for bound in range(0,upperbound):
+        used3=set()
+        five3=five
+        six3=six
+        combos3=[]
+        if five3==0 and six3==0:
+            break
+        for m in range(len(space0)):
             if five3==0 and six3==0:
                 break
-            for m in range(len(space0)):
+            for n in range(len(space0)-1,m,-1):
                 if five3==0 and six3==0:
                     break
-                for n in range(len(space0)-1,m,-1):
-                    if five3==0 and six3==0:
-                        break
-                    if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five3 or six3)>0 and (m not in used3) and (n not in used3):
-                        if space0[m]+space0[n]>=6 and six3>0:
-                            used3.add(m)
-                            used3.add(n)
-                            combos3.append([m+1,n+1])
-                            six3-=1
-                        elif space0[m]+space0[n]==5 and five3>0:
-                            used3.add(m)
-                            used3.add(n)
-                            combos3.append([m+1,n+1])
-                            five3-=1
-        if five3==0 and six3==0:
-            return combos3
-        six4=six
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five3 or six3)>0 and (m not in used3) and (n not in used3):
+                    if space0[m]+space0[n]>=6 and six3>0:
+                        used3.add(m)
+                        used3.add(n)
+                        combos3.append([m+1,n+1])
+                        six3-=1
+                    elif space0[m]+space0[n]==5 and five3>0:
+                        used3.add(m)
+                        used3.add(n)
+                        combos3.append([m+1,n+1])
+                        five3-=1
+    if five3==0 and six3==0:
+        return combos3
+    six4=six
+    used4=set()
+    combos4=[]
+    five4=five
+    for bound in range(0,upperbound):
+        if six4==0:
+            break
         used4=set()
+        six4=six
         combos4=[]
-        five4=five
-        for bound in range(0,upperbound):
+        for m in range(len(space0)):
             if six4==0:
                 break
-            used4=set()
-            six4=six
-            combos4=[]
-            for m in range(len(space0)):
+            for n in range(len(space0)-1,m,-1):
                 if six4==0:
                     break
-                for n in range(len(space0)-1,m,-1):
-                    if six4==0:
-                        break
-                    if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used4) and (n not in used4):
-                        used4.add(m)
-                        used4.add(n)
-                        combos4.append([m+1,n+1])
-                        six4-=1
-        combos5=combos4
+                if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used4) and (n not in used4):
+                    used4.add(m)
+                    used4.add(n)
+                    combos4.append([m+1,n+1])
+                    six4-=1
+    combos5=combos4
+    used5=used4
+    for bound in range(0,upperbound):
+        if five4==0:
+            break
         used5=used4
-        for bound in range(0,upperbound):
+        five4=five
+        combos5=combos4
+        for m in range(len(space0)):
             if five4==0:
                 break
-            used5=used4
-            five4=five
-            combos5=combos4
-            for m in range(len(space0)):
+            for n in range(len(space0)-1,m,-1):
                 if five4==0:
                     break
-                for n in range(len(space0)-1,m,-1):
-                    if five4==0:
-                        break
-                    if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used5) and (n not in used5):
-                        used5.add(m)
-                        used5.add(n)
-                        combos5.append([m+1,n+1])
-                        five4-=1
-        if five4==0 and six4==0:
-            return combos5
+                if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used5) and (n not in used5):
+                    used5.add(m)
+                    used5.add(n)
+                    combos5.append([m+1,n+1])
+                    five4-=1
+    if five4==0 and six4==0:
+        return combos5
     outer=[combos1,combos2,combos3,combos5]
     spent=[used1,used2,used3,used5]
     shorts=[[five1,six1],[five2,six2],[five3,six3],[five4,six4]]
-    finaltry=lastresort(outer,shorts,spent,allocations0,space0)
+    finaltry=lastresort(outer,shorts,spent,allocations0,space0,upperbound)
     if finaltry!=[]:
         return finaltry
     return []
 
-def lastresort(combolist,shortfalllist,usedlist,allocations,space):
-    for upperbound in range(1,10):
-        for elem in range(len(shortfalllist)):
-            combos=combolist[elem]
-            shortfall=shortfalllist[elem]
-            used=usedlist[elem]
-            triplecombos=[]
+def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound):
+    for elem in range(len(shortfalllist)):
+        combos=combolist[elem]
+        shortfall=shortfalllist[elem]
+        used=usedlist[elem]
+        triplecombos=[]
 
-            shortfall1=shortfall.copy()
-            used1=used
-            triplecombos1=triplecombos
-            if len(space)>=3:
-                for bound in range(0,upperbound):
+        shortfall1=shortfall.copy()
+        used1=used
+        triplecombos1=triplecombos
+        if len(space)>=3:
+            for bound in range(0,upperbound):
+                if shortfall1[0]==0 and shortfall1[1]==0:
+                    break
+                for i in range(len(space)-2):
                     if shortfall1[0]==0 and shortfall1[1]==0:
                         break
-                    for i in range(len(space)-2):
+                    for j in range(len(space)-1, i+1, -1):
                         if shortfall1[0]==0 and shortfall1[1]==0:
                             break
-                        for j in range(len(space)-1, i+1, -1):
+                        for k in range(j-1, i, -1):
                             if shortfall1[0]==0 and shortfall1[1]==0:
                                 break
-                            for k in range(j-1, i, -1):
-                                if shortfall1[0]==0 and shortfall1[1]==0:
-                                    break
-                                if space[i]+space[j]+space[k]>=5 and (shortfall1[0]>0 or shortfall1[1]>0) and (i not in used1) and (j not in used1) and (k not in used1) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
-                                    if shortfall1[1]>0 and space[i]+space[j]+space[k]>=6:
-                                        used1.add(i)
-                                        used1.add(j)
-                                        used1.add(k)
-                                        shortfall1[1]-=1
-                                        triplecombos1.append([i+1,k+1,j+1])
-                                    elif shortfall1[0]>0 and space[i]+space[j]+space[k]>=5:
-                                        used1.add(i)
-                                        used1.add(j)
-                                        used1.add(k)
-                                        shortfall1[0]-=1
-                                        triplecombos1.append([i+1,k+1,j+1])
+                            if space[i]+space[j]+space[k]>=5 and (shortfall1[0]>0 or shortfall1[1]>0) and (i not in used1) and (j not in used1) and (k not in used1) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                                if shortfall1[1]>0 and space[i]+space[j]+space[k]>=6:
+                                    used1.add(i)
+                                    used1.add(j)
+                                    used1.add(k)
+                                    shortfall1[1]-=1
+                                    triplecombos1.append([i+1,k+1,j+1])
+                                elif shortfall1[0]>0 and space[i]+space[j]+space[k]>=5:
+                                    used1.add(i)
+                                    used1.add(j)
+                                    used1.add(k)
+                                    shortfall1[0]-=1
+                                    triplecombos1.append([i+1,k+1,j+1])
 
-            if shortfall1[0]==0 and shortfall1[1]==0:
-                return combos+triplecombos1
+        if shortfall1[0]==0 and shortfall1[1]==0:
+            return combos+triplecombos1
 
-        for elem in range(len(shortfalllist)):
-            combos=combolist[elem]
-            shortfall=shortfalllist[elem]
-            used=usedlist[elem]
-            triplecombos=[]
+    for elem in range(len(shortfalllist)):
+        combos=combolist[elem]
+        shortfall=shortfalllist[elem]
+        used=usedlist[elem]
+        triplecombos=[]
 
-            shortfall2=shortfall.copy()
-            used2=used.copy()
-            triplecombos2=triplecombos
-            if len(space)>=3:
-                for bound in range(0,upperbound):
+        shortfall2=shortfall.copy()
+        used2=used.copy()
+        triplecombos2=triplecombos
+        if len(space)>=3:
+            for bound in range(0,upperbound):
+                if shortfall2[1]==0:
+                    break
+                for i in range(len(space)-2):
                     if shortfall2[1]==0:
                         break
-                    for i in range(len(space)-2):
+                    for j in range(len(space)-1, i+1, -1):
                         if shortfall2[1]==0:
                             break
-                        for j in range(len(space)-1, i+1, -1):
+                        for k in range(j-1, i, -1):
                             if shortfall2[1]==0:
                                 break
-                            for k in range(j-1, i, -1):
-                                if shortfall2[1]==0:
-                                    break
-                                if space[i]+space[j]+space[k]>=6 and (shortfall2[1]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
-                                    used2.add(i)
-                                    used2.add(j)
-                                    used2.add(k)
-                                    shortfall2[1]-=1
-                                    triplecombos2.append([i+1,k+1,j+1])
-                for bound in range(0,upperbound):
+                            if space[i]+space[j]+space[k]>=6 and (shortfall2[1]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                                used2.add(i)
+                                used2.add(j)
+                                used2.add(k)
+                                shortfall2[1]-=1
+                                triplecombos2.append([i+1,k+1,j+1])
+            for bound in range(0,upperbound):
+                if shortfall2[0]==0:
+                    break
+                for i in range(len(space)-2):
                     if shortfall2[0]==0:
                         break
-                    for i in range(len(space)-2):
+                    for j in range(len(space)-1, i+1, -1):
                         if shortfall2[0]==0:
                             break
-                        for j in range(len(space)-1, i+1, -1):
+                        for k in range(j-1, i, -1):
                             if shortfall2[0]==0:
                                 break
-                            for k in range(j-1, i, -1):
-                                if shortfall2[0]==0:
-                                    break
-                                if space[i]+space[j]+space[k]>=5 and (shortfall2[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
-                                    used2.add(i)
-                                    used2.add(j)
-                                    used2.add(k)
-                                    shortfall2[0]-=1
-                                    triplecombos2.append([i+1,k+1,j+1])
-            if shortfall2[0]==0 and shortfall2[1]==0:
-                return combos+triplecombos2
+                            if space[i]+space[j]+space[k]>=5 and (shortfall2[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                                used2.add(i)
+                                used2.add(j)
+                                used2.add(k)
+                                shortfall2[0]-=1
+                                triplecombos2.append([i+1,k+1,j+1])
+        if shortfall2[0]==0 and shortfall2[1]==0:
+            return combos+triplecombos2
 
-        for elem in range(len(shortfalllist)):
-            combos=combolist[elem]
-            shortfall=shortfalllist[elem]
-            used=usedlist[elem]
-            triplecombos=[]
+    for elem in range(len(shortfalllist)):
+        combos=combolist[elem]
+        shortfall=shortfalllist[elem]
+        used=usedlist[elem]
+        triplecombos=[]
 
-            shortfall3=shortfall
-            used3=used
-            triplecombos3=triplecombos
-            if len(space)>=3:
-                for bound in range(0,upperbound):
+        shortfall3=shortfall
+        used3=used
+        triplecombos3=triplecombos
+        if len(space)>=3:
+            for bound in range(0,upperbound):
+                if shortfall3[0]==0 and shortfall3[1]==0:
+                    break
+                shortfall3=shortfall.copy()
+                used3=used.copy()
+                triplecombos3=triplecombos
+                for i in range(len(space)-2):
                     if shortfall3[0]==0 and shortfall3[1]==0:
                         break
-                    shortfall3=shortfall.copy()
-                    used3=used.copy()
-                    triplecombos3=triplecombos
-                    for i in range(len(space)-2):
+                    for j in range(len(space)-1, i+1, -1):
                         if shortfall3[0]==0 and shortfall3[1]==0:
                             break
-                        for j in range(len(space)-1, i+1, -1):
+                        for k in range(j-1, i, -1):
                             if shortfall3[0]==0 and shortfall3[1]==0:
                                 break
-                            for k in range(j-1, i, -1):
-                                if shortfall3[0]==0 and shortfall3[1]==0:
-                                    break
-                                if space[i]+space[j]+space[k]>=5 and (shortfall3[0]>0 or shortfall3[1]>0) and (i not in used3 and j not in used3 and k not in used3) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
-                                    if shortfall3[1]>0 and space[i]+space[j]+space[k]>=6:
-                                        used3.add(i)
-                                        used3.add(j)
-                                        used3.add(k)
-                                        shortfall3[1]-=1
-                                        triplecombos3.append([i+1,k+1,j+1])
-                                    elif shortfall3[0]>0 and space[i]+space[j]+space[k]>=5:
-                                        used3.add(i)
-                                        used3.add(j)
-                                        used3.add(k)
-                                        shortfall3[0]-=1
-                                        triplecombos3.append([i+1,k+1,j+1])
-            if shortfall3[0]==0 and shortfall3[1]==0:
-                return combos+triplecombos3
+                            if space[i]+space[j]+space[k]>=5 and (shortfall3[0]>0 or shortfall3[1]>0) and (i not in used3 and j not in used3 and k not in used3) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                                if shortfall3[1]>0 and space[i]+space[j]+space[k]>=6:
+                                    used3.add(i)
+                                    used3.add(j)
+                                    used3.add(k)
+                                    shortfall3[1]-=1
+                                    triplecombos3.append([i+1,k+1,j+1])
+                                elif shortfall3[0]>0 and space[i]+space[j]+space[k]>=5:
+                                    used3.add(i)
+                                    used3.add(j)
+                                    used3.add(k)
+                                    shortfall3[0]-=1
+                                    triplecombos3.append([i+1,k+1,j+1])
+        if shortfall3[0]==0 and shortfall3[1]==0:
+            return combos+triplecombos3
 
-        for elem in range(len(shortfalllist)):
-            combos=combolist[elem]
-            shortfall=shortfalllist[elem]
-            used=usedlist[elem]
-            triplecombos=[]
+    for elem in range(len(shortfalllist)):
+        combos=combolist[elem]
+        shortfall=shortfalllist[elem]
+        used=usedlist[elem]
+        triplecombos=[]
 
-            shortfall4=shortfall
-            used4=used
-            triplecombos4=triplecombos
-            used5=used
-            shortfall5=shortfall
-            triplecombos5=triplecombos4
-            if len(space)>=3:
-                for bound in range(0,upperbound):
+        shortfall4=shortfall
+        used4=used
+        triplecombos4=triplecombos
+        used5=used
+        shortfall5=shortfall
+        triplecombos4=triplecombos
+        if len(space)>=3:
+            for bound in range(0,upperbound):
+                if shortfall4[1]==0:
+                    break
+                for i in range(len(space)-2):
                     if shortfall4[1]==0:
                         break
-                    for i in range(len(space)-2):
+                    for j in range(len(space)-1, i+1, -1):
                         if shortfall4[1]==0:
                             break
-                        for j in range(len(space)-1, i+1, -1):
+                        for k in range(j-1, i, -1):
                             if shortfall4[1]==0:
                                 break
-                            for k in range(j-1, i, -1):
-                                if shortfall4[1]==0:
-                                    break
-                                if space[i]+space[j]+space[k]>=6 and (shortfall4[1]>0) and (i not in used4 and j not in used4 and k not in used4) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
-                                    used4.add(i)
-                                    used4.add(j)
-                                    used4.add(k)
-                                    shortfall4[1]-=1
-                                    triplecombos4.append([i+1,k+1,j+1])
+                            if space[i]+space[j]+space[k]>=6 and (shortfall4[1]>0) and (i not in used4 and j not in used4 and k not in used4) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                                used4.add(i)
+                                used4.add(j)
+                                used4.add(k)
+                                shortfall4[1]-=1
+                                triplecombos4.append([i+1,k+1,j+1])
+            shortfall5=shortfall4
+            used5=used4
+            triplecombos5=triplecombos4
+            for bound in range(0,upperbound):
                 shortfall5=shortfall4
                 used5=used4
                 triplecombos5=triplecombos4
-                for bound in range(0,upperbound):
-                    shortfall5=shortfall4
-                    used5=used4
-                    triplecombos5=triplecombos4
+                if shortfall5[0]==0:
+                    break
+                for i in range(len(space)-2):
                     if shortfall5[0]==0:
                         break
-                    for i in range(len(space)-2):
+                    for j in range(len(space)-1, i+1, -1):
                         if shortfall5[0]==0:
                             break
-                        for j in range(len(space)-1, i+1, -1):
+                        for k in range(j-1, i, -1):
                             if shortfall5[0]==0:
                                 break
-                            for k in range(j-1, i, -1):
-                                if shortfall5[0]==0:
-                                    break
-                                if space[i]+space[j]+space[k]>=5 and (shortfall5[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
-                                    used5.add(i)
-                                    used5.add(j)
-                                    used5.add(k)
-                                    shortfall5[0]-=1
-                                    triplecombos5.append([i+1,k+1,j+1])
-            if shortfall5[0]==0 and shortfall5[1]==0:
-                return combos+triplecombos5
+                            if space[i]+space[j]+space[k]>=5 and (shortfall5[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                                used5.add(i)
+                                used5.add(j)
+                                used5.add(k)
+                                shortfall5[0]-=1
+                                triplecombos5.append([i+1,k+1,j+1])
+        if shortfall5[0]==0 and shortfall5[1]==0:
+            return combos+triplecombos5
     return []
 def splitting(combolist):
     pairs=[]
