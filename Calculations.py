@@ -397,12 +397,12 @@ def combine(sorted_output,shortfall):
                 if five1==0 and six1==0:
                     break
                 if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five1 or six1)>0 and (m not in used1) and (n not in used1):
-                    if space0[m]+space0[n]>=6:
+                    if space0[m]+space0[n]>=6 and six1>0:
                         used1.add(m)
                         used1.add(n)
                         combos1.append([m+1,n+1])
                         six1-=1
-                    elif space0[m]+space0[n]==5:
+                    elif space0[m]+space0[n]==5 and five1>0:
                         used1.add(m)
                         used1.add(n)
                         combos1.append([m+1,n+1])
@@ -457,12 +457,12 @@ def combine(sorted_output,shortfall):
                 if five3==0 and six3==0:
                     break
                 if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (five3 or six3)>0 and (m not in used3) and (n not in used3):
-                    if space0[m]+space0[n]>=6:
+                    if space0[m]+space0[n]>=6 and six3>0:
                         used3.add(m)
                         used3.add(n)
                         combos3.append([m+1,n+1])
                         six3-=1
-                    elif space0[m]+space0[n]==5:
+                    elif space0[m]+space0[n]==5 and five3>0:
                         used3.add(m)
                         used3.add(n)
                         combos3.append([m+1,n+1])
@@ -490,8 +490,8 @@ def combine(sorted_output,shortfall):
                     used4.add(n)
                     combos4.append([m+1,n+1])
                     six4-=1
-    combos5=[]
-    used5=set()
+    combos5=combos4
+    used5=used4
     for bound in range(0,7):
         if five4==0:
             break
@@ -520,7 +520,6 @@ def combine(sorted_output,shortfall):
     return []
 
 def lastresort(combolist,shortfalllist,usedlist,allocations,space):
-
     for elem in range(len(shortfalllist)):
         combos=combolist[elem]
         shortfall=shortfalllist[elem]
@@ -528,7 +527,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         triplecombos=[]
 
         shortfall1=shortfall.copy()
-        used1=used.copy()
+        used1=used
         triplecombos1=triplecombos
         if len(space)>=3:
             for bound in range(0,7):
@@ -543,7 +542,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
                         for k in range(j-1, i, -1):
                             if shortfall1[0]==0 and shortfall1[1]==0:
                                 break
-                            if space[i]+space[j]+space[k]>=5 and (shortfall1[0]>0 or shortfall1[1]>0) and (i not in used1 and j not in used1 and k not in used1) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
+                            if space[i]+space[j]+space[k]>=5 and (shortfall1[0]>0 or shortfall1[1]>0) and (i not in used1) and (j not in used1) and (k not in used1) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound:
                                 if shortfall1[1]>0 and space[i]+space[j]+space[k]>=6:
                                     used1.add(i)
                                     used1.add(j)
@@ -615,8 +614,8 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used=usedlist[elem]
         triplecombos=[]
 
-        shortfall3=shortfall.copy()
-        used3=used.copy()
+        shortfall3=shortfall
+        used3=used
         triplecombos3=triplecombos
         if len(space)>=3:
             for bound in range(0,7):
@@ -656,11 +655,11 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space):
         used=usedlist[elem]
         triplecombos=[]
 
-        shortfall4=shortfall.copy()
-        used4=used.copy()
+        shortfall4=shortfall
+        used4=used
         triplecombos4=triplecombos
-        used5=used.copy()
-        shortfall5=shortfall.copy()
+        used5=used
+        shortfall5=shortfall
         triplecombos4=triplecombos
         if len(space)>=3:
             for bound in range(0,7):
@@ -718,8 +717,8 @@ def splitting(combolist):
             threes.append(elem)
     return [pairs,threes]
 
-#allocate=[[0,0],[0,0],[0,0]]
-#space=[3,3,1]
-#short=[0,1]
+#allocate=[[1,1],[0,2],[0,2],[0,2],[2,0],[0,2]]
+#space=[4,4,2,1]
+#short=[0,2]
 #y=combine([allocate,space],short)
-#print(splitting(y))
+#print(y)
