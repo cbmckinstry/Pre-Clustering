@@ -202,14 +202,14 @@
 
     <!-- Ranges Form -->
     <form method="POST" action="/ranges">
-        <h2>Run Ranges</h2>
+        <h2>Crew Ranges</h2>
         {% if error_message and request.path == '/ranges' %}
             <div class="error-message">{{ error_message }}</div>
         {% endif %}
         <label for="total_people">Enter Total People:</label>
         <input type="number" id="total_people" name="total_people" value="{{ total_people }}" required>
 
-        <button type="submit">Run Ranges</button>
+        <button type="submit">Submit</button>
 
         {% if ranges_result %}
             <div class="results-section">
