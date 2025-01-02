@@ -19,6 +19,13 @@
         .left-column, .right-column {
             flex: 1;
         }
+        .instructions {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
         form {
             margin-bottom: 20px;
             padding: 15px;
@@ -71,6 +78,18 @@
 <div class="container">
     <!-- Left Column -->
     <div class="left-column">
+        <!-- Instructions Section -->
+        <div class="instructions">
+            <h2>Instructions</h2>
+            <p>Welcome to the Pre-Clustering Tool! Use the following forms to calculate vehicle capacities, crew structures, and ranges for your clustering needs.</p>
+            <ul>
+                <li><strong>Vehicle Capacities:</strong> Enter vehicle capacities and the number of 5-, 6-, and 7-person groups to get allocations and combinations.</li>
+                <li><strong>Crew Structure:</strong> Provide the total number of people and crews to calculate the distribution of 5-, 6-, and 7-person groups.</li>
+                <li><strong>Crew Ranges:</strong> Enter the total number of people to determine possible ranges for crew sizes.</li>
+            </ul>
+            <p>Submit each form independently and view results below each section.</p>
+        </div>
+
         <!-- Ranges Form -->
         <form method="POST" action="/ranges">
             <h2>Crew Ranges</h2>
