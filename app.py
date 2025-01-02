@@ -13,7 +13,6 @@ Session(app)
 logging.basicConfig(level=logging.DEBUG)
 
 @app.route("/", methods=["GET", "POST"])
-@app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         try:
@@ -81,7 +80,6 @@ def index():
             session["pers6"] = pers6
             session["pers7"] = pers7
             session["results"] = results
-            session["backupsize"]= backupsize
 
         except Exception as e:
             logging.error(f"Exception occurred: {e}")
@@ -93,11 +91,15 @@ def index():
                 pers5=pers5_input,
                 pers6=pers6_input,
                 pers7=pers7_input,
-                backupsize=None,
                 results=None,
                 sorted_allocations=None,
                 pairs=None,
                 threes=None,
+                matrices_result=session.get("matrices_result"),
+                ranges_result=session.get("ranges_result"),
+                total_people=session.get("total_people", ""),
+                people=session.get("people", ""),
+                crews=session.get("crews", ""),
                 zip=zip,
                 enumerate=enumerate
             )
@@ -111,13 +113,132 @@ def index():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
-        backupsize=session.get("backupsize"),
         pairs=session.get("pairs"),
         threes=session.get("threes"),
+        matrices_result=session.get("matrices_result"),
+        ranges_result=session.get("ranges_result"),
+        total_people=session.get("total_people", ""),
+        people=session.get("people", ""),
+        crews=session.get("crews", ""),
         zip=zip,
         enumerate=enumerate
     )
 
+@app.route("/matrices", methods=["POST"])
+def matrices():
+    try:
+        # Input parsing
+        people_input = request.form.get("people", "").strip()
+        crews_input = request.form.get("crews", "").strip()
+
+        people = int(people_input) if people_input else 0
+        crews = int(crews_input) if crews_input else 0
+
+        # Run matrices algorithm
+        matrices_result = Calculations.matrices(people, crews)
+
+        # Store the result in session
+        session["matrices_result"] = matrices_result
+        session["people"] = people
+        session["crews"] = crews
+
+    except Exception as e:
+        logging.error(f"Exception occurred while running matrices: {e}")
+        logging.error(traceback.format_exc())
+        return render_template(
+            "index.html",
+            error_message=f"An error occurred while running matrices: {e}",
+            vehlist=",".join(map(str, session.get("vehlist", []))),
+            pers5=session.get("pers5", ""),
+            pers6=session.get("pers6", ""),
+            pers7=session.get("pers7", ""),
+            results=session.get("results"),
+            sorted_allocations=session.get("sorted_allocations"),
+            pairs=session.get("pairs"),
+            threes=session.get("threes"),
+            matrices_result=None,
+            ranges_result=session.get("ranges_result"),
+            total_people=session.get("total_people", ""),
+            people=people_input,
+            crews=crews_input,
+            zip=zip,
+            enumerate=enumerate
+        )
+
+    return render_template(
+        "index.html",
+        vehlist=",".join(map(str, session.get("vehlist", []))),
+        pers5=session.get("pers5", ""),
+        pers6=session.get("pers6", ""),
+        pers7=session.get("pers7", ""),
+        results=session.get("results"),
+        sorted_allocations=session.get("sorted_allocations"),
+        pairs=session.get("pairs"),
+        threes=session.get("threes"),
+        matrices_result=session.get("matrices_result"),
+        ranges_result=session.get("ranges_result"),
+        total_people=session.get("total_people", ""),
+        people=session.get("people", ""),
+        crews=session.get("crews", ""),
+        zip=zip,
+        enumerate=enumerate
+    )
+
+@app.route("/ranges", methods=["POST"])
+def ranges():
+    try:
+        # Input parsing
+        total_people_input = request.form.get("total_people", "").strip()
+        total_people = int(total_people_input) if total_people_input else 0
+
+        # Run ranges algorithm
+        ranges_result = Calculations.ranges(total_people)
+
+        # Store the result in session
+        session["ranges_result"] = ranges_result
+        session["total_people"] = total_people
+
+    except Exception as e:
+        logging.error(f"Exception occurred while running ranges: {e}")
+        logging.error(traceback.format_exc())
+        return render_template(
+            "index.html",
+            error_message=f"An error occurred while running ranges: {e}",
+            vehlist=",".join(map(str, session.get("vehlist", []))),
+            pers5=session.get("pers5", ""),
+            pers6=session.get("pers6", ""),
+            pers7=session.get("pers7", ""),
+            results=session.get("results"),
+            sorted_allocations=session.get("sorted_allocations"),
+            pairs=session.get("pairs"),
+            threes=session.get("threes"),
+            matrices_result=session.get("matrices_result"),
+            ranges_result=None,
+            total_people=total_people_input,
+            people=session.get("people", ""),
+            crews=session.get("crews", ""),
+            zip=zip,
+            enumerate=enumerate
+        )
+
+    return render_template(
+        "index.html",
+        vehlist=",".join(map(str, session.get("vehlist", []))),
+        pers5=session.get("pers5", ""),
+        pers6=session.get("pers6", ""),
+        pers7=session.get("pers7", ""),
+        results=session.get("results"),
+        sorted_allocations=session.get("sorted_allocations"),
+        pairs=session.get("pairs"),
+        threes=session.get("threes"),
+        matrices_result=session.get("matrices_result"),
+        ranges_result=session.get("ranges_result"),
+        total_people=session.get("total_people", ""),
+        people=session.get("people", ""),
+        crews=session.get("crews", ""),
+        zip=zip,
+        enumerate=enumerate
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

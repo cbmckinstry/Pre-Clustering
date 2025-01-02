@@ -881,6 +881,7 @@ def matrices(people,crews):
     pers6n=-1*people+7*crews
     if pers7>=0 and pers6n>=0 and isinstance(pers7,int) and isinstance(pers6n,int):
         return 0,pers6n,pers7
+    return []
 
 #allocate=[[1,1],[0,2],[0,2],[0,2],[2,0],[0,2]]
 #space=[4,4,2,1]
