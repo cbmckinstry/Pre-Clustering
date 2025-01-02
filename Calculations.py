@@ -16,9 +16,6 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, s
 
 def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, sort_order="none", minimize_remainder=False, fill_before_next=False, switch_to_seven=False):
     # Validate inputs
-    logging.debug(f"Initial vehicle capacities: {vehicle_capacities}")
-    logging.debug(f"Backup groups: {backup_groups}, Six-person groups: {six_person_groups}")
-
     original_indices = list(range(len(vehicle_capacities)))
 
     # Apply sorting based on `sort_order`
@@ -40,7 +37,6 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
     else:
         primary_size, primary_groups, secondary_groups,backup_size = backup_size, backup_groups, six_person_groups,6
 
-    logging.debug(f"Primary size: {primary_size}, Secondary size: {backup_size}")
 
     # Check if any group can be placed
     def can_place_any_group():
@@ -54,11 +50,9 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
         progress_in_iteration = False
 
         for current_vehicle in range(len(vehicle_capacities)):
-            logging.debug(f"Current vehicle {current_vehicle} capacity: {vehicle_capacities[current_vehicle]}")
 
             if primary_groups > 0 and vehicle_capacities[current_vehicle] >= primary_size:
                 # Assign a primary group
-                logging.debug(f"Assigning primary group to vehicle {current_vehicle}")
                 vehicle_assignments[current_vehicle][primary_size == 6] += 1
                 totals[primary_size == 6] += 1
                 vehicle_capacities[current_vehicle] -= primary_size
@@ -66,7 +60,6 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
                 progress_in_iteration = True
             elif secondary_groups > 0 and vehicle_capacities[current_vehicle] >= backup_size:
                 # Assign a backup group
-                logging.debug(f"Assigning backup group to vehicle {current_vehicle}")
                 vehicle_assignments[current_vehicle][backup_size == 6] += 1
                 totals[backup_size == 6] += 1
                 vehicle_capacities[current_vehicle] -= backup_size
@@ -74,12 +67,8 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
                 progress_in_iteration = True
 
         if not progress_in_iteration:
-            logging.debug("No progress in allocation, breaking loop.")
             break
 
-    logging.debug(f"Final vehicle capacities: {vehicle_capacities}")
-    logging.debug(f"Vehicle assignments: {vehicle_assignments}")
-    logging.debug(f"Total allocations: {totals}")
 
     space_remaining = list(vehicle_capacities)
     restored_order = sorted(zip(original_indices, vehicle_assignments, space_remaining), key=lambda x: x[0])
