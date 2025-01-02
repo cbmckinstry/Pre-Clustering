@@ -86,10 +86,13 @@
                 <label for="pers6">Enter Number of 6-person Groups:</label>
                 <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required>
 
+                <label for="pers7">Enter Number of 7-person Groups:</label>
+                <input type="number" id="pers7" name="pers7" value="{{ pers7 }}" required>
+
                 <button type="submit">Submit</button>
 
                 <h3>Instructions</h3>
-                <p>Please ensure you provide the correct inputs in the form above. For vehicle capacities, enter a comma-separated list of integers (e.g., 4, 5, 8, 10). The number of 5-person and 6-person groups should be positive integers. Make sure you do not include assign together vehicles/crews in this calculation. After pressing submit, it will tell you which crews need additional space organized by largest remaining space. Combine vehicles using the remaining spaces column until you get a "You're all good!" message. The combinations section will only display results if it can find "good" pairings of 2 and 3 vehicles with extra space that satisfy the shortfall impacting 9 or fewer other crews. If you need additional help, refer to <a href="https://google.com" target=\"_blank\">https://google.com</a>.</p>
+                <p>Please ensure you provide the correct inputs in the form above. For vehicle capacities, enter a comma-separated list of integers (e.g., 4, 5, 8, 10). The number of 5-, 6-, and 7-person groups should be positive integers. After pressing submit, it will calculate the allocations and provide suggestions for combining vehicles with extra space to meet the crew requirements. If you need additional help, refer to <a href="https://google.com" target="_blank">https://google.com</a>.</p>
             </form>
         </div>
     </div>
@@ -101,12 +104,20 @@
             <p>You're all good!</p>
         {% else %}
             <p><strong>Totals:</strong>
-                Total 5-person groups: {{ results[0][0][0] }},
-                Total 6-person groups: {{ results[0][0][1] }}
+                Total 6-person groups: {{ results[0][0][1] }},
+                {% if backupsize == 5 %}
+                    Total 5-person groups: {{ results[0][0][0] }}
+                {% else %}
+                    Total 7-person groups: {{ results[0][0][0] }}
+                {% endif %}
             </p>
             <p><strong>Shortfall:</strong>
-                5-person groups: {{ results[1][0] }},
-                6-person groups: {{ results[1][1] }}
+                6-person groups: {{ results[1][1] }},
+                {% if backupsize == 5 %}
+                    5-person groups: {{ results[1][0] }}
+                {% else %}
+                    7-person groups: {{ results[1][0] }}
+                {% endif %}
             </p>
             <p><strong>Combinations:</strong></p>
             {% if pairs or threes %}
@@ -141,7 +152,11 @@
                         <td>{{ entry[3] }}</td>
                         <td>{{ entry[0] }}</td> <!-- Vehicle size -->
                         <td>
-                            {{ entry[1][0] }} 5-person groups, {{ entry[1][1] }} 6-person groups
+                            {% if backupsize==5 %}
+                                {{ entry[1][0] }} 5-person groups, {{ entry[1][1] }} 6-person groups
+                            {% else %}
+                                {{ entry[1][0] }} 7-person groups, {{ entry[1][1] }} 6-person groups
+                            {% endif %}
                         </td>
                         <td>{{ entry[2] }} spaces remaining</td> <!-- Remaining space -->
                     </tr>
