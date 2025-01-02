@@ -11,11 +11,13 @@
             padding: 20px;
         }
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: auto;
+            display: flex;
+            gap: 20px;
         }
-        h1, h2 {
-            text-align: center;
+        .left-column, .right-column {
+            flex: 1;
         }
         form {
             margin-bottom: 20px;
@@ -67,172 +69,175 @@
 </head>
 <body>
 <div class="container">
-    <h1>Pre-Clustering Tool</h1>
+    <!-- Left Column -->
+    <div class="left-column">
+        <!-- Ranges Form -->
+        <form method="POST" action="/ranges">
+            <h2>Crew Ranges</h2>
+            {% if error_message and request.path == '/ranges' %}
+                <div class="error-message">{{ error_message }}</div>
+            {% endif %}
+            <label for="total_people">Enter Total People:</label>
+            <input type="number" id="total_people" name="total_people" value="{{ total_people }}" required>
 
-    <!-- Vehicle Capacities Form -->
-    <form method="POST" action="/">
-        <h2>Vehicle Capacities</h2>
-        {% if error_message and request.path == '/' %}
-            <div class="error-message">{{ error_message }}</div>
-        {% endif %}
-        <label for="vehlist">Enter Vehicle Capacities (comma-separated):</label>
-        <textarea id="vehlist" name="vehlist" rows="4" required>{{ vehlist }}</textarea>
+            <button type="submit">Submit</button>
 
-        <label for="pers5">Enter Number of 5-person Groups:</label>
-        <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required>
-
-        <label for="pers6">Enter Number of 6-person Groups:</label>
-        <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required>
-
-        <label for="pers7">Enter Number of 7-person Groups:</label>
-        <input type="number" id="pers7" name="pers7" value="{{ pers7 }}" required>
-
-        <button type="submit">Submit Vehicle Data</button>
-
-        <!-- Vehicle Capacities Results -->
-        {% if results %}
-            <div class="results-section">
-                <h3>Vehicle Capacities Results</h3>
-                {% if results[1][0] == 0 and results[1][1] == 0 %}
-                    <p>You're all good!</p>
-                {% else %}
-                    <p><strong>Totals:</strong>
-                        {% if pers7 == 0 %}
-                            Total 5-person groups: {{ results[0][0][0] }},
+            {% if ranges_result %}
+                <div class="results-section">
+                    <h3>Ranges Result:</h3>
+                    <p>
+                        {% if ranges_result[0] %}
+                            5 and 6-person range: {{ ranges_result[0][0] }} to {{ ranges_result[0][1] }}
                         {% else %}
-                            Total 7-person groups: {{ results[0][0][0] }},
+                            No 5 and 6-person range.
                         {% endif %}
-                        Total 6-person groups: {{ results[0][0][1] }}
                     </p>
-                    <p><strong>Shortfall:</strong>
-                        {% if pers7 == 0 %}
-                            5-person groups: {{ results[1][0] }},
+                    <p>
+                        {% if ranges_result[1] %}
+                            6 and 7-person range: {{ ranges_result[1][0] }} to {{ ranges_result[1][1] }}
                         {% else %}
-                            7-person groups: {{ results[1][0] }},
+                            No 6 and 7-person range.
                         {% endif %}
-                        6-person groups: {{ results[1][1] }}
                     </p>
-                    <p><strong>Combinations:</strong></p>
-                    {% if pairs or threes %}
-                        {% if pairs %}
-                            {% for vehicle in pairs %}
-                                <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
-                            {% endfor %}
-                        {% endif %}
-                        {% if threes %}
-                            {% for elem in threes %}
-                                <p>Combine Vehicle {{ elem[0] }}, Vehicle {{ elem[1] }}, and Vehicle {{ elem[2] }}</p>
-                            {% endfor %}
-                        {% endif %}
+                </div>
+            {% else %}
+                <p>No results for ranges yet.</p>
+            {% endif %}
+        </form>
+
+        <!-- Matrices Form -->
+        <form method="POST" action="/matrices">
+            <h2>Crew Structure</h2>
+            {% if error_message and request.path == '/matrices' %}
+                <div class="error-message">{{ error_message }}</div>
+            {% endif %}
+            <label for="people">Enter Total People:</label>
+            <input type="number" id="people" name="people" value="{{ people }}" required>
+
+            <label for="crews">Enter Total Crews:</label>
+            <input type="number" id="crews" name="crews" value="{{ crews }}" required>
+
+            <button type="submit">Submit</button>
+
+            {% if matrices_result %}
+                <div class="results-section">
+                    <h3>Crew Structure Result:</h3>
+                    <p>5-person crews: {{ matrices_result[0] }}</p>
+                    <p>6-person crews: {{ matrices_result[1] }}</p>
+                    <p>7-person crews: {{ matrices_result[2] }}</p>
+                </div>
+            {% else %}
+                <p>No results for crew structure yet.</p>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+        <!-- Vehicle Capacities Form -->
+        <form method="POST" action="/">
+            <h2>Vehicle Capacities</h2>
+            {% if error_message and request.path == '/' %}
+                <div class="error-message">{{ error_message }}</div>
+            {% endif %}
+            <label for="vehlist">Enter Vehicle Capacities (comma-separated):</label>
+            <textarea id="vehlist" name="vehlist" rows="4" required>{{ vehlist }}</textarea>
+
+            <label for="pers5">Enter Number of 5-person Groups:</label>
+            <input type="number" id="pers5" name="pers5" value="{{ pers5 }}" required>
+
+            <label for="pers6">Enter Number of 6-person Groups:</label>
+            <input type="number" id="pers6" name="pers6" value="{{ pers6 }}" required>
+
+            <label for="pers7">Enter Number of 7-person Groups:</label>
+            <input type="number" id="pers7" name="pers7" required value="{{ pers7 }}">
+
+            <button type="submit">Submit Vehicle Data</button>
+
+            <!-- Vehicle Capacities Results -->
+            {% if results %}
+                <div class="results-section">
+                    <h3>Vehicle Capacities Results</h3>
+                    {% if results[1][0] == 0 and results[1][1] == 0 %}
+                        <p>You're all good!</p>
                     {% else %}
-                        <p>No combinations available.</p>
-                    {% endif %}
-                {% endif %}
-
-                <!-- Allocations Matrix -->
-                {% if sorted_allocations %}
-                    <h3>Allocations:</h3>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Vehicle Number</th>
-                            <th>Vehicle Capacity</th>
-                            {% if pers7==0 %}
-                                <th>5-Person Groups</th>
+                        <p><strong>Totals:</strong>
+                            {% if pers7 == 0 %}
+                                Total 5-person groups: {{ results[0][0][0] }},
+                            {% else %}
+                                Total 7-person groups: {{ results[0][0][0] }},
                             {% endif %}
-                            <th>6-Person Groups</th>
-                            {% if pers7!=0 %}
-                                <th>7-Person Groups</th>
-                                {% endif %}
-                            <th>Remaining Space</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for entry in sorted_allocations %}
+                            Total 6-person groups: {{ results[0][0][1] }}
+                        </p>
+                        <p><strong>Shortfall:</strong>
+                            {% if pers7 == 0 %}
+                                5-person groups: {{ results[1][0] }},
+                            {% else %}
+                                7-person groups: {{ results[1][0] }},
+                            {% endif %}
+                            6-person groups: {{ results[1][1] }}
+                        </p>
+                        <p><strong>Combinations:</strong></p>
+                        {% if pairs or threes %}
+                            {% if pairs %}
+                                {% for vehicle in pairs %}
+                                    <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
+                                {% endfor %}
+                            {% endif %}
+                            {% if threes %}
+                                {% for elem in threes %}
+                                    <p>Combine Vehicle {{ elem[0] }}, Vehicle {{ elem[1] }}, and Vehicle {{ elem[2] }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            <p>No combinations available.</p>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Allocations Matrix -->
+                    {% if sorted_allocations %}
+                        <h3>Allocations:</h3>
+                        <table>
+                            <thead>
                             <tr>
-                                <td>{{ entry[3] }}</td>
-                                <td>{{ entry[0] }}</td>
-                                {% if pers7==0 %}
-                                    <td>{{ entry[1][0] }}</td> <!-- 5-person groups -->
+                                <th>Vehicle Number</th>
+                                <th>Vehicle Capacity</th>
+                                {% if pers7 == 0 %}
+                                    <th>5-Person Groups</th>
                                 {% endif %}
-                                <td>{{ entry[1][1] }}</td> <!-- 6-person groups -->
-                                {% if pers7!=0 %}
-                                    <td>{{ entry[1][0] }}</td> <!-- 7-person groups -->
+                                <th>6-Person Groups</th>
+                                {% if pers7 != 0 %}
+                                    <th>7-Person Groups</th>
                                 {% endif %}
-                                <td>{{ entry[2] }}</td>
+                                <th>Remaining Space</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p>No sorted allocations to display.</p>
-                {% endif %}
-            </div>
-        {% else %}
-            <p>No results for vehicles yet.</p>
-        {% endif %}
-    </form>
-
-    <!-- Matrices Form -->
-    <form method="POST" action="/matrices">
-        <h2>Crew Structure</h2>
-        {% if error_message and request.path == '/matrices' %}
-            <div class="error-message">{{ error_message }}</div>
-        {% endif %}
-        <label for="people">Enter Total People:</label>
-        <input type="number" id="people" name="people" value="{{ people }}" required>
-
-        <label for="crews">Enter Total Crews:</label>
-        <input type="number" id="crews" name="crews" value="{{ crews }}" required>
-
-        <button type="submit">Submit</button>
-
-        {% if matrices_result %}
-            <div class="results-section">
-                <h3>Crew Structure Result:</h3>
-                <p>5-person crews: {{ matrices_result[0] }}</p>
-                <p>6-person crews: {{ matrices_result[1] }}</p>
-                <p>7-person crews: {{ matrices_result[2] }}</p>
-
-            </div>
-        {% else %}
-            <p>No results for crew structure yet.</p>
-        {% endif %}
-    </form>
-
-    <!-- Ranges Form -->
-    <form method="POST" action="/ranges">
-        <h2>Crew Ranges</h2>
-        {% if error_message and request.path == '/ranges' %}
-            <div class="error-message">{{ error_message }}</div>
-        {% endif %}
-        <label for="total_people">Enter Total People:</label>
-        <input type="number" id="total_people" name="total_people" value="{{ total_people }}" required>
-
-        <button type="submit">Submit</button>
-
-        {% if ranges_result %}
-            <div class="results-section">
-                <h3>Ranges Result:</h3>
-                <p>
-                    {% if ranges_result[0] %}
-                        5 and 6-person range: {{ ranges_result[0][0] }} to {{ ranges_result[0][1] }}
+                            </thead>
+                            <tbody>
+                            {% for entry in sorted_allocations %}
+                                <tr>
+                                    <td>{{ entry[3] }}</td>
+                                    <td>{{ entry[0] }}</td>
+                                    {% if pers7 == 0 %}
+                                        <td>{{ entry[1][0] }}</td> <!-- 5-person groups -->
+                                    {% endif %}
+                                    <td>{{ entry[1][1] }}</td> <!-- 6-person groups -->
+                                    {% if pers7 != 0 %}
+                                        <td>{{ entry[1][0] }}</td> <!-- 7-person groups -->
+                                    {% endif %}
+                                    <td>{{ entry[2] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     {% else %}
-                        No 5 and 6-person range.
+                        <p>No sorted allocations to display.</p>
                     {% endif %}
-                </p>
-                <p>
-                    {% if ranges_result[1] %}
-                        6 and 7-person range: {{ ranges_result[1][0] }} to {{ ranges_result[1][1] }}
-                    {% else %}
-                        No 6 and 7-person range.
-                    {% endif %}
-                </p>
-            </div>
-        {% else %}
-            <p>No results for ranges yet.</p>
-        {% endif %}
-    </form>
+                </div>
+            {% else %}
+                <p>No results for vehicles yet.</p>
+            {% endif %}
+        </form>
+    </div>
 </div>
 </body>
 </html>
