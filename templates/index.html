@@ -104,20 +104,20 @@
             {% if ranges_result %}
                 <div class="results-section">
                     <h3>Ranges Result:</h3>
-                    <p>
-                        {% if ranges_result[0] %}
-                            5 and 6-person range: {{ ranges_result[0][0] }} to {{ ranges_result[0][1] }}
+                        {% if ranges_result[0] or ranges_result[1]%}
+                            {% if ranges_result[0] %}
+                                <p>Optimal: {{ ranges_result[0][0] }}</p>
+                                <p>5 and 6-person range: {{ ranges_result[0][0] }} to {{ ranges_result[0][1] }}</p>
+                            {% endif %}
+                            {% if ranges_result[1] %}
+                                {% if not ranges_result[0] %}
+                                    <p>Optimal: {{ ranges_result[1][1] }}</p>
+                                {% endif %}
+                                <p>6 and 7-person range: {{ ranges_result[1][0] }} to {{ ranges_result[1][1] }}</p>
+                            {% endif %}
                         {% else %}
-                            No 5 and 6-person range.
+                            <p> No valid range results</p>
                         {% endif %}
-                    </p>
-                    <p>
-                        {% if ranges_result[1] %}
-                            6 and 7-person range: {{ ranges_result[1][0] }} to {{ ranges_result[1][1] }}
-                        {% else %}
-                            No 6 and 7-person range.
-                        {% endif %}
-                    </p>
                 </div>
             {% else %}
                 <p>No results for ranges yet.</p>
