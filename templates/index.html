@@ -141,9 +141,15 @@
             {% if matrices_result %}
                 <div class="results-section">
                     <h3>Crew Structure Result:</h3>
-                    <p>5-person crews: {{ matrices_result[0] }}</p>
-                    <p>6-person crews: {{ matrices_result[1] }}</p>
-                    <p>7-person crews: {{ matrices_result[2] }}</p>
+                    {% if matrices_result[0]!=0 %}
+                        <p>5-person crews: {{ matrices_result[0] }}</p>
+                    {% endif %}
+                    {% if matrices_result[1]!=0 %}
+                        <p>6-person crews: {{ matrices_result[1] }}</p>
+                    {% endif %}
+                    {% if matrices_result[2]!=0 %}
+                        <p>7-person crews: {{ matrices_result[2] }}</p>
+                    {% endif %}
                 </div>
             {% else %}
                 <p>No results for crew structure yet.</p>
