@@ -53,12 +53,12 @@ def index():
                         ))
 
             # Closest allocation logic
-            results = Calculations.closestalg([backup_group, pers6], allocations)
+            backupsize = 5 if pers7 == 0 else 7
+            results = Calculations.closestalg([backup_group, pers6], allocations,backupsize)
 
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
-            backupsize = 5 if pers7 == 0 else 7
             sorted_allocations, sorted_spaces, sorted_sizes, number = Calculations.sort_closestalg_output(results, backupsize)
 
             # Combine the sorted data for the template
@@ -123,7 +123,6 @@ def index():
         zip=zip,
         enumerate=enumerate
     )
-
 @app.route("/matrices", methods=["POST"])
 def matrices():
     try:
