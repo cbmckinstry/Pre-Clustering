@@ -55,7 +55,6 @@ def index():
             # Closest allocation logic
             backupsize = 5 if pers7 == 0 else 7
             results = Calculations.closestalg([backup_group, pers6], allocations,backupsize)
-
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
