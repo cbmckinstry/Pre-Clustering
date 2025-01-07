@@ -277,7 +277,7 @@ def allocate_groups_simultaneous(vehicle_capacities, backup_groups, six_person_g
 
     return [totals, vehicle_assignments, space_remaining]
 
-def closestalg(required_groups, allocations):
+def closestalg(required_groups, allocations,backupsize=5):
     offby = []
     total_shortfalls = []
 
@@ -297,7 +297,7 @@ def closestalg(required_groups, allocations):
     if len(best_indices) > 1:
         best_indices.sort(key=lambda i: (
             len([cap for cap in allocations[i][2] if cap > 0]),  # Number of vehicles with remaining capacity
-            -allocations[i][0][1]  # Number of 6-person groups
+            -allocations[i][0][backupsize==5]  # Number of larger groups
         ))
 
     # Return the best allocation
