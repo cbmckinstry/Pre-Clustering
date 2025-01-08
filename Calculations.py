@@ -546,19 +546,19 @@ def combine(sorted_output,shortfall,upperbound,backup_size=5):
                         backup4-=1
     if backup4==0 and six4==0:
         return combos5
-    if upperbound>=5:
-        outer=[combos1,combos2,combos3,combos5]
-        spent=[used1,used2,used3,used5]
-        shorts=[[backup1,six1],[backup2,six2],[backup3,six3],[backup4,six4]]
-        finaltry=lastresort(outer,shorts,spent,allocations0,space0,upperbound,backup_size)
-        if finaltry:
-            return finaltry
+    outer=[combos1,combos2,combos3,combos5]
+    spent=[used1,used2,used3,used5]
+    shorts=[[backup1,six1],[backup2,six2],[backup3,six3],[backup4,six4]]
+    finaltry=lastresort(outer,shorts,spent,allocations0,space0,upperbound,backup_size)
+    if finaltry:
+        return finaltry
     return []
 
 def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,backup_size):
     final=[]
     bounding=[]
     bound1=bound2=bound3=bound4=bound5=bound6=0
+    tripleused1=tripleused2=tripleused3=tripleused4=tripleused5=set()
     for elem in range(len(shortfalllist)):
         combos=combolist[elem]
         shortfall=shortfalllist[elem]
@@ -568,6 +568,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
         shortfall1=shortfall.copy()
         used1=used
         triplecombos1=triplecombos
+        tripleused1=set()
         if len(space)>=3:
             for bound1 in range(0,upperbound):
                 if shortfall1[0]==0 and shortfall1[1]==0:
@@ -581,23 +582,20 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                         for k in range(j-1, i, -1):
                             if shortfall1[0]==0 and shortfall1[1]==0:
                                 break
-                            if space[i]+space[j]+space[k]>=min(backup_size,6) and (shortfall1[0]>0 or shortfall1[1]>0) and (i not in used1) and (j not in used1) and (k not in used1) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound1:
+                            if space[i]+space[j]+space[k]>=min(backup_size,6) and (shortfall1[0]>0 or shortfall1[1]>0) and ((([i+1,j+1] in combos and k not in used1) or ([k+1,j+1] in combos and i not in used1) or ([i+1,k+1] in combos and j not in used1)) or (i not in used1 and j not in used1 and k not in used1)) and (i not in tripleused1 and j not in tripleused1 and k not in tripleused1) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound1:
                                 if shortfall1[0]>0 and space[i]+space[j]+space[k]>=7 and backup_size==7:
-                                    used1.add(i)
-                                    used1.add(j)
-                                    used1.add(k)
+                                    used1.update([i,j,k])
+                                    tripleused1.update([i,j,k])
                                     shortfall1[0]-=1
                                     triplecombos1.append([i+1,k+1,j+1])
                                 elif shortfall1[1]>0 and space[i]+space[j]+space[k]>=6:
-                                    used1.add(i)
-                                    used1.add(j)
-                                    used1.add(k)
+                                    used1.update([i,j,k])
+                                    tripleused1.update([i,j,k])
                                     shortfall1[1]-=1
                                     triplecombos1.append([i+1,k+1,j+1])
                                 elif shortfall1[0]>0 and space[i]+space[j]+space[k]>=5 and backup_size==5:
-                                    used1.add(i)
-                                    used1.add(j)
-                                    used1.add(k)
+                                    used1.update([i,j,k])
+                                    tripleused1.update([i,j,k])
                                     shortfall1[0]-=1
                                     triplecombos1.append([i+1,k+1,j+1])
 
@@ -614,6 +612,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
         shortfall2=shortfall.copy()
         used2=used.copy()
         triplecombos2=triplecombos
+        tripleused2=set()
         if len(space)>=3:
             if backup_size==7:
                 for bound3 in range(0,upperbound):
@@ -628,10 +627,9 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                             for k in range(j-1, i, -1):
                                 if shortfall2[0]==0:
                                     break
-                                if space[i]+space[j]+space[k]>=7 and (shortfall2[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound3:
-                                    used2.add(i)
-                                    used2.add(j)
-                                    used2.add(k)
+                                if space[i]+space[j]+space[k]>=7 and (shortfall2[0]>0) and ((([i+1,j+1] in combos and k not in used2) or ([k+1,j+1] in combos and i not in used2) or ([i+1,k+1] in combos and j not in used2)) or (i not in used2 and j not in used2 and k not in used2)) and (i not in tripleused2 and j not in tripleused2 and k not in tripleused2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound3:
+                                    used2.update([i,j,k])
+                                    tripleused2.update([i,j,k])
                                     shortfall2[0]-=1
                                     triplecombos2.append([i+1,k+1,j+1])
             for bound2 in range(0,upperbound):
@@ -646,10 +644,9 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                         for k in range(j-1, i, -1):
                             if shortfall2[1]==0:
                                 break
-                            if space[i]+space[j]+space[k]>=6 and (shortfall2[1]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound2:
-                                used2.add(i)
-                                used2.add(j)
-                                used2.add(k)
+                            if space[i]+space[j]+space[k]>=6 and (shortfall2[1]>0) and ((([i+1,j+1] in combos and k not in used2) or ([k+1,j+1] in combos and i not in used2) or ([i+1,k+1] in combos and j not in used2)) or (i not in used2 and j not in used2 and k not in used2)) and (i not in tripleused2 and j not in tripleused2 and k not in tripleused2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound2:
+                                used2.update([i,j,k])
+                                tripleused2.update([i,j,k])
                                 shortfall2[1]-=1
                                 triplecombos2.append([i+1,k+1,j+1])
             if backup_size==5:
@@ -665,10 +662,9 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                             for k in range(j-1, i, -1):
                                 if shortfall2[0]==0:
                                     break
-                                if space[i]+space[j]+space[k]>=5 and (shortfall2[0]>0) and (i not in used2 and j not in used2 and k not in used2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound3:
-                                    used2.add(i)
-                                    used2.add(j)
-                                    used2.add(k)
+                                if space[i]+space[j]+space[k]>=5 and (shortfall2[0]>0) and ((([i+1,j+1] in combos and k not in used2) or ([k+1,j+1] in combos and i not in used2) or ([i+1,k+1] in combos and j not in used2)) or (i not in used2 and j not in used2 and k not in used2)) and (i not in tripleused2 and j not in tripleused2 and k not in tripleused2) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound3:
+                                    used2.update([i,j,k])
+                                    tripleused2.update([i,j,k])
                                     shortfall2[0]-=1
                                     triplecombos2.append([i+1,k+1,j+1])
         if shortfall2[0]==0 and shortfall2[1]==0:
@@ -684,6 +680,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
         shortfall3=shortfall
         used3=used
         triplecombos3=triplecombos
+        tripleused3=set()
         if len(space)>=3:
             for bound4 in range(0,upperbound):
                 if shortfall3[0]==0 and shortfall3[1]==0:
@@ -691,6 +688,7 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                 shortfall3=shortfall.copy()
                 used3=used.copy()
                 triplecombos3=triplecombos
+                tripleused3=set()
                 for i in range(len(space)-2):
                     if shortfall3[0]==0 and shortfall3[1]==0:
                         break
@@ -700,23 +698,20 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                         for k in range(j-1, i, -1):
                             if shortfall3[0]==0 and shortfall3[1]==0:
                                 break
-                            if space[i]+space[j]+space[k]>=min(backup_size,6) and (shortfall3[0]>0 or shortfall3[1]>0) and (i not in used3 and j not in used3 and k not in used3) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound4:
+                            if space[i]+space[j]+space[k]>=min(backup_size,6) and (shortfall3[0]>0 or shortfall3[1]>0) and ((([i+1,j+1] in combos and k not in used3) or ([k+1,j+1] in combos and i not in used3) or ([i+1,k+1] in combos and j not in used3)) or (i not in used3 and j not in used3 and k not in used3)) and (i not in tripleused3 and j not in tripleused3 and k not in tripleused3) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound4:
                                 if shortfall3[0]>0 and space[i]+space[j]+space[k]>=7 and backup_size==7:
-                                    used3.add(i)
-                                    used3.add(j)
-                                    used3.add(k)
+                                    used3.update([i,j,k])
+                                    tripleused3.update([i,j,k])
                                     shortfall3[0]-=1
                                     triplecombos3.append([i+1,k+1,j+1])
                                 elif shortfall3[1]>0 and space[i]+space[j]+space[k]>=6:
-                                    used3.add(i)
-                                    used3.add(j)
-                                    used3.add(k)
+                                    used3.update([i,j,k])
+                                    tripleused3.update([i,j,k])
                                     shortfall3[1]-=1
                                     triplecombos3.append([i+1,k+1,j+1])
                                 elif shortfall3[0]>0 and space[i]+space[j]+space[k]>=5 and backup_size==5:
-                                    used3.add(i)
-                                    used3.add(j)
-                                    used3.add(k)
+                                    used3.update([i,j,k])
+                                    tripleused3.update([i,j,k])
                                     shortfall3[0]-=1
                                     triplecombos3.append([i+1,k+1,j+1])
         if shortfall3[0]==0 and shortfall3[1]==0:
@@ -735,6 +730,8 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
         used5=used
         shortfall5=shortfall
         triplecombos5=triplecombos4
+        tripleused4=set()
+        tripleused5=tripleused4
         if len(space)>=3:
             if backup_size==7:
                 for bound5 in range(0,upperbound):
@@ -749,19 +746,20 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                             for k in range(j-1, i, -1):
                                 if shortfall4[0]==0:
                                     break
-                                if space[i]+space[j]+space[k]>=7 and (shortfall4[0]>0) and (i not in used4 and j not in used4 and k not in used4) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound5:
-                                    used4.add(i)
-                                    used4.add(j)
-                                    used4.add(k)
+                                if space[i]+space[j]+space[k]>=7 and (shortfall4[0]>0) and ((([i+1,j+1] in combos and k not in used4) or ([k+1,j+1] in combos and i not in used4) or ([i+1,k+1] in combos and j not in used4)) or (i not in used4 and j not in used4 and k not in used4)) and (i not in tripleused4 and j not in tripleused4 and k not in tripleused4) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound5:
+                                    used4.update([i,j,k])
+                                    tripleused4.update([i,j,k])
                                     shortfall4[0]-=1
                                     triplecombos4.append([i+1,k+1,j+1])
                 shortfall5=shortfall4
                 used5=used4
+                tripleused5=tripleused4
                 triplecombos5=triplecombos4
                 for bound6 in range(0,upperbound):
                     shortfall5=shortfall4
                     used5=used4
                     triplecombos5=triplecombos4
+                    tripleused5=tripleused4
                     if shortfall5[1]==0:
                         break
                     for i in range(len(space)-2):
@@ -773,10 +771,9 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                             for k in range(j-1, i, -1):
                                 if shortfall5[1]==0:
                                     break
-                                if space[i]+space[j]+space[k]>=6 and (shortfall5[1]>0) and (i not in used5 and j not in used5 and k not in used5) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound6:
-                                    used5.add(i)
-                                    used5.add(j)
-                                    used5.add(k)
+                                if space[i]+space[j]+space[k]>=6 and (shortfall5[1]>0) and ((([i+1,j+1] in combos and k not in used5) or ([k+1,j+1] in combos and i not in used5) or ([i+1,k+1] in combos and j not in used5)) or (i not in used5 and j not in used5 and k not in used5)) and (i not in tripleused5 and j not in tripleused5 and k not in tripleused5) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound6:
+                                    used5.update([i,j,k])
+                                    tripleused5.update([i,j,k])
                                     shortfall5[1]-=1
                                     triplecombos5.append([i+1,k+1,j+1])
             else:
@@ -792,19 +789,20 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                             for k in range(j-1, i, -1):
                                 if shortfall4[1]==0:
                                     break
-                                if space[i]+space[j]+space[k]>=6 and (shortfall4[1]>0) and (i not in used4 and j not in used4 and k not in used4) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound5:
-                                    used4.add(i)
-                                    used4.add(j)
-                                    used4.add(k)
+                                if space[i]+space[j]+space[k]>=6 and (shortfall4[1]>0) and ((([i+1,j+1] in combos and k not in used4) or ([k+1,j+1] in combos and i not in used4) or ([i+1,k+1] in combos and j not in used4)) or (i not in used4 and j not in used4 and k not in used4)) and (i not in tripleused4 and j not in tripleused4 and k not in tripleused4) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound5:
+                                    used4.update([i,j,k])
+                                    tripleused4.update([i,j,k])
                                     shortfall4[1]-=1
                                     triplecombos4.append([i+1,k+1,j+1])
                 shortfall5=shortfall4
                 used5=used4
                 triplecombos5=triplecombos4
+                tripleused5=tripleused4
                 for bound6 in range(0,upperbound):
                     shortfall5=shortfall4
                     used5=used4
                     triplecombos5=triplecombos4
+                    tripleused5=tripleused4
                     if shortfall5[0]==0:
                         break
                     for i in range(len(space)-2):
@@ -816,10 +814,9 @@ def lastresort(combolist,shortfalllist,usedlist,allocations,space,upperbound,bac
                             for k in range(j-1, i, -1):
                                 if shortfall5[0]==0:
                                     break
-                                if space[i]+space[j]+space[k]>=5 and (shortfall5[0]>0) and (i not in used5 and j not in used5 and k not in used5) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound6:
-                                    used5.add(i)
-                                    used5.add(j)
-                                    used5.add(k)
+                                if space[i]+space[j]+space[k]>=5 and (shortfall5[0]>0) and ((([i+1,j+1] in combos and k not in used5) or ([k+1,j+1] in combos and i not in used5) or ([i+1,k+1] in combos and j not in used5)) or (i not in used5 and j not in used5 and k not in used5)) and (i not in tripleused5 and j not in tripleused5 and k not in tripleused5) and sum(allocations[i])+sum(allocations[k])+sum(allocations[j])<=bound6:
+                                    used5.update([i,j,k])
+                                    tripleused5.update([i,j,k])
                                     shortfall5[0]-=1
                                     triplecombos5.append([i+1,k+1,j+1])
         if shortfall5[0]==0 and shortfall5[1]==0:
@@ -843,6 +840,10 @@ def splitting(combolist):
                 pairs.append(elem)
             else:
                 threes.append(elem)
+    for item in pairs:
+        for elem in threes:
+            if item[0] and item[1] in elem:
+                pairs.remove(item)
     return [pairs,threes]
 
 def ranges(people):
