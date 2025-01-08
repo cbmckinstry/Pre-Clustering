@@ -68,12 +68,9 @@ def index():
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
-            combos = Calculations.bestone([sorted_allocations.copy(), sorted_spaces.copy()], results[1].copy(), 10)
-            splitvers = Calculations.splitting(combos)
-            pairs, threes = splitvers[0], splitvers[1]
+            pairs = Calculations.bestone([sorted_allocations.copy(), sorted_spaces.copy()], results[1].copy(), 10)
 
             session["pairs"] = pairs
-            session["threes"] = threes
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
@@ -93,7 +90,6 @@ def index():
                 results=None,
                 sorted_allocations=None,
                 pairs=None,
-                threes=None,
                 matrices_result=session.get("matrices_result"),
                 ranges_result=session.get("ranges_result"),
                 total_people=session.get("total_people", ""),
@@ -113,7 +109,6 @@ def index():
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
         pairs=session.get("pairs"),
-        threes=session.get("threes"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
