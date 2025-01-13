@@ -47,6 +47,7 @@ def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
                                 threes1.append([i+1,k+1,j+1])
     if six1==0 and backup1==0:
         return threes1,allgood
+
     six2=shortfall[1]
     backup2=shortfall[0]
     used2=set()
@@ -268,9 +269,10 @@ def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
     allgood=False
     return [threes8,[backup8,six8],used8],allgood
 
+
 def place3w2looped(shortfall,allocations,spaces,backupsize):
     for x in range(1,10):
         y=place3w2(shortfall.copy(),allocations,spaces,backupsize,x)
-        if not y[1]:
+        if y[1]:
             return y
     return y

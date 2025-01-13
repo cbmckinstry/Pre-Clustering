@@ -214,9 +214,9 @@ def combine(sorted_output, shortfall, upperbound, backup_size=5, used=None):
     allgood=False
     return [combos5,[backup4,six4],used5],allgood
 
-def bestone(sorted_output,shortfall,used,backup_size=5):
+def bestone(sorted_output,shortfall,backup_size,used=None):
     for x in range(1,10):
         y=combine(sorted_output,shortfall,x,backup_size,used)
-        if not y[1]:
+        if y[1]:
             return y
     return y

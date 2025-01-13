@@ -17,11 +17,11 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, s
 def allalgs(allocations,spaces,shortfall,backupsize):
     round1=bestone([allocations,spaces],shortfall,backupsize)
     if round1[1]:
-        return round1[0]
+        return round1[0],[]
     else:
         round2=place3w2looped(shortfall.copy(),allocations,spaces,backupsize)
         if round2[1]:
-            return round2[0]
+            return [],round2[0]
         else:
             short1=round2[0][1]
             used1=round2[0][2]
