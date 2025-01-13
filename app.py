@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, session
 import logging
 from flask_session import Session
 import traceback
-import Calculations  # Import your module
+from Master import *
+from Allocations import *
+import Trials  # Import your module
 
 # Configure Flask and Logging
 app = Flask(__name__)
@@ -28,7 +30,7 @@ def index():
             pers7 = int(pers7_input) if pers7_input else 0
 
             # Validate inputs
-            Calculations.validate_inputs(vehlist, pers5, pers6, pers7)
+            validate_inputs(vehlist, pers5, pers6, pers7)
 
             # Determine backup group and primary group
             backup_group = pers7 if pers7 != 0 else pers5
@@ -41,24 +43,24 @@ def index():
                 for order in [None, "asc", "desc"]:
                     for opt2 in [False, True]:
                         for opt1 in [False, True]:
-                            allocations.append(Calculations.allocate_groups(
+                            allocations.append(allocate_groups(
                                 vehlist[:].copy(), backup_group, primary_group, priority, order, opt2, opt1, use_backup
                             ))
 
             for order in [None, "asc", "desc"]:
                 for opt2 in [False, True]:
                     for opt1 in [False, True]:
-                        allocations.append(Calculations.allocate_groups_simultaneous(
+                        allocations.append(allocate_groups_simultaneous(
                             vehlist[:].copy(), backup_group, primary_group, order, opt2, opt1, use_backup
                         ))
 
             # Closest allocation logic
             backupsize = 5 if pers7 == 0 else 7
-            results = Calculations.closestalg([backup_group, pers6], allocations,backupsize)
+            results = closestalg([backup_group, pers6], allocations,backupsize)
             if not results or not isinstance(results, list) or len(results) < 2:
                 raise ValueError("Invalid results returned from calculations.")
 
-            sorted_allocations, sorted_spaces, sorted_sizes, number = Calculations.sort_closestalg_output(results, backupsize)
+            sorted_allocations, sorted_spaces, sorted_sizes, number = sort_closestalg_output(results, backupsize)
 
             # Combine the sorted data for the template
             combined_sorted_data = [
@@ -68,9 +70,9 @@ def index():
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
-            pairs = Calculations.bestone([sorted_allocations.copy(), sorted_spaces.copy()], results[1].copy(), 10)
-
+            pairs,threes=allalgs(sorted_allocations.copy(),sorted_spaces.copy(),results[1].copy(),backupsize)
             session["pairs"] = pairs
+            session["threes"]=threes
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
@@ -90,6 +92,7 @@ def index():
                 results=None,
                 sorted_allocations=None,
                 pairs=None,
+                threes=None,
                 matrices_result=session.get("matrices_result"),
                 ranges_result=session.get("ranges_result"),
                 total_people=session.get("total_people", ""),
@@ -109,6 +112,7 @@ def index():
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
         pairs=session.get("pairs"),
+        threes=session.get("threes"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
@@ -128,7 +132,7 @@ def matrices():
         crews = int(crews_input) if crews_input else 0
 
         # Run matrices algorithm
-        matrices_result = Calculations.matrices(people, crews)
+        matrices_result = matrices(people, crews)
 
         # Store the result in session
         session["matrices_result"] = matrices_result
@@ -148,6 +152,7 @@ def matrices():
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
             pairs=session.get("pairs"),
+            threes=session.get("threes"),
             matrices_result=None,
             ranges_result=session.get("ranges_result"),
             total_people=session.get("total_people", ""),
@@ -166,6 +171,7 @@ def matrices():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         pairs=session.get("pairs"),
+        threes=session.get("threes"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
@@ -183,7 +189,7 @@ def ranges():
         total_people = int(total_people_input) if total_people_input else 0
 
         # Run ranges algorithm
-        ranges_result = Calculations.ranges(total_people)
+        ranges_result = ranges(total_people)
 
         # Store the result in session
         session["ranges_result"] = ranges_result
@@ -202,6 +208,7 @@ def ranges():
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
             pairs=session.get("pairs"),
+            threes=session.get("threes"),
             matrices_result=session.get("matrices_result"),
             ranges_result=None,
             total_people=total_people_input,
@@ -220,6 +227,7 @@ def ranges():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         pairs=session.get("pairs"),
+        threes=session.get("threes"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
