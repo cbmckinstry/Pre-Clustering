@@ -252,7 +252,7 @@ def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
     return [triplecombos5,used5,shortfall5],allgood
 
 def best3(shortfall,used,allocations,space,backup_size):
-    for upper in range(1,10):
+    for upper in range(9,10):
         out=placingthrees(shortfall,used,allocations,space,backup_size,upper)
         if out[1]:
             return out
