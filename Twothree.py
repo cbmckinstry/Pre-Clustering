@@ -270,7 +270,7 @@ def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
     return [threes8,[backup8,six8],used8],allgood
 
 def place3w2looped(shortfall,allocations,spaces,backupsize):
-    for x in range(1,10):
+    for x in range(9,10):
         y=place3w2(shortfall.copy(),allocations,spaces,backupsize,x)
         if y[1]:
             return y
