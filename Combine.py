@@ -213,7 +213,7 @@ def combine(allocations, space, shortfall, upperbound, backup_size=5, used=None)
     return [combos5,[backup4,six4],used5],allgood
 
 def bestone(allocations,space,shortfall,backup_size,used=None):
-    for x in range(1,10):
+    for x in range(10,11):
         y=combine(allocations,space,shortfall,x,backup_size,used)
         if y[1]:
             return y
