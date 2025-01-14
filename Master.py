@@ -50,7 +50,7 @@ def allalgs(allocations,spaces,shortfall,backupsize):
                 if round7[1]:
                     return round7[0],round5[0][0]+round6[0]
     return [],[]
-def ranges(people):
+def compute_ranges(people):
     final=[]
     counter1=0
     people1=people
@@ -78,7 +78,7 @@ def ranges(people):
         final.append([])
     return final
 
-def matrices(people,crews):
+def compute_matrices(people,crews):
     pers5=-1*people+6*crews
     pers6=people-5*crews
     if pers5>=0 and pers6>=0 and isinstance(pers5,int) and isinstance(pers6,int):

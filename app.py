@@ -131,7 +131,7 @@ def matrices():
         crews = int(crews_input) if crews_input else 0
 
         # Run matrices algorithm
-        matrices_result = matrices(people, crews)
+        matrices_result = compute_matrices(people, crews)
 
         # Store the result in session
         session["matrices_result"] = matrices_result
@@ -188,7 +188,7 @@ def ranges():
         total_people = int(total_people_input) if total_people_input else 0
 
         # Run ranges algorithm
-        ranges_result = ranges(total_people)
+        ranges_result = compute_ranges(total_people)
 
         # Store the result in session
         session["ranges_result"] = ranges_result
