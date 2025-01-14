@@ -4,7 +4,6 @@ from flask_session import Session
 import traceback
 from Master import *
 from Allocations import *
-import Trials  # Import your module
 
 # Configure Flask and Logging
 app = Flask(__name__)
