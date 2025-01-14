@@ -1,9 +1,7 @@
-def combine(sorted_output, shortfall, upperbound, backup_size=5, used=None):
+def combine(allocations, space, shortfall, upperbound, backup_size=5, used=None):
     if used is None:
         used = set()
     allgood=True
-    allocations=sorted_output[0]
-    space=sorted_output[1]
     backup=shortfall[0]
     six=shortfall[1]
 
@@ -214,9 +212,9 @@ def combine(sorted_output, shortfall, upperbound, backup_size=5, used=None):
     allgood=False
     return [combos5,[backup4,six4],used5],allgood
 
-def bestone(sorted_output,shortfall,backup_size,used=None):
+def bestone(allocations,space,shortfall,backup_size,used=None):
     for x in range(1,10):
-        y=combine(sorted_output,shortfall,x,backup_size,used)
+        y=combine(allocations,space,shortfall,x,backup_size,used)
         if y[1]:
             return y
     return y

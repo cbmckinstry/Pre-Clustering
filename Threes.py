@@ -1,6 +1,8 @@
 def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
+    allgood=True
     triplecombos=[]
-
+    if used is None:
+        used=set()
     shortfall1=shortfall.copy()
     used1=used.copy()
     triplecombos1=triplecombos.copy()
@@ -38,7 +40,7 @@ def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
                                 triplecombos1.append([i+1,k+1,j+1])
 
     if shortfall1[0]==0 and shortfall1[1]==0:
-       return triplecombos1
+       return triplecombos1,allgood
 
     shortfall2=shortfall.copy()
     used2=used.copy()
@@ -101,7 +103,7 @@ def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
                                 shortfall2[0]-=1
                                 triplecombos2.append([i+1,k+1,j+1])
     if shortfall2[0]==0 and shortfall2[1]==0:
-        return triplecombos2
+        return triplecombos2,allgood
 
     shortfall3=shortfall.copy()
     used3=used.copy()
@@ -142,7 +144,7 @@ def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
                                 shortfall3[0]-=1
                                 triplecombos3.append([i+1,k+1,j+1])
     if shortfall3[0]==0 and shortfall3[1]==0:
-        return triplecombos3
+        return triplecombos3,allgood
 
     shortfall4=shortfall.copy()
     used4=used.copy()
@@ -245,12 +247,13 @@ def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
                                 shortfall5[0]-=1
                                 triplecombos5.append([i+1,k+1,j+1])
     if shortfall5[0]==0 and shortfall5[1]==0:
-       return triplecombos5
-    return []
+       return triplecombos5,allgood
+    allgood=False
+    return [triplecombos5,used5,shortfall5],allgood
 
 def best3(shortfall,used,allocations,space,backup_size):
     for upper in range(1,10):
         out=placingthrees(shortfall,used,allocations,space,backup_size,upper)
-        if out:
+        if out[1]:
             return out
-    return []
+    return out

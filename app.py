@@ -70,7 +70,7 @@ def index():
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
-            pairs,threes=allalgs(sorted_allocations.copy(),sorted_spaces.copy(),results[1].copy(),backupsize)
+            pairs,threes=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
             session["pairs"] = pairs
             session["threes"]=threes
             session["vehlist"] = vehlist

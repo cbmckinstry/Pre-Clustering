@@ -15,7 +15,7 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, s
         raise ValueError("There cannot be both 5 and 7 person crews")
 
 def allalgs(allocations,spaces,shortfall,backupsize):
-    round1=bestone([allocations,spaces],shortfall,backupsize)
+    round1=bestone(allocations,spaces,shortfall,backupsize)
     if round1[1]:
         return round1[0],[]
     else:
@@ -25,17 +25,31 @@ def allalgs(allocations,spaces,shortfall,backupsize):
         else:
             short1=round2[0][1]
             used1=round2[0][2]
-            round3=bestone([allocations,spaces],short1.copy(),backupsize,used1.copy())
+            round3=bestone(allocations,spaces,short1.copy(),backupsize,used1.copy())
             if round3[1]:
-                return round3[0],round2[0]
+                return round3[0],round2[0][0]
             else:
                 short2=round3[0][1]
                 used2=round3[0][2]
                 round4=best3(short2.copy(),used2.copy(),allocations,spaces,backupsize)
-                if round4:
-                    return round3[0],round4[0]+round2[0]
-    return [[],[]]
-
+                if round4[1]:
+                    return round3[0][0],round4[0]+round2[0][0]
+        round5=place3w2looped(shortfall.copy(),allocations,spaces,backupsize)
+        if round5[1]:
+            return [],round5[0]
+        else:
+            short6=round5[0][1]
+            used6=round5[0][2]
+            round6=best3(short6.copy(),used6.copy(),allocations,spaces,backupsize)
+            if round6[1]:
+                return [],round5[0][0]+round6[0]
+            else:
+                short7=round3[0][1]
+                used7=round3[0][2]
+                round7=bestone(allocations,spaces,short7.copy(),backupsize,used7.copy())
+                if round7[1]:
+                    return round7[0],round5[0][0]+round6[0]
+    return [],[]
 def ranges(people):
     final=[]
     counter1=0
