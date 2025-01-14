@@ -1,52 +1,5 @@
-def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
+def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=9):
     allgood=True
-
-    six1=shortfall[1]
-    backup1=shortfall[0]
-    used1=set()
-    threes1=[]
-    for m in range(upperbound):
-        for i in range(0,len(spaces)-2):
-            if six1==0 and backup1==0:
-                break
-            for j in range(len(spaces)-1,i+1,-1):
-                if six1==0 and backup1==0:
-                    break
-                for k in range(j-1,i,-1):
-                    if six1==0 and backup1==0:
-                        break
-                    if (i not in used1 and j not in used1 and k not in used1) and spaces[i]+spaces[k]+spaces[j]>=(2*min(backupsize,6)) and (six1>0 or backup1>0) and (sum(allocations[i])+sum(allocations[j])+sum(allocations[k]))<m:
-                        if spaces[i]+spaces[k]+spaces[j]>=(2*max(backupsize,6)):
-                            if backupsize==7:
-                                if backup1>1:
-                                    backup1-=2
-                                    used1.update([i,j,k])
-                                    threes1.append([i+1,k+1,j+1])
-                                elif six1>1:
-                                    six1-=2
-                                    used1.update([i,j,k])
-                                    threes1.append([i+1,k+1,j+1])
-                            elif backupsize==5 and six1>=2:
-                                six1-=2
-                                used1.update([i,j,k])
-                                threes1.append([i+1,k+1,j+1])
-                        elif spaces[i]+spaces[k]+spaces[j]>=(max(backupsize,6)+min(backupsize,6)):
-                            if backup1>0 and six1>0:
-                                backup1-=1
-                                six1-=1
-                                used1.update([i,j,k])
-                                threes1.append([i+1,k+1,j+1])
-                        elif spaces[i]+spaces[k]+spaces[j]>=(2*min(backupsize,6)):
-                            if backupsize==7 and six1>=2:
-                                six1-=2
-                                used1.update([i,j,k])
-                                threes1.append([i+1,k+1,j+1])
-                            elif backupsize==5 and backup1>=2:
-                                backup1-=2
-                                used1.update([i,j,k])
-                                threes1.append([i+1,k+1,j+1])
-    if six1==0 and backup1==0:
-        return threes1,allgood
 
     six2=shortfall[1]
     backup2=shortfall[0]
@@ -69,14 +22,14 @@ def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
                                     backup2-=2
                                     used2.update([i,j,k])
                                     threes2.append([i+1,k+1,j+1])
-                                elif six1>1:
+                                elif six2>1:
                                     six2-=2
                                     used2.update([i,j,k])
                                     threes2.append([i+1,k+1,j+1])
-                            elif backupsize==5 and six1>=2:
-                                six1-=2
-                                used1.update([i,j,k])
-                                threes1.append([i+1,k+1,j+1])
+                            elif backupsize==5 and six2>=2:
+                                six2-=2
+                                used2.update([i,j,k])
+                                threes2.append([i+1,k+1,j+1])
     six3=six2
     backup3=backup2
     used3=used2.copy()
@@ -126,56 +79,6 @@ def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
     if six4==0 and backup4==0:
         return threes4,allgood
 
-    six5=shortfall[1]
-    backup5=shortfall[0]
-    used5=set()
-    threes5=[]
-    for m in range(upperbound):
-        six5=shortfall[1]
-        backup5=shortfall[0]
-        used5=set()
-        threes5=[]
-        for i in range(0,len(spaces)-2):
-            if six5==0 and backup5==0:
-                break
-            for j in range(len(spaces)-1,i+1,-1):
-                if six5==0 and backup5==0:
-                    break
-                for k in range(j-1,i,-1):
-                    if six5==0 and backup5==0:
-                        break
-                    if (i not in used5 and j not in used5 and k not in used5) and spaces[i]+spaces[k]+spaces[j]>=(2*min(backupsize,6)) and (six5>0 or backup5>0) and (sum(allocations[i])+sum(allocations[j])+sum(allocations[k]))<m:
-                        if spaces[i]+spaces[k]+spaces[j]>=(2*max(backupsize,6)):
-                            if backupsize==7:
-                                if backup5>1:
-                                    backup5-=2
-                                    used5.update([i,j,k])
-                                    threes5.append([i+1,k+1,j+1])
-                                elif six5>1:
-                                    six5-=2
-                                    used5.update([i,j,k])
-                                    threes5.append([i+1,k+1,j+1])
-                            elif backupsize==5 and six5>=2:
-                                six5-=2
-                                used5.update([i,j,k])
-                                threes5.append([i+1,k+1,j+1])
-                        elif spaces[i]+spaces[k]+spaces[j]>=(max(backupsize,6)+min(backupsize,6)):
-                            if backup5>0 and six5>0:
-                                backup5-=1
-                                six5-=1
-                                used5.update([i,j,k])
-                                threes5.append([i+1,k+1,j+1])
-                        elif spaces[i]+spaces[k]+spaces[j]>=(2*min(backupsize,6)):
-                            if backupsize==7 and six5>=2:
-                                six5-=2
-                                used5.update([i,j,k])
-                                threes5.append([i+1,k+1,j+1])
-                            elif backupsize==5 and backup5>=2:
-                                backup5-=2
-                                used5.update([i,j,k])
-                                threes5.append([i+1,k+1,j+1])
-    if six5==0 and backup5==0:
-        return threes5,allgood
     six6=shortfall[1]
     backup6=shortfall[0]
     used6=set()
@@ -268,10 +171,3 @@ def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=10):
 
     allgood=False
     return [threes8,[backup8,six8],used8],allgood
-
-def place3w2looped(shortfall,allocations,spaces,backupsize):
-    for x in range(9,10):
-        y=place3w2(shortfall.copy(),allocations,spaces,backupsize,x)
-        if y[1]:
-            return y
-    return y
