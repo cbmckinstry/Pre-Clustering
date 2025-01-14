@@ -28,15 +28,10 @@ def place3w2(shortfall,allocations1,spaces1,backupsize=5,upperbound=9):
                         break
                     if (i not in used6 and j not in used6 and k not in used6) and spaces[i]+spaces[k]+spaces[j]>=(2*max(backupsize,6)) and (six6>0 or backup6>0) and (sum(allocations[i])+sum(allocations[j])+sum(allocations[k]))<m:
                         if spaces[i]+spaces[k]+spaces[j]>=(2*max(backupsize,6)):
-                            if backupsize==7:
-                                if backup6>1:
-                                    backup6-=2
-                                    used6.update([i,j,k])
-                                    threes6.append([i+1,k+1,j+1])
-                                elif six6>1:
-                                    six6-=2
-                                    used6.update([i,j,k])
-                                    threes6.append([i+1,k+1,j+1])
+                            if backupsize==7 and backup6>=2:
+                                backup6-=2
+                                used6.update([i,j,k])
+                                threes6.append([i+1,k+1,j+1])
                             elif backupsize==5 and six6>=2:
                                 six6-=2
                                 used6.update([i,j,k])
