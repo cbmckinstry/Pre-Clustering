@@ -11,56 +11,6 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
         if space[i]!=0:
             allocations0.append(allocations[i])
             space0.append(space[i])
-    used2=used.copy()
-    backup2=backup
-    six2=six
-    combos2=[]
-    if backup_size==7:
-        for bound in range(0,upperbound):
-            if backup2==0:
-                break
-            for m in range(len(space0)):
-                if backup2==0:
-                    break
-                for n in range(len(space0)-1,m,-1):
-                    if backup2==0:
-                        break
-                    if (space0[m]+space0[n]>=7) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
-                        used2.add(m)
-                        used2.add(n)
-                        combos2.append([m+1,n+1])
-                        backup2-=1
-    for bound in range(0,upperbound):
-        if six2==0:
-            break
-        for m in range(len(space0)):
-            if six2==0:
-                break
-            for n in range(len(space0)-1,m,-1):
-                if six2==0:
-                    break
-                if (space0[m]+space0[n]>=6) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
-                    used2.add(m)
-                    used2.add(n)
-                    combos2.append([m+1,n+1])
-                    six2-=1
-    if backup_size==5:
-        for bound in range(0,upperbound):
-            if backup2==0:
-                break
-            for m in range(len(space0)):
-                if backup2==0:
-                    break
-                for n in range(len(space0)-1,m,-1):
-                    if backup2==0:
-                        break
-                    if (space0[m]+space0[n]>=5) and ((sum(allocations0[m])+sum(allocations0[n]))<=bound) and (m not in used2) and (n not in used2):
-                        used2.add(m)
-                        used2.add(n)
-                        combos2.append([m+1,n+1])
-                        backup2-=1
-    if backup2==0 and six2==0:
-        return combos2,allgood
     six4=six
     used4=used.copy()
     combos4=[]
