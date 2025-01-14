@@ -1,5 +1,12 @@
-def place3w2(shortfall,allocations,spaces,backupsize=5,upperbound=9):
+def place3w2(shortfall,allocations1,spaces1,backupsize=5,upperbound=9):
     allgood=True
+
+    allocations=[]
+    spaces=[]
+    for i in range(len(spaces1)):
+        if spaces1[i]!=0:
+            allocations.append(allocations1[i])
+            spaces.append(spaces1[i])
 
     six6=shortfall[1]
     backup6=shortfall[0]

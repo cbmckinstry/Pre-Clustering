@@ -1,8 +1,14 @@
-def placingthrees(shortfall,used,allocations,space,backup_size,upperbound=10):
+def placingthrees(shortfall,used,allocations1,space1,backup_size,upperbound=10):
     allgood=True
     triplecombos=[]
     if used is None:
         used=set()
+    allocations=[]
+    space=[]
+    for i in range(len(space1)):
+        if space1[i]!=0:
+            allocations.append(allocations1[i])
+            space.append(space1[i])
 
     shortfall4=shortfall.copy()
     used4=used.copy()
