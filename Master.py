@@ -19,36 +19,19 @@ def allalgs(allocations,spaces,shortfall,backupsize):
     if round1[1]:
         return round1[0],[]
     else:
-        round2=place3w2(shortfall.copy(),allocations,spaces,backupsize)
-        if round2[1]:
-            return [],round2[0]
-        else:
-            short1=round2[0][1]
-            used1=round2[0][2]
-            round3=combine(allocations,spaces,short1.copy(),backupsize,used1.copy())
-            if round3[1]:
-                return round3[0],round2[0][0]
-            else:
-                short2=round3[0][1]
-                used2=round3[0][2]
-                round4=placingthrees(short2.copy(),used2.copy(),allocations,spaces,backupsize)
-                if round4[1]:
-                    return round3[0][0],round4[0]+round2[0][0]
-        round5=place3w2(shortfall.copy(),allocations,spaces,backupsize)
+        round5=place3w2(shortfall.copy(),allocations,spaces,backupsize,1)
         if round5[1]:
             return [],round5[0]
+        elif round5[2]:
+            return round5[0][0],round5[0][1]
         else:
             short6=round5[0][1]
             used6=round5[0][2]
-            round6=placingthrees(short6.copy(),used6.copy(),allocations,spaces,backupsize)
+            round6=placingthrees(short6.copy(),used6.copy(),allocations,spaces,backupsize,1)
             if round6[1]:
                 return [],round5[0][0]+round6[0]
-            else:
-                short7=round3[0][1]
-                used7=round3[0][2]
-                round7=combine(allocations,spaces,short7.copy(),backupsize,used7.copy())
-                if round7[1]:
-                    return round7[0],round5[0][0]+round6[0]
+            elif round6[2]:
+                return round6[0][0],round6[0][1]+round5[0][0]
     return [],[]
 def compute_ranges(people):
     final=[]
