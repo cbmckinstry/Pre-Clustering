@@ -1,3 +1,4 @@
+from Combine import *
 def place3w2(shortfall,allocations1,spaces1,backupsize=5,upperbound=9):
     allgood=True
 
@@ -36,6 +37,9 @@ def place3w2(shortfall,allocations1,spaces1,backupsize=5,upperbound=9):
                                 six6-=2
                                 used6.update([i,j,k])
                                 threes6.append([i+1,k+1,j+1])
+                            trial=combine(allocations,spaces,[backup6,six6],backupsize,used6)
+                            if trial[1]:
+                                return [threes6,[backup6,six6],used6],False
     six7=six6
     backup7=backup6
     used7=used6.copy()
@@ -61,6 +65,9 @@ def place3w2(shortfall,allocations1,spaces1,backupsize=5,upperbound=9):
                                 six7-=1
                                 used7.update([i,j,k])
                                 threes7.append([i+1,k+1,j+1])
+                            trial=combine(allocations,spaces,[backup7,six7],backupsize,used7)
+                            if trial[1]:
+                                return [threes7,[backup7,six7],used7],False
     six8=six7
     backup8=backup7
     used8=used7.copy()
@@ -89,6 +96,9 @@ def place3w2(shortfall,allocations1,spaces1,backupsize=5,upperbound=9):
                                 backup8-=2
                                 used8.update([i,j,k])
                                 threes8.append([i+1,k+1,j+1])
+                            trial=combine(allocations,spaces,[backup8,six8],backupsize,used8)
+                            if trial[1]:
+                                return [threes8,[backup8,six8],used8],False
 
     if six8==0 and backup8==0:
         return threes8,allgood

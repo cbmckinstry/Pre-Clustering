@@ -1,3 +1,4 @@
+from Combine import *
 def placingthrees(shortfall,used,allocations1,space1,backup_size,upperbound=10):
     allgood=True
     triplecombos=[]
@@ -40,6 +41,9 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,upperbound=10):
                                 used4.add(k)
                                 shortfall4[0]-=1
                                 triplecombos4.append([i+1,k+1,j+1])
+                                trial=combine(allocations,space,shortfall4,backup_size,used4)
+                                if trial[1]:
+                                    return [triplecombos4,used4,shortfall4],False
             shortfall5=shortfall4.copy()
             used5=used4.copy()
             triplecombos5=triplecombos4.copy()
@@ -64,6 +68,9 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,upperbound=10):
                                 used5.add(k)
                                 shortfall5[1]-=1
                                 triplecombos5.append([i+1,k+1,j+1])
+                                trial=combine(allocations,space,shortfall5,backup_size,used5)
+                                if trial[1]:
+                                    return [triplecombos5,used5,shortfall5],False
         else:
             for bound5 in range(0,upperbound):
                 if shortfall4[1]==0:
@@ -86,6 +93,9 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,upperbound=10):
                                 used4.add(k)
                                 shortfall4[1]-=1
                                 triplecombos4.append([i+1,k+1,j+1])
+                                trial=combine(allocations,space,shortfall4,backup_size,used4)
+                                if trial[1]:
+                                    return [triplecombos4,used4,shortfall4],False
             shortfall5=shortfall4.copy()
             used5=used4.copy()
             triplecombos5=triplecombos4.copy()
@@ -110,6 +120,9 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,upperbound=10):
                                 used5.add(k)
                                 shortfall5[0]-=1
                                 triplecombos5.append([i+1,k+1,j+1])
+                                trial=combine(allocations,space,shortfall5,backup_size,used5)
+                                if trial[1]:
+                                    return [triplecombos5,used5,shortfall5],False
     if shortfall5[0]==0 and shortfall5[1]==0:
        return triplecombos5,allgood
     allgood=False
