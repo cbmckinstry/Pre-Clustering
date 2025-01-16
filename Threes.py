@@ -17,6 +17,9 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
     used5=used.copy()
     shortfall5=shortfall.copy()
     triplecombos5=triplecombos4.copy()
+
+    init=[]
+    init1=[]
     if len(space)>=3:
         if backup_size==7:
             for bound5 in range(0,upperbound):
@@ -25,6 +28,7 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
                 shortfall4=shortfall.copy()
                 used4=used.copy()
                 triplecombos4=triplecombos.copy()
+                init=[]
                 for i in range(len(space)-2):
                     if shortfall4[0]==0:
                         break
@@ -40,17 +44,20 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
                                 used4.add(k)
                                 shortfall4[0]-=1
                                 triplecombos4.append([i+1,k+1,j+1])
+                                init.append([1,0])
                                 if param==1:
                                     trial=combine(allocations,space,shortfall4,backup_size,used4)
                                     if trial[1] and param==1:
-                                        return [trial[0],triplecombos4],False,True
+                                        return [trial[0],triplecombos4,trial[2]+init],False,True
             shortfall5=shortfall4.copy()
             used5=used4.copy()
             triplecombos5=triplecombos4.copy()
+            init1=init.copy()
             for bound6 in range(0,upperbound):
                 shortfall5=shortfall4.copy()
                 used5=used4.copy()
                 triplecombos5=triplecombos4.copy()
+                init1=init.copy()
                 if shortfall5[1]==0:
                     break
                 for i in range(len(space)-2):
@@ -68,10 +75,11 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
                                 used5.add(k)
                                 shortfall5[1]-=1
                                 triplecombos5.append([i+1,k+1,j+1])
+                                init1.append([0,1])
                                 if param==1:
                                     trial=combine(allocations,space,shortfall5,backup_size,used5)
                                     if trial[1] and param==1:
-                                        return [trial[0],triplecombos5],False,True
+                                        return [trial[0],triplecombos5,trial[2]+init1],False,True
         else:
             for bound5 in range(0,upperbound):
                 if shortfall4[1]==0:
@@ -79,6 +87,7 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
                 shortfall4=shortfall.copy()
                 used4=used.copy()
                 triplecombos4=triplecombos.copy()
+                init=[]
                 for i in range(len(space)-2):
                     if shortfall4[1]==0:
                         break
@@ -94,17 +103,20 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
                                 used4.add(k)
                                 shortfall4[1]-=1
                                 triplecombos4.append([i+1,k+1,j+1])
+                                init.append([0,1])
                                 if param==1:
                                     trial=combine(allocations,space,shortfall4,backup_size,used4)
                                     if trial[1]:
-                                        return [trial[0],triplecombos4],False,True
+                                        return [trial[0],triplecombos4,trial[2]+init],False,True
             shortfall5=shortfall4.copy()
             used5=used4.copy()
             triplecombos5=triplecombos4.copy()
+            init1=init.copy()
             for bound6 in range(0,upperbound):
                 shortfall5=shortfall4.copy()
                 used5=used4.copy()
                 triplecombos5=triplecombos4.copy()
+                init1=init.copy()
                 if shortfall5[0]==0:
                     break
                 for i in range(len(space)-2):
@@ -122,11 +134,12 @@ def placingthrees(shortfall,used,allocations1,space1,backup_size,param=0,upperbo
                                 used5.add(k)
                                 shortfall5[0]-=1
                                 triplecombos5.append([i+1,k+1,j+1])
+                                init1.append([1,0])
                                 if param==1:
                                     trial=combine(allocations,space,shortfall5,backup_size,used5)
                                     if trial[1]:
-                                        return [trial[0],triplecombos5],False,True
+                                        return [trial[0],triplecombos5,trial[2]+init1],False,True
     if shortfall5[0]==0 and shortfall5[1]==0:
-        return triplecombos5,True,False
+        return triplecombos5,True,False,init1
 
-    return [triplecombos5,used5,shortfall5],False,False
+    return [triplecombos5,used5,shortfall5,init1],False,False

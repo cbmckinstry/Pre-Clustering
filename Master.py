@@ -17,21 +17,21 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, s
 def allalgs(allocations,spaces,shortfall,backupsize):
     round1=combine(allocations,spaces,shortfall,backupsize)
     if round1[1]:
-        return round1[0],[]
+        return round1[0],[],round1[2]
     else:
         round5=place3w2(shortfall.copy(),allocations,spaces,backupsize,1)
         if round5[1]:
-            return [],round5[0]
+            return [],round5[0],round5[3]
         elif round5[2]:
-            return round5[0][0],round5[0][1]
+            return round5[0][0],round5[0][1],round5[0][2]
         else:
             short6=round5[0][1]
             used6=round5[0][2]
             round6=placingthrees(short6.copy(),used6.copy(),allocations,spaces,backupsize,1)
             if round6[1]:
-                return [],round5[0][0]+round6[0]
+                return [],round5[0][0]+round6[0],round5[0][2]+round6[3]
             elif round6[2]:
-                return round6[0][0],round6[0][1]+round5[0][0]
+                return round6[0][0],round6[0][1]+round5[0][0],round6[0][2]+round5[0][3]
     return [],[]
 def compute_ranges(people):
     final=[]

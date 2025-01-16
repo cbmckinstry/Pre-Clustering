@@ -66,9 +66,10 @@ def index():
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
-            pairs,threes=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
+            pairs,threes,listing=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
             session["pairs"] = pairs
             session["threes"]=threes
+            session["listing"]=listing
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
@@ -89,6 +90,7 @@ def index():
                 sorted_allocations=None,
                 pairs=None,
                 threes=None,
+                listing=None,
                 matrices_result=session.get("matrices_result"),
                 ranges_result=session.get("ranges_result"),
                 total_people=session.get("total_people", ""),
@@ -109,6 +111,7 @@ def index():
         error_message=None,
         pairs=session.get("pairs"),
         threes=session.get("threes"),
+        listing=session.get("listing"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
@@ -149,6 +152,7 @@ def matrices():
             sorted_allocations=session.get("sorted_allocations"),
             pairs=session.get("pairs"),
             threes=session.get("threes"),
+            listing=session.get("listing"),
             matrices_result=None,
             ranges_result=session.get("ranges_result"),
             total_people=session.get("total_people", ""),
@@ -168,6 +172,7 @@ def matrices():
         sorted_allocations=session.get("sorted_allocations"),
         pairs=session.get("pairs"),
         threes=session.get("threes"),
+        listing=session.get("listing"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
@@ -205,6 +210,7 @@ def ranges():
             sorted_allocations=session.get("sorted_allocations"),
             pairs=session.get("pairs"),
             threes=session.get("threes"),
+            listing=session.get("listing"),
             matrices_result=session.get("matrices_result"),
             ranges_result=None,
             total_people=total_people_input,
@@ -224,6 +230,7 @@ def ranges():
         sorted_allocations=session.get("sorted_allocations"),
         pairs=session.get("pairs"),
         threes=session.get("threes"),
+        listing=session.get("listing"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),

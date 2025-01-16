@@ -15,6 +15,7 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
     used4=used.copy()
     combos4=[]
     backup4=backup
+    init=[]
     if backup_size==7:
         for bound in range(0,upperbound):
             if backup4==0:
@@ -22,6 +23,7 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
             used4=used.copy()
             backup4=backup
             combos4=[]
+            init=[]
             for m in range(len(space0)):
                 if backup4==0:
                     break
@@ -33,14 +35,17 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
                         used4.add(n)
                         combos4.append([m+1,n+1])
                         backup4-=1
+                        init.append([1,0])
         combos5=combos4.copy()
         used5=used4.copy()
+        init1=init.copy()
         for bound in range(0,upperbound):
             if six4==0:
                 break
             used5=used4.copy()
             six4=six
             combos5=combos4.copy()
+            init1=init.copy()
             for m in range(len(space0)):
                 if six4==0:
                     break
@@ -52,6 +57,7 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
                         used5.add(n)
                         combos5.append([m+1,n+1])
                         six4-=1
+                        init1.append([0,1])
     else:
         for bound in range(0,upperbound):
             if six4==0:
@@ -59,6 +65,7 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
             used4=used.copy()
             six4=six
             combos4=[]
+            init=[]
             for m in range(len(space0)):
                 if six4==0:
                     break
@@ -70,14 +77,17 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
                         used4.add(n)
                         combos4.append([m+1,n+1])
                         six4-=1
+                        init.append([0,1])
         combos5=combos4.copy()
         used5=used4.copy()
+        init1=init.copy()
         for bound in range(0,upperbound):
             if backup4==0:
                 break
             used5=used4.copy()
             backup4=backup
             combos5=combos4.copy()
+            init1=init.copy()
             for m in range(len(space0)):
                 if backup4==0:
                     break
@@ -89,7 +99,8 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
                         used5.add(n)
                         combos5.append([m+1,n+1])
                         backup4-=1
+                        init1.append([1,0])
     if backup4==0 and six4==0:
-        return combos5,allgood
+        return combos5,allgood,init1
     allgood=False
-    return [combos5,[backup4,six4],used5],allgood
+    return [combos5,[backup4,six4],used5,init1],allgood
