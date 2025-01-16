@@ -1,6 +1,6 @@
+from Combine import *
 from Threes import *
 from Twothree import *
-from Allocations import *
 
 def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, seven_person_groups):
     if not all(isinstance(cap, int) and cap >= 0 for cap in vehicle_capacities):
@@ -27,15 +27,11 @@ def allalgs(allocations,spaces,shortfall,backupsize):
         else:
             short6=round5[0][1]
             used6=round5[0][2]
-            round6=combine(allocations,spaces,short6.copy(),backupsize,used6.copy())
+            round6=placingthrees(short6.copy(),used6.copy(),allocations,spaces,backupsize,1)
             if round6[1]:
-                return round6[0],round5[0][0]
-            else:
-                short7=round6[0][1]
-                used7=round6[0][2]
-                round7=placingthrees(short7.copy(),used7.copy(),allocations,spaces,backupsize)
-                if round7:
-                    return round6[0][0],round7+round5[0][0]
+                return [],round5[0][0]+round6[0]
+            elif round6[2]:
+                return round6[0][0],round6[0][1]+round5[0][0]
     return [],[]
 def compute_ranges(people):
     final=[]

@@ -90,6 +90,6 @@ def combine(allocations, space, shortfall, backup_size=5, used=None,upperbound=1
                         combos5.append([m+1,n+1])
                         backup4-=1
     if backup4==0 and six4==0:
-       return combos5,allgood
+        return combos5,allgood
     allgood=False
     return [combos5,[backup4,six4],used5],allgood
