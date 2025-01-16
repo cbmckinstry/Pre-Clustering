@@ -35,13 +35,6 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
 
         return best_vehicle
 
-    # Check if any group can be placed
-    def can_place_any_group():
-        for capacity in vehicle_capacities:
-            if (primary_groups > 0 and capacity >= primary_size) or (secondary_groups > 0 and capacity >= backup_size):
-                return True
-        return False
-
     # Distribute primary and backup groups
     while primary_groups > 0 or secondary_groups > 0:
         progress_in_iteration = False
@@ -51,7 +44,6 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
                 # Minimize remainder and fill vehicles
                 best_vehicle_primary = find_best_vehicle(primary_size) if primary_groups > 0 else None
                 best_vehicle_secondary = find_best_vehicle(backup_size) if secondary_groups > 0 else None
-
                 if best_vehicle_primary is not None and (best_vehicle_secondary is None or vehicle_capacities[best_vehicle_primary] % primary_size <= vehicle_capacities[best_vehicle_secondary] % backup_size):
                     best_vehicle = best_vehicle_primary
                     group_size = primary_size
@@ -71,10 +63,10 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
                         secondary_groups -= 1
                     progress_in_iteration = True
             else:
+
                 # Place one group based on remainder minimization
                 best_vehicle_primary = find_best_vehicle(primary_size) if primary_groups > 0 else None
                 best_vehicle_secondary = find_best_vehicle(backup_size) if secondary_groups > 0 else None
-
                 if best_vehicle_primary is not None and (best_vehicle_secondary is None or vehicle_capacities[best_vehicle_primary] % primary_size <= vehicle_capacities[best_vehicle_secondary] % backup_size):
                     best_vehicle = best_vehicle_primary
                     group_size = primary_size
@@ -85,8 +77,8 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
                     break
 
                 if vehicle_capacities[best_vehicle] >= group_size:
-                    vehicle_assignments[best_vehicle][group_size == primary_size] += 1
-                    totals[group_size == primary_size] += 1
+                    vehicle_assignments[best_vehicle][group_size == 6] += 1
+                    totals[group_size == 6] += 1
                     vehicle_capacities[best_vehicle] -= group_size
                     if group_size == primary_size:
                         primary_groups -= 1
