@@ -3,6 +3,7 @@ import logging
 from flask_session import Session
 import traceback
 from Master import *
+from Allocations import *
 
 
 app = Flask(__name__)
