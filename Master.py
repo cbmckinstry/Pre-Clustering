@@ -1,5 +1,6 @@
 from Threes import *
 from Twothree import *
+from Allocations import *
 
 def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, seven_person_groups):
     if not all(isinstance(cap, int) and cap >= 0 for cap in vehicle_capacities):
@@ -12,6 +13,29 @@ def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, s
         raise ValueError("Seven-person groups must be a non-negative integer.")
     if seven_person_groups!=0 and five_person_groups!=0:
         raise ValueError("There cannot be both 5 and 7 person crews")
+
+def allocate(vehlist,pers5,pers6,pers7):
+    backup_group = pers7 if pers7 != 0 else pers5
+    backupsize = 5 if pers7 == 0 else 7
+    primary_group = pers6
+    use_backup = pers7 != 0
+
+    allocations = []
+    for priority in range(2):
+        for order in [None, "asc", "desc"]:
+            for opt2 in [False, True]:
+                for opt1 in [False, True]:
+                    allocations.append(allocate_groups(
+                        vehlist[:].copy(), backup_group, primary_group, priority, order, opt2, opt1, use_backup
+                    ))
+
+    for order in [None, "asc", "desc"]:
+        for opt2 in [False, True]:
+            for opt1 in [False, True]:
+                allocations.append(allocate_groups_simultaneous(
+                    vehlist[:].copy(), backup_group, primary_group, order, opt2, opt1, use_backup
+                ))
+    return allocations,backup_group,backupsize
 
 def allalgs(allocations,spaces,shortfall,backupsize):
     round1=combine(allocations,spaces,shortfall,backupsize)
