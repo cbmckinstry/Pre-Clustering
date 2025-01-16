@@ -4,7 +4,7 @@ from flask_session import Session
 import traceback
 from Master import *
 
-# Configure Flask and Logging
+
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"
