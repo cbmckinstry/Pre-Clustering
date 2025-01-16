@@ -32,7 +32,16 @@ def allalgs(allocations,spaces,shortfall,backupsize):
                 return [],round5[0][0]+round6[0],round5[0][2]+round6[3]
             elif round6[2]:
                 return round6[0][0],round6[0][1]+round5[0][0],round6[0][2]+round5[0][3]
-    return [],[]
+    return [],[],[]
+
+def together(pairs,threes,allist):
+    al=pairs+threes
+    i=zip(al,allist)
+    out=[]
+    for elem in enumerate(i):
+        out.append(elem[1])
+    return out
+
 def compute_ranges(people):
     final=[]
     counter1=0

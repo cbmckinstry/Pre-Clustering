@@ -67,9 +67,16 @@ def index():
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
             pairs,threes,listing=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
-            session["pairs"] = pairs
+
+            alllist=together(pairs,threes,listing)
+            pairspart=alllist[:len(pairs)]
+            threespart=alllist[len(pairs):]
+
+            session["pairspart"]=pairspart
+            session["threespart"]=threespart
+            session["pairs"]=pairs
             session["threes"]=threes
-            session["listing"]=listing
+            session["backupsize"]=backupsize
             session["vehlist"] = vehlist
             session["pers5"] = pers5
             session["pers6"] = pers6
@@ -88,16 +95,19 @@ def index():
                 pers7=pers7_input,
                 results=None,
                 sorted_allocations=None,
+                pairspart=None,
+                threespart=None,
                 pairs=None,
                 threes=None,
-                listing=None,
+                backupsize=None,
                 matrices_result=session.get("matrices_result"),
                 ranges_result=session.get("ranges_result"),
                 total_people=session.get("total_people", ""),
                 people=session.get("people", ""),
                 crews=session.get("crews", ""),
                 zip=zip,
-                enumerate=enumerate
+                enumerate=enumerate,
+                len=len,
             )
 
     return render_template(
@@ -109,16 +119,19 @@ def index():
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
+        backupsize=session.get("backupsize"),
+        pairspart=session.get("pairspart"),
+        threespart=session.get("threespart"),
         pairs=session.get("pairs"),
         threes=session.get("threes"),
-        listing=session.get("listing"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
         people=session.get("people", ""),
         crews=session.get("crews", ""),
         zip=zip,
-        enumerate=enumerate
+        enumerate=enumerate,
+        len=len,
     )
 @app.route("/matrices", methods=["POST"])
 def matrices():
@@ -150,16 +163,19 @@ def matrices():
             pers7=session.get("pers7", ""),
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
+            pairspart=session.get("pairspart"),
+            threespart=session.get("threespart"),
             pairs=session.get("pairs"),
             threes=session.get("threes"),
-            listing=session.get("listing"),
+            backupsize=session.get("backupsize"),
             matrices_result=None,
             ranges_result=session.get("ranges_result"),
             total_people=session.get("total_people", ""),
             people=people_input,
             crews=crews_input,
             zip=zip,
-            enumerate=enumerate
+            enumerate=enumerate,
+            len=len,
         )
 
     return render_template(
@@ -170,16 +186,19 @@ def matrices():
         pers7=session.get("pers7", ""),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
+        pairspart=session.get("pairspart"),
+        threespart=session.get("threespart"),
         pairs=session.get("pairs"),
         threes=session.get("threes"),
-        listing=session.get("listing"),
+        backupsize=session.get("backupsize"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
         people=session.get("people", ""),
         crews=session.get("crews", ""),
         zip=zip,
-        enumerate=enumerate
+        enumerate=enumerate,
+        len=len,
     )
 
 @app.route("/ranges", methods=["POST"])
@@ -208,16 +227,19 @@ def ranges():
             pers7=session.get("pers7", ""),
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
+            backupsize=session.get("backupsize"),
+            pairspart=session.get("pairspart"),
+            threespart=session.get("threespart"),
             pairs=session.get("pairs"),
             threes=session.get("threes"),
-            listing=session.get("listing"),
             matrices_result=session.get("matrices_result"),
             ranges_result=None,
             total_people=total_people_input,
             people=session.get("people", ""),
             crews=session.get("crews", ""),
             zip=zip,
-            enumerate=enumerate
+            enumerate=enumerate,
+            len=len,
         )
 
     return render_template(
@@ -228,16 +250,19 @@ def ranges():
         pers7=session.get("pers7", ""),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
+        backupsize=session.get("backupsize"),
+        pairspart=session.get("pairspart"),
+        threespart=session.get("threespart"),
         pairs=session.get("pairs"),
         threes=session.get("threes"),
-        listing=session.get("listing"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
         people=session.get("people", ""),
         crews=session.get("crews", ""),
         zip=zip,
-        enumerate=enumerate
+        enumerate=enumerate,
+        len=len,
     )
 
 if __name__ == "__main__":

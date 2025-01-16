@@ -203,16 +203,28 @@
                             6-person groups: {{ results[1][1] }}
                         </p>
                         <p><strong>Combinations:</strong></p>
-                        {% if pairs or threes%}
-                            {% if pairs %}
-                                {% for vehicle in pairs %}
-                                    <p>Combine Vehicle {{ vehicle[0] }} and Vehicle {{ vehicle[1] }}</p>
-                                {% endfor %}
+                        {% if len(pairs)!=0 or len(threes)!=0%}
+                            {% if len(pairs)!=0 and len(pairspart)!=0 %}
+                                {% if backupsize==5 %}
+                                    {% for vehicle in pairspart %}
+                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }}, ({{ vehicle[1][0] }} 5-person, {{ vehicle[1][1] }} 6-person)</p>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for vehicle in pairspart %}
+                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }}, ({{ vehicle[1][1] }} 6-person, {{ vehicle[1][0] }} 7-person)</p>
+                                    {% endfor %}
+                                {% endif %}
                             {% endif %}
-                            {% if threes %}
-                                {% for elem in threes %}
-                                    <p>Combine Vehicle {{ elem[0] }} and Vehicle {{ elem[1] }} and Vehicle {{ elem[2] }}</p>
-                                {% endfor %}
+                            {% if len(threes)!=0 and len(threespart)!=0%}
+                                {% if backupsize==5 %}
+                                    {% for vehicle in threespart %}
+                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }} and Vehicle {{ vehicle[0][2] }}, ({{ vehicle[1][0] }} 5-person, {{ vehicle[1][1] }} 6-person)</p>
+                                    {% endfor %}
+                                {% else %}
+                                    {% for vehicle in threespart %}
+                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }} and Vehicle {{ vehicle[0][2] }}, ({{ vehicle[1][1] }} 6-person, {{ vehicle[1][0] }} 7-person)</p>
+                                    {% endfor %}
+                                {% endif %}
                             {% endif %}
                         {% else %}
                             <p>No combinations available.</p>
