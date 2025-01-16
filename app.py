@@ -5,7 +5,7 @@ import traceback
 from Master import *
 from Allocations import *
 
-# Configure Flask and Logging
+
 app = Flask(__name__)
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"

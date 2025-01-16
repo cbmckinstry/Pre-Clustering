@@ -1,4 +1,3 @@
-from Combine import *
 from Threes import *
 from Twothree import *
 
