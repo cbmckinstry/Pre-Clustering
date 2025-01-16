@@ -54,8 +54,8 @@ def allocate_groups(vehicle_capacities, backup_groups, six_person_groups, vers, 
                     break
 
                 while vehicle_capacities[best_vehicle] >= group_size and (primary_groups > 0 if group_size == primary_size else secondary_groups > 0):
-                    vehicle_assignments[best_vehicle][group_size == primary_size] += 1
-                    totals[group_size == primary_size] += 1
+                    vehicle_assignments[best_vehicle][group_size == 6] += 1
+                    totals[group_size == 6] += 1
                     vehicle_capacities[best_vehicle] -= group_size
                     if group_size == primary_size:
                         primary_groups -= 1
