@@ -68,7 +68,7 @@ def index():
             session["sorted_allocations"] = combined_sorted_data
             pairs,threes,listing=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
 
-            alllist=together(pairs,threes,listing)
+            alllist=alltogether(pairs,threes,listing)
             pairspart=alllist[:len(pairs)]
             threespart=alllist[len(pairs):]
 

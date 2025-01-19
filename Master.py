@@ -35,7 +35,7 @@ def allalgs(allocations,spaces,shortfall,backupsize):
                 return round6[0][0],round6[0][1]+round5[0][0],round6[0][2]+round5[0][3]
     return [],[],[]
 
-def together(pairs,threes,allist):
+def alltogether(pairs,threes,allist):
     al=pairs+threes
     i=zip(al,allist)
     out=[]
