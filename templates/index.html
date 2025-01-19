@@ -86,7 +86,6 @@
                 <li><strong>Vehicle Capacities:</strong> Enter non-assign together vehicle capacities and the number of 5-, 6-, and 7-person groups to get allocations and combinations.</li>
                 <li><strong>Crew Ranges:</strong> Enter the total number of people to determine possible ranges for crew sizes.</li>
                 <li><strong>Crew Structure:</strong> Provide the total number of people and crews to calculate the distribution of 5-, 6-, and 7-person groups.</li>
-                <li><strong>Assign Together:</strong> Enter the assign together group's vehicle capacities and the number of their 5-, 6-, and 7-person crews to get vehicle combinations.</li>
             </ul>
             <p>Submit each form independently and view results below each section.</p>
         </div>
@@ -154,53 +153,6 @@
                 </div>
             {% else %}
                 <p>No results for crew structure yet.</p>
-            {% endif %}
-        </form>
-        <form method="POST" action="/together">
-            <h2>Assign Together</h2>
-            {% if error_message and request.path == '/together' %}
-                <div class="error-message">{{ error_message }}</div>
-            {% endif %}
-            <label for="vehlist1">Enter Vehicle Capacities (comma-separated):</label>
-            <textarea id="vehlist1" name="vehlist1" rows="2">{{ vehlist1 }}</textarea>
-
-            <label for="pers51">Enter Number of 5-person Groups:</label>
-            <input type="number" id="pers51" name="pers51" value="{{ pers51 }}" required>
-
-            <label for="pers61">Enter Number of 6-person Groups:</label>
-            <input type="number" id="pers61" name="pers61" value="{{ pers61 }}" required>
-
-            <label for="pers71">Enter Number of 7-person Groups:</label>
-            <input type="number" id="pers71" name="pers71" value="{{ pers71 }}" required>
-
-            <button type="submit">Submit</button>
-
-            <!-- Results Section -->
-            {% if data %}
-                <div class="results-section">
-                    <h3>Results:</h3>
-                    <div id="list-output">
-                        <script>
-                            // Inject data into the results dynamically
-                            const data = {{ data | tojson | safe }};
-                            const outputDiv = document.getElementById("list-output");
-
-                            if (Array.isArray(data)) {
-                                data.forEach((sublist, index) => {
-                                    const paragraph = document.createElement("p");
-                                    // Format the sublist as "Combine Vehicle 1 and Vehicle 2 and ..."
-                                    const formattedSublist = sublist.map((vehicle, idx) => `Vehicle ${vehicle}`).join(" and ");
-                                    paragraph.textContent = `Combine ${formattedSublist}`;
-                                    outputDiv.appendChild(paragraph);
-                                });
-                            } else {
-                                outputDiv.textContent = "No data available.";
-                            }
-                        </script>
-                    </div>
-                </div>
-            {% else %}
-                <p>No results available.</p>
             {% endif %}
         </form>
     </div>
