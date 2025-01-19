@@ -1,6 +1,7 @@
 from Combine import *
 from Threes import *
 from Twothree import *
+from Allocations import *
 
 def validate_inputs(vehicle_capacities, five_person_groups, six_person_groups, seven_person_groups):
     if not all(isinstance(cap, int) and cap >= 0 for cap in vehicle_capacities):
@@ -41,6 +42,82 @@ def together(pairs,threes,allist):
     for elem in enumerate(i):
         out.append(elem[1])
     return out
+
+def partitions(lst):
+    if not lst:
+        return [[]]
+
+    first = lst[0]
+    rest = lst[1:]
+
+    rest_partitions = partitions(rest)
+    result = []
+
+    for partition in rest_partitions:
+        # Case 1: Add the element as a new subset
+        result.append([[first]] + partition)
+
+        # Case 2: Add the element to existing subsets
+        for i in range(len(partition)):
+            new_partition = partition[:i] + [partition[i] + [first]] + partition[i+1:]
+            result.append(new_partition)
+
+    return result
+
+def sortpartitions(lists):
+    # Define the sorting key
+    def sort_key(sublist):
+        # Length of the largest inner list
+        max_inner_length = max(len(inner) for inner in sublist) if sublist else 0
+        # Length of the parent sublist
+        overall_length = len(sublist)
+        return (max_inner_length, -overall_length)
+
+    # Sort the list based on the custom key
+    return sorted(lists, key=sort_key)
+def assigntogether(pers5,pers6,pers7,vehicles0):
+    indeces0=list(range(1,len(vehicles0)+1))
+    combined = sorted(zip(vehicles0, indeces0), key=lambda x: x[0])
+    vehicles, indeces = zip(*combined)
+    partition=sortpartitions(partitions(vehicles))
+    relative=sortpartitions(partitions(indeces))
+
+    backup_group = pers7 if pers7 != 0 else pers5
+    backupsize = 5 if pers7 == 0 else 7
+    primary_group = pers6
+    use_backup = pers7 != 0
+
+    for elem1 in range(len(partition)):
+        newvehicles=[]
+        for elem2 in partition[elem1]:
+            newvehicles.append(sum(elem2))
+        allocations = []
+        for priority in range(2):
+            for order in [None, "asc", "desc"]:
+                for opt2 in [False, True]:
+                    for opt1 in [False, True]:
+                        allocations.append(allocate_groups(
+                            newvehicles[:].copy(), backup_group, primary_group, priority, order, opt2, opt1, use_backup
+                        ))
+
+        for order in [None, "asc", "desc"]:
+            for opt2 in [False, True]:
+                for opt1 in [False, True]:
+                    allocations.append(allocate_groups_simultaneous(
+                        newvehicles[:].copy(), backup_group, primary_group, order, opt2, opt1, use_backup
+                    ))
+
+        results = closestalg([backup_group, pers6], allocations,backupsize)
+        if results[1][0]==0 and results[1][1]==0:
+            for elem in relative[elem1]:
+                elem.sort()
+            out=[]
+            for item in relative[elem1]:
+                if len(item)!=1:
+                    out.append(item)
+            return out
+
+    return []
 
 def compute_ranges(people):
     final=[]
