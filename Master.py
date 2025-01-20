@@ -43,26 +43,9 @@ def alltogether(pairs,threes,allist):
         out.append(elem[1])
     return out
 
-def partitions(lst):
-    if not lst:
-        return [[]]
-
-    first = lst[0]
-    rest = lst[1:]
-
-    rest_partitions = partitions(rest)
-    result = []
-
-    for partition in rest_partitions:
-        # Case 1: Add the element as a new subset
-        result.append([[first]] + partition)
-
-        # Case 2: Add the element to existing subsets
-        for i in range(len(partition)):
-            new_partition = partition[:i] + [partition[i] + [first]] + partition[i+1:]
-            result.append(new_partition)
-
-    return result
+from more_itertools import set_partitions
+def partitions(lst,n):
+    return list(set_partitions(lst,n))
 
 def sortpartitions(lists):
     # Define the sorting key
@@ -77,45 +60,76 @@ def sortpartitions(lists):
     return sorted(lists, key=sort_key)
 def assigntogether(pers5,pers6,pers7,vehicles0):
     indeces0=list(range(1,len(vehicles0)+1))
-    combined = sorted(zip(vehicles0, indeces0), key=lambda x: x[0])
+    combined = sorted(zip(vehicles0, indeces0),reverse=True, key=lambda x: x[0])
     vehicles, indeces = zip(*combined)
-    partition=sortpartitions(partitions(vehicles))
-    relative=sortpartitions(partitions(indeces))
+    vehicles=list(vehicles)
+    indeces=list(indeces)
 
     backup_group = pers7 if pers7 != 0 else pers5
     backupsize = 5 if pers7 == 0 else 7
     primary_group = pers6
     use_backup = pers7 != 0
 
-    for elem1 in range(len(partition)):
-        newvehicles=[]
-        for elem2 in partition[elem1]:
-            newvehicles.append(sum(elem2))
-        allocations = []
-        for priority in range(2):
-            for order in [None, "asc", "desc"]:
-                for opt2 in [False, True]:
-                    for opt1 in [False, True]:
-                        allocations.append(allocate_groups(
-                            newvehicles[:].copy(), backup_group, primary_group, priority, order, opt2, opt1, use_backup
-                        ))
-
+    allocations1 = []
+    for priority in range(2):
         for order in [None, "asc", "desc"]:
             for opt2 in [False, True]:
                 for opt1 in [False, True]:
-                    allocations.append(allocate_groups_simultaneous(
-                        newvehicles[:].copy(), backup_group, primary_group, order, opt2, opt1, use_backup
+                    allocations1.append(allocate_groups(
+                        vehicles.copy(), backup_group, primary_group, priority, order, opt2, opt1, use_backup
                     ))
 
-        results = closestalg([backup_group, pers6], allocations,backupsize)
-        if results[1][0]==0 and results[1][1]==0:
-            for elem in relative[elem1]:
-                elem.sort()
-            out=[]
-            for item in relative[elem1]:
-                if len(item)!=1:
-                    out.append(item)
-            return out
+    for order in [None, "asc", "desc"]:
+        for opt2 in [False, True]:
+            for opt1 in [False, True]:
+                allocations1.append(allocate_groups_simultaneous(
+                    vehicles.copy(), backup_group, primary_group, order, opt2, opt1, use_backup
+                ))
+
+    results = closestalg([backup_group, pers6], allocations1,backupsize)
+    sorted_allocations, sorted_spaces, sorted_sizes, number = sort_closestalg_output(results, backupsize)
+    pairs,threes,listing=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
+    if pairs or threes:
+        out1=pairs+threes
+        out2=[]
+        for elem in out1:
+            if elem and len(elem)!=1:
+                out2.append(elem)
+        return out2
+
+    for n in range(len(vehicles)//3,0,-1):
+        partition=sortpartitions(partitions(vehicles,n))
+        relative=sortpartitions(partitions(indeces,n))
+
+        for elem1 in range(len(partition)):
+            newvehicles=[]
+            for elem2 in partition[elem1]:
+                newvehicles.append(sum(elem2))
+            allocations = []
+            for priority in range(2):
+                for order in [None, "asc", "desc"]:
+                    for opt2 in [False, True]:
+                        for opt1 in [False, True]:
+                            allocations.append(allocate_groups(
+                                newvehicles[:].copy(), backup_group, primary_group, priority, order, opt2, opt1, use_backup
+                            ))
+
+            for order in [None, "asc", "desc"]:
+                for opt2 in [False, True]:
+                    for opt1 in [False, True]:
+                        allocations.append(allocate_groups_simultaneous(
+                            newvehicles[:].copy(), backup_group, primary_group, order, opt2, opt1, use_backup
+                        ))
+
+            results = closestalg([backup_group, pers6], allocations,backupsize)
+            if results[1][0]==0 and results[1][1]==0:
+                for elem in relative[elem1]:
+                    elem.sort()
+                out=[]
+                for item in relative[elem1]:
+                    if len(item)!=1:
+                        out.append(item)
+                return out
 
     return []
 
