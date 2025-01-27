@@ -66,16 +66,15 @@ def index():
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
-            pairs,threes,listing=allalgs(sorted_allocations.copy(),sorted_spaces,results[1].copy(),backupsize)
+            use_alternative="assignTogether" in request.form
+            if use_alternative:
+                combos,listing=assigntogether(sorted_allocations,sorted_spaces,results[1].copy(),backupsize)
+            else:
+                combos,listing=threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize)
 
-            alllist=alltogether(pairs,threes,listing)
-            pairspart=alllist[:len(pairs)]
-            threespart=alllist[len(pairs):]
+            alllist=alltogether(combos,listing)
 
-            session["pairspart"]=pairspart
-            session["threespart"]=threespart
-            session["pairs"]=pairs
-            session["threes"]=threes
+            session["alllist"]=alllist
             session["backupsize"]=backupsize
             session["vehlist"] = vehlist
             session["pers5"] = pers5
@@ -93,17 +92,9 @@ def index():
                 pers5=pers5_input,
                 pers6=pers6_input,
                 pers7=pers7_input,
-                vehlist1=",".join(map(str, session.get("vehlist1", []))),
-                pers51=session.get("pers51", ""),
-                pers61=session.get("pers61", ""),
-                pers71=session.get("pers71", ""),
-                data=session.get("data"),
                 results=None,
                 sorted_allocations=None,
-                pairspart=None,
-                threespart=None,
-                pairs=None,
-                threes=None,
+                alllist=None,
                 backupsize=None,
                 matrices_result=session.get("matrices_result"),
                 ranges_result=session.get("ranges_result"),
@@ -121,19 +112,11 @@ def index():
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         pers7=session.get("pers7", ""),
-        vehlist1=",".join(map(str, session.get("vehlist1", []))),
-        pers51=session.get("pers51", ""),
-        pers61=session.get("pers61", ""),
-        pers71=session.get("pers71", ""),
-        data=session.get("data"),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
         backupsize=session.get("backupsize"),
-        pairspart=session.get("pairspart"),
-        threespart=session.get("threespart"),
-        pairs=session.get("pairs"),
-        threes=session.get("threes"),
+        combos=session.get("alllist"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
@@ -143,92 +126,7 @@ def index():
         enumerate=enumerate,
         len=len,
     )
-@app.route("/together", methods=["POST"])
-def together():
-    if request.method == "POST":
-        try:
-            # Input parsing and validation
-            vehlist_input1 = request.form.get("vehlist1", "").strip()
-            pers5_input1 = request.form.get("pers51", "").strip()
-            pers6_input1 = request.form.get("pers61", "").strip()
-            pers7_input1 = request.form.get("pers71", "").strip()
 
-            vehlist1 = [int(x.strip()) for x in vehlist_input1.split(",") if x.strip()]
-            pers51 = int(pers5_input1) if pers5_input1 else 0
-            pers61 = int(pers6_input1) if pers6_input1 else 0
-            pers71 = int(pers7_input1) if pers7_input1 else 0
-
-            # Validate inputs
-            validate_inputs(vehlist1, pers51, pers61, pers71)
-
-            data=assigntogether(pers51,pers61,pers71,vehlist1.copy())
-
-            session["vehlist1"] = vehlist1
-            session["pers51"] = pers51
-            session["pers61"] = pers61
-            session["pers71"] = pers71
-            session["data"]=data
-
-        except Exception as e:
-            logging.error(f"Exception occurred: {e}")
-            logging.error(traceback.format_exc())
-            return render_template(
-                "index.html",
-                error_message=f"An error occurred: {e}",
-                vehlist=",".join(map(str, session.get("vehlist", []))),
-                pers5=session.get("pers5", ""),
-                pers6=session.get("pers6", ""),
-                pers7=session.get("pers7", ""),
-                vehlist1=vehlist_input1,
-                pers51=pers5_input1,
-                pers61=pers6_input1,
-                pers71=pers7_input1,
-                data=None,
-                results=session.get("results"),
-                sorted_allocations=session.get("sorted_allocations"),
-                pairspart=session.get("pairspart"),
-                threespart=session.get("threespart"),
-                pairs=session.get("pairs"),
-                threes=session.get("threes"),
-                backupsize=session.get("backupsize"),
-                matrices_result=session.get("matrices_result"),
-                ranges_result=session.get("ranges_result"),
-                total_people=session.get("total_people", ""),
-                people=session.get("people", ""),
-                crews=session.get("crews", ""),
-                zip=zip,
-                enumerate=enumerate,
-                len=len,
-            )
-
-    return render_template(
-        "index.html",
-        vehlist=",".join(map(str, session.get("vehlist", []))),
-        pers5=session.get("pers5", ""),
-        pers6=session.get("pers6",""),
-        pers7=session.get("pers7",""),
-        vehlist1=",".join(map(str, session.get("vehlist1", []))),
-        pers51=session.get("pers51", ""),
-        pers61=session.get("pers61", ""),
-        pers71=session.get("pers71", ""),
-        data=session.get("data"),
-        results=session.get("results"),
-        sorted_allocations=session.get("sorted_allocations"),
-        error_message=None,
-        backupsize=session.get("backupsize"),
-        pairspart=session.get("pairspart"),
-        threespart=session.get("threespart"),
-        pairs=session.get("pairs"),
-        threes=session.get("threes"),
-        matrices_result=session.get("matrices_result"),
-        ranges_result=session.get("ranges_result"),
-        total_people=session.get("total_people", ""),
-        people=session.get("people", ""),
-        crews=session.get("crews", ""),
-        zip=zip,
-        enumerate=enumerate,
-        len=len,
-    )
 @app.route("/matrices", methods=["POST"])
 def matrices():
     try:
@@ -257,17 +155,9 @@ def matrices():
             pers5=session.get("pers5", ""),
             pers6=session.get("pers6", ""),
             pers7=session.get("pers7", ""),
-            vehlist1=",".join(map(str, session.get("vehlist1", []))),
-            pers51=session.get("pers51", ""),
-            pers61=session.get("pers61", ""),
-            pers71=session.get("pers71", ""),
-            data=session.get("data"),
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
-            pairspart=session.get("pairspart"),
-            threespart=session.get("threespart"),
-            pairs=session.get("pairs"),
-            threes=session.get("threes"),
+            alllist=session.get("alllist"),
             backupsize=session.get("backupsize"),
             matrices_result=None,
             ranges_result=session.get("ranges_result"),
@@ -285,17 +175,9 @@ def matrices():
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         pers7=session.get("pers7", ""),
-        vehlist1=",".join(map(str, session.get("vehlist1", []))),
-        pers51=session.get("pers51", ""),
-        pers61=session.get("pers61", ""),
-        pers71=session.get("pers71", ""),
-        data=session.get("data"),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
-        pairspart=session.get("pairspart"),
-        threespart=session.get("threespart"),
-        pairs=session.get("pairs"),
-        threes=session.get("threes"),
+        alllist=session.get("alllist"),
         backupsize=session.get("backupsize"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
@@ -331,18 +213,10 @@ def ranges():
             pers5=session.get("pers5", ""),
             pers6=session.get("pers6", ""),
             pers7=session.get("pers7", ""),
-            vehlist1=",".join(map(str, session.get("vehlist1", []))),
-            pers51=session.get("pers51", ""),
-            pers61=session.get("pers61", ""),
-            pers71=session.get("pers71", ""),
-            data=session.get("data"),
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
             backupsize=session.get("backupsize"),
-            pairspart=session.get("pairspart"),
-            threespart=session.get("threespart"),
-            pairs=session.get("pairs"),
-            threes=session.get("threes"),
+            alllist=session.get("alllist"),
             matrices_result=session.get("matrices_result"),
             ranges_result=None,
             total_people=total_people_input,
@@ -359,18 +233,10 @@ def ranges():
         pers5=session.get("pers5", ""),
         pers6=session.get("pers6", ""),
         pers7=session.get("pers7", ""),
-        vehlist1=",".join(map(str, session.get("vehlist1", []))),
-        pers51=session.get("pers51", ""),
-        pers61=session.get("pers61", ""),
-        pers71=session.get("pers71", ""),
-        data=session.get("data"),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
         backupsize=session.get("backupsize"),
-        pairspart=session.get("pairspart"),
-        threespart=session.get("threespart"),
-        pairs=session.get("pairs"),
-        threes=session.get("threes"),
+        alllist=session.get("alllist"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),
