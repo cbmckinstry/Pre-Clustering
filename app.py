@@ -116,7 +116,7 @@ def index():
         sorted_allocations=session.get("sorted_allocations"),
         error_message=None,
         backupsize=session.get("backupsize"),
-        combos=session.get("alllist"),
+        alllist=session.get("alllist"),
         matrices_result=session.get("matrices_result"),
         ranges_result=session.get("ranges_result"),
         total_people=session.get("total_people", ""),

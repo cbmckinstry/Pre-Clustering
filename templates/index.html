@@ -214,7 +214,6 @@
                             6-person groups: {{ results[1][1] }}
                         </p>
                         <p><strong>Combinations:</strong></p>
-                        {% if len(alllist)!=0%}
                             {% if len(alllist[0])!=0 %}
                                 {% if backupsize==5 %}
                                     {% for vehicle in alllist[0] %}
@@ -259,9 +258,9 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
-                        {% else %}
-                            <p>No combinations available.</p>
-                        {% endif %}
+                            {% if len(alllist[0])==0 and len(alllist[1])==0 and len(alllist[2])==0 and len(alllist[3])==0%}
+                                <p>No Combinations Available</p>
+                            {% endif %}
                     {% endif %}
 
                     <!-- Allocations Matrix -->
