@@ -33,16 +33,16 @@ def alltogether(combos,allist):
     return twos,threes,fours,fives
 
 
-def assigntogether(allocations,spaces,shortfall,backupsize):
+def assigntogether(allocations,spaces,shortfall,backupsize,boundlst):
     round1=[],[]
     if len(allocations)>=5:
-        round1=fives(shortfall,allocations,spaces,backupsize,None)
+        round1=fives(shortfall,allocations,spaces,backupsize,None,boundlst)
     elif len(allocations)>=4:
-        round1=fours(shortfall,allocations,spaces,backupsize,None)
+        round1=fours(shortfall,allocations,spaces,backupsize,None,boundlst)
     elif len(allocations)>=3:
-        round1=threes1(shortfall,allocations,spaces,backupsize,None)
+        round1=threes(shortfall,allocations,spaces,backupsize,None,boundlst)
     elif len(allocations)>=2:
-        round1=combine1(allocations,spaces,shortfall,backupsize,None)
+        round1=combine(allocations,spaces,shortfall,backupsize,None,boundlst)
     return round1
 
 def compute_ranges(people):
@@ -83,3 +83,20 @@ def compute_matrices(people,crews):
     if pers7>=0 and pers6n>=0 and isinstance(pers7,int) and isinstance(pers6n,int):
         return 0,pers6n,pers7
     return []
+
+def sort_by_sum(lst):
+    x=sorted(lst, key=lambda sublist: sum(sublist), reverse=True)
+    twoup=twolow=threeup=threelow=fourup=fourlow=fiveup=fivelow=0
+    if len(lst)>=2:
+        twoup=sum(x[1])+sum(x[0])+1
+        twolow=sum(x[-1])+sum(x[-2])
+    if len(lst)>=3:
+        threeup=sum(x[1])+sum(x[2])+sum(x[0])+1
+        threelow=sum(x[-1])+sum(x[-2])+sum(x[-3])
+    if len(lst)>=4:
+        fourup=sum(x[1])+sum(x[2])+sum(x[3])+sum(x[0])+1
+        fourlow=sum(x[-1])+sum(x[-2])+sum(x[-3])+sum(x[-4])
+    if len(lst)>=5:
+        fiveup=sum(x[1])+sum(x[2])+sum(x[3])+sum(x[0])+sum(x[4])+1
+        fivelow=sum(x[-1])+sum(x[-2])+sum(x[-3])+sum(x[-4])+sum(x[-5])
+    return [[twolow,twoup],[threelow,threeup],[fourlow,fourup],[fivelow,fiveup]]

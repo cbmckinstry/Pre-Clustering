@@ -1,7 +1,9 @@
 from Fours import *
-def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
+def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None, boundlst=None):
     if used5 is None:
         used5 = set()
+    if boundlst is None:
+        boundlst = [[0,0], [0,0], [0,0],[0,0]]
     allocations = []
     spaces = []
     for i in range(len(spaces1)):
@@ -9,21 +11,21 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
             allocations.append(allocations1[i])
             spaces.append(spaces1[i])
 
-    a = fours(shortfall, allocations, spaces, backupsize, used5)
+    a = fours(shortfall, allocations, spaces, backupsize, used5,boundlst)
     if a[1]:
         return a
+    lower=boundlst[3][0]
+    upperbound=boundlst[3][1]
 
     backup, six = shortfall[0], shortfall[1]
     used = used5.copy()
     fives_alloc = []
     init = []
-
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup, six = shortfall[0], shortfall[1]
         used = used5.copy()
         fives_alloc = []
         init = []
-
         for i in range(0, len(spaces) - 4):
             if backup == 0 and six == 0:
                 break
@@ -37,7 +39,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup == 0 and six == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used and j not in used and k not in used and l not in used and n not in used and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 4 * max(backupsize, 6))):
+                            if (i not in used and j not in used and k not in used and l not in used and n not in used and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 4 * max(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup >= 4:
                                     backup -= 4
                                     used.update([i, j, k, l, n])
@@ -52,7 +54,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                 if six==0 and backup==0:
                                     return fives_alloc,init
 
-                                trial = fours([backup, six], allocations, spaces, backupsize, used)
+                                trial = fours([backup, six], allocations, spaces, backupsize, used,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives_alloc, trial[1] + init
 
@@ -61,7 +63,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives1 = fives_alloc.copy()
     init1 = init.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup1, six1 = backup, six
         used1 = used.copy()
         fives1 = fives_alloc.copy()
@@ -80,7 +82,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup1 == 0 and six1 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used1 and j not in used1 and k not in used1 and l not in used1 and n not in used1 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 3 * max(backupsize, 6) + min(backupsize, 6))):
+                            if (i not in used1 and j not in used1 and k not in used1 and l not in used1 and n not in used1 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 3 * max(backupsize, 6) + min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup1 >= 3 and six1 >= 1:
                                     backup1 -= 3
                                     six1 -= 1
@@ -95,7 +97,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init1.append([1, 3])
                                 if six1==0 and backup1==0:
                                     return fives1,init1
-                                trial = fours([backup1, six1], allocations, spaces, backupsize,used1)
+                                trial = fours([backup1, six1], allocations, spaces, backupsize,used1,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives1, trial[1] + init1
     backup2, six2 = backup1, six1
@@ -103,7 +105,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives2 = fives1.copy()
     init2 = init1.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup2, six2 = backup1, six1
         used2 = used1.copy()
         fives2 = fives1.copy()
@@ -122,7 +124,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup2 == 0 and six2 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used2 and j not in used2 and k not in used2 and l not in used2 and n not in used2 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * max(backupsize, 6) + 2 * min(backupsize, 6))):
+                            if (i not in used2 and j not in used2 and k not in used2 and l not in used2 and n not in used2 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * max(backupsize, 6) + 2 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup2 >= 2 and six2 >= 2:
                                     backup2 -= 2
                                     six2 -= 2
@@ -137,7 +139,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init2.append([2, 2])
                                 if six2==0 and backup2==0:
                                     return fives2,init2
-                                trial = fours([backup2, six2], allocations, spaces, backupsize,used2)
+                                trial = fours([backup2, six2], allocations, spaces, backupsize,used2,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives2, trial[1] + init2
 
@@ -146,7 +148,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives3 = fives2.copy()
     init3 = init2.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup3, six3 = backup2, six2
         used3 = used2.copy()
         fives3 = fives2.copy()
@@ -165,7 +167,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup3 == 0 and six3 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used3 and j not in used3 and k not in used3 and l not in used3 and n not in used3 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= max(backupsize, 6) + 3 * min(backupsize, 6))):
+                            if (i not in used3 and j not in used3 and k not in used3 and l not in used3 and n not in used3 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= max(backupsize, 6) + 3 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup3 >= 1 and six3 >= 3:
                                     backup3 -= 1
                                     six3 -= 3
@@ -180,7 +182,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init3.append([1, 3])
                                 if six3==0 and backup3==0:
                                     return fives3,init3
-                                trial = fours([backup3, six3], allocations, spaces, backupsize,used3)
+                                trial = fours([backup3, six3], allocations, spaces, backupsize,used3,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives3, trial[1] + init3
 
@@ -189,7 +191,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives4 = fives3.copy()
     init4 = init3.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup4, six4 = backup3, six3
         used4 = used3.copy()
         fives4 = fives3.copy()
@@ -208,7 +210,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup4 == 0 and six4 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used4 and j not in used4 and k not in used4 and l not in used4 and n not in used4 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 4 * min(backupsize, 6))):
+                            if (i not in used4 and j not in used4 and k not in used4 and l not in used4 and n not in used4 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 4 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize==7 and six4 >= 4:
                                     six4 -= 4
                                     used4.update([i, j, k, l, n])
@@ -221,7 +223,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init4.append([4, 0])
                                 if six4==0 and backup4==0:
                                     return fives4,init4
-                                trial = fours([backup4, six4], allocations, spaces, backupsize, used4)
+                                trial = fours([backup4, six4], allocations, spaces, backupsize, used4,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives4, trial[1] + init4
 
@@ -233,7 +235,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives5 = fives4.copy()
     init5 = init4.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup5, six5 = backup4, six4
         used5 = used4.copy()
         fives5 = fives4.copy()
@@ -252,7 +254,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup5 == 0 and six5 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used5 and j not in used5 and k not in used5 and l not in used5 and n not in used5 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 3 * max(backupsize, 6))):
+                            if (i not in used5 and j not in used5 and k not in used5 and l not in used5 and n not in used5 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 3 * max(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup5 >= 3:
                                     backup5 -= 3
                                     used5.update([i, j, k, l, n])
@@ -265,7 +267,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init5.append([0, 3])
                                 if six5==0 and backup5==0:
                                     return fives5,init5
-                                trial = fours([backup5, six5], allocations, spaces, backupsize, used5)
+                                trial = fours([backup5, six5], allocations, spaces, backupsize, used5,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives5, trial[1] + init5
     backup6, six6 = backup5, six5
@@ -273,7 +275,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives6 = fives5.copy()
     init6 = init5.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup6, six6 = backup5, six5
         used6 = used5.copy()
         fives6 = fives5.copy()
@@ -292,7 +294,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup6 == 0 and six6 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used6 and j not in used6 and k not in used6 and l not in used6 and n not in used6 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * max(backupsize, 6) + 1 * min(backupsize, 6))):
+                            if (i not in used6 and j not in used6 and k not in used6 and l not in used6 and n not in used6 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * max(backupsize, 6) + 1 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup6 >= 2 and six6 >= 1:
                                     backup6 -= 2
                                     six6 -= 1
@@ -307,7 +309,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init6.append([1, 2])
                                 if six6==0 and backup6==0:
                                     return fives6,init6
-                                trial = fours([backup6, six6], allocations, spaces, backupsize, used6)
+                                trial = fours([backup6, six6], allocations, spaces, backupsize, used6,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives6, trial[1] + init6
 
@@ -316,7 +318,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives7 = fives6.copy()
     init7 = init6.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup7, six7 = backup6, six6
         used7 = used6.copy()
         fives7 = fives6.copy()
@@ -335,7 +337,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup7 == 0 and six7 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used7 and j not in used7 and k not in used7 and l not in used7 and n not in used7 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * max(backupsize, 6) + 2 * min(backupsize, 6))):
+                            if (i not in used7 and j not in used7 and k not in used7 and l not in used7 and n not in used7 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * max(backupsize, 6) + 2 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup7 >= 1 and six7 >= 2:
                                     backup7 -= 1
                                     six7 -= 2
@@ -350,16 +352,16 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init7.append([2, 1])
                                 if six7==0 and backup7==0:
                                     return fives7,init7
-                                trial = fours([backup7, six7], allocations, spaces, backupsize, used7)
+                                trial = fours([backup7, six7], allocations, spaces, backupsize, used7,boundlst)
                                 if trial[1]:
                                      return trial[0] + fives7, trial[1] + init7
-        # Case: 0 * max and 3 * min
+
     backup8, six8 = backup7, six7
     used8 = used7.copy()
     fives8 = fives7.copy()
     init8 = init7.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup8, six8 = backup7, six7
         used8 = used7.copy()
         fives8 = fives7.copy()
@@ -378,7 +380,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup8 == 0 and six8 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used8 and j not in used8 and k not in used8 and l not in used8 and n not in used8 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 0 * max(backupsize, 6) + 3 * min(backupsize, 6))):
+                            if (i not in used8 and j not in used8 and k not in used8 and l not in used8 and n not in used8 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 0 * max(backupsize, 6) + 3 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and six8 >= 3:
                                     six8 -= 3
                                     used8.update([i, j, k, l, n])
@@ -391,20 +393,20 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init8.append([3, 0])
                                 if six8==0 and backup8==0:
                                     return fives8,init8
-                                trial = fours([backup8, six8], allocations, spaces, backupsize, used8)
+                                trial = fours([backup8, six8], allocations, spaces, backupsize, used8,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives8, trial[1] + init8
 
     if backup8 == 0 and six8 == 0:
         return fives8, init8
 
-        # Case: 2 * max
+
     backup9, six9 = backup8, six8
     used9 = used8.copy()
     fives9 = fives8.copy()
     init9 = init8.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup9, six9 = backup8, six8
         used9 = used8.copy()
         fives9 = fives8.copy()
@@ -423,7 +425,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup9 == 0 and six9 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used9 and j not in used9 and k not in used9 and l not in used9 and n not in used9 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * max(backupsize, 6))):
+                            if (i not in used9 and j not in used9 and k not in used9 and l not in used9 and n not in used9 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * max(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup9 >= 2:
                                     backup9 -= 2
                                     used9.update([i, j, k, l, n])
@@ -436,7 +438,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init9.append([0, 2])
                                 if six9==0 and backup9==0:
                                     return fives9,init9
-                                trial = fours([backup9, six9], allocations, spaces, backupsize, used9)
+                                trial = fours([backup9, six9], allocations, spaces, backupsize, used9,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives9, trial[1] + init9
 
@@ -445,7 +447,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives10 = fives9.copy()
     init10 = init9.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup10, six10 = backup9, six9
         used10 = used9.copy()
         fives10 = fives9.copy()
@@ -464,7 +466,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup10 == 0 and six10 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used10 and j not in used10 and k not in used10 and l not in used10 and n not in used10 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * max(backupsize, 6) + 1 * min(backupsize, 6))):
+                            if (i not in used10 and j not in used10 and k not in used10 and l not in used10 and n not in used10 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * max(backupsize, 6) + 1 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup10 >= 1 and six10 >= 1:
                                     backup10 -= 1
                                     six10 -= 1
@@ -479,7 +481,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init10.append([1, 1])
                                 if six10==0 and backup10==0:
                                     return fives10,init10
-                                trial = fours([backup10, six10], allocations, spaces, backupsize,used10)
+                                trial = fours([backup10, six10], allocations, spaces, backupsize,used10,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives10, trial[1] + init10
 
@@ -488,7 +490,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives11 = fives10.copy()
     init11 = init10.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup11, six11 = backup10, six10
         used11 = used10.copy()
         fives11 = fives10.copy()
@@ -507,7 +509,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup11 == 0 and six11 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used11 and j not in used11 and k not in used11 and l not in used11 and n not in used11 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * min(backupsize, 6))):
+                            if (i not in used11 and j not in used11 and k not in used11 and l not in used11 and n not in used11 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 2 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and six11 >= 2:
                                     six11 -= 2
                                     used11.update([i, j, k, l, n])
@@ -520,7 +522,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init11.append([2, 0])
                                 if six11==0 and backup11==0:
                                     return fives11,init11
-                                trial = fours([backup11, six11], allocations, spaces, backupsize, used11)
+                                trial = fours([backup11, six11], allocations, spaces, backupsize, used11,boundlst)
                                 if trial[1]:
                                      return trial[0] + fives11, trial[1] + init11
     if backup11 == 0 and six11 == 0:
@@ -531,7 +533,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives12 = fives11.copy()
     init12 = init11.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup12, six12 = backup11, six11
         used12 = used11.copy()
         fives12 = fives11.copy()
@@ -550,7 +552,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup12 == 0 and six12 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used12 and j not in used12 and k not in used12 and l not in used12 and n not in used12 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * max(backupsize, 6))):
+                            if (i not in used12 and j not in used12 and k not in used12 and l not in used12 and n not in used12 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * max(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and backup12 >= 1:
                                     backup12 -= 1
                                     used12.update([i, j, k, l, n])
@@ -563,7 +565,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init12.append([0, 1])
                                 if six12==0 and backup12==0:
                                     return fives12,init12
-                                trial = fours([backup12, six12], allocations, spaces, backupsize, used12)
+                                trial = fours([backup12, six12], allocations, spaces, backupsize, used12,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives12, trial[1] + init12
 
@@ -572,7 +574,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
     fives13 = fives12.copy()
     init13 = init12.copy()
 
-    for m in range(1):
+    for m in range(lower,upperbound):
         backup13, six13 = backup12, six12
         used13 = used12.copy()
         fives13 = fives12.copy()
@@ -591,7 +593,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                         if backup13 == 0 and six13 == 0:
                             break
                         for n in range(l - 1, i, -1):
-                            if (i not in used13 and j not in used13 and k not in used13 and l not in used13 and n not in used13 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * min(backupsize, 6))):
+                            if (i not in used13 and j not in used13 and k not in used13 and l not in used13 and n not in used13 and (spaces[i] + spaces[j] + spaces[k] + spaces[l] + spaces[n] >= 1 * min(backupsize, 6)) and sum(allocations[i])+sum(allocations[j])+sum(allocations[k])+sum(allocations[l])+sum(allocations[n])<=m):
                                 if backupsize == 7 and six13 >= 1:
                                     six13 -= 1
                                     used13.update([i, j, k, l, n])
@@ -604,7 +606,7 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None):
                                     init13.append([1, 0])
                                 if six13==0 and backup13==0:
                                     return fives13,init13
-                                trial = fours([backup13, six13], allocations, spaces, backupsize,used13)
+                                trial = fours([backup13, six13], allocations, spaces, backupsize,used13,boundlst)
                                 if trial[1]:
                                     return trial[0] + fives13, trial[1] + init13
     if backup13 == 0 and six13 == 0:
