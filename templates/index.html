@@ -177,18 +177,7 @@
             <label for="pers7">Enter Number of 7-person Groups:</label>
             <input type="number" id="pers7" name="pers7" required value="{{ pers7 }}">
 
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <button type="submit">Submit Vehicle Data</button>
-                <label for="assignTogether" style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                    <input
-                            type="checkbox"
-                            id="assignTogether"
-                            name="assignTogether"
-                            style="width: 20px; height: 20px; cursor: pointer;"
-                    >
-                    <span>Assign Together</span>
-                </label>
-            </div>
+            <button type="submit">Submit</button>
 
             <!-- Vehicle Capacities Results -->
             {% if results %}
@@ -236,29 +225,7 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
-                            {% if len(alllist[2])!=0%}
-                                {% if backupsize==5 %}
-                                    {% for vehicle in alllist[2] %}
-                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }} and Vehicle {{ vehicle[0][2] }} and Vehicle {{ vehicle[0][3] }}, ({{ vehicle[1][0] }} 5-person, {{ vehicle[1][1] }} 6-person)</p>
-                                    {% endfor %}
-                                {% else %}
-                                    {% for vehicle in alllist[2] %}
-                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }} and Vehicle {{ vehicle[0][2] }} and Vehicle {{ vehicle[0][3] }}, ({{ vehicle[1][1] }} 6-person, {{ vehicle[1][0] }} 7-person)</p>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endif %}
-                            {% if len(alllist[3])!=0%}
-                                {% if backupsize==5 %}
-                                    {% for vehicle in alllist[3] %}
-                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }} and Vehicle {{ vehicle[0][2] }} and Vehicle {{ vehicle[0][3] }} and Vehicle {{ vehicle[0][4] }}, ({{ vehicle[1][0] }} 5-person, {{ vehicle[1][1] }} 6-person)</p>
-                                    {% endfor %}
-                                {% else %}
-                                    {% for vehicle in alllist[3] %}
-                                        <p>Combine Vehicle {{ vehicle[0][0] }} and Vehicle {{ vehicle[0][1] }} and Vehicle {{ vehicle[0][2] }} and Vehicle {{ vehicle[0][3] }} and Vehicle {{ vehicle[0][4] }}, ({{ vehicle[1][1] }} 6-person, {{ vehicle[1][0] }} 7-person)</p>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endif %}
-                            {% if len(alllist[0])==0 and len(alllist[1])==0 and len(alllist[2])==0 and len(alllist[3])==0%}
+                            {% if len(alllist[0])==0 and len(alllist[1])==0%}
                                 <p>No Combinations Available</p>
                             {% endif %}
                     {% endif %}

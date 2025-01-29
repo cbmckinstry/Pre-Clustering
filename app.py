@@ -68,12 +68,8 @@ def index():
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
-            use_alternative="assignTogether" in request.form
             boundlst=sort_by_sum(sorted_allocations.copy())
-            if use_alternative:
-                combos,listing=assigntogether(sorted_allocations,sorted_spaces,results[1].copy(),backupsize,boundlst)
-            else:
-                combos,listing=compared_threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None,boundlst)
+            combos,listing=compared_threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None,boundlst)
 
             alllist=alltogether(combos,listing)
 
