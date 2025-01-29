@@ -746,9 +746,9 @@ def compared_fours(shortfall,allocations,spaces,backupsize=5,used=None,boundlst=
     if results1==([],[]) and results==([],[]):
         return [],[]
     if results1==([],[]):
-        return results
+        return results[0],results[1]
     if results==([],[]):
-        return results1
+        return results1[0],results1[1]
     for elem in results[0]:
         runningsum=0
         for item in elem:
@@ -762,6 +762,6 @@ def compared_fours(shortfall,allocations,spaces,backupsize=5,used=None,boundlst=
         if runningsum1>maxnow1:
             maxnow1=runningsum1
     if maxnow1<maxnow:
-        return results1
+        return results1[0],results1[1]
     else:
-        return results
+        return results[0],results[1]
