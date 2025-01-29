@@ -234,6 +234,8 @@ def threes(shortfall, allocations1, spaces1, backupsize=5, used5=None, boundlst=
     if shortfall5[0]==0 and shortfall5[1]==0:
         return triplecombos5,init4
 
+    return [],[]
+
 def threes1(shortfall, allocations1, spaces1, backupsize=5, used5=None, boundlst=None):
     if boundlst is None:
         boundlst = [[0,0], [0,0], [0,0]]

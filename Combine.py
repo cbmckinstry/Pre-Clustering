@@ -12,7 +12,6 @@ def combine(allocations, space, shortfall, backup_size=5, used=None, boundlst=No
     lower=boundlst[0][0]
     upper=boundlst[0][1]
 
-
     backup=shortfall[0]
     six=shortfall[1]
     six4=six
@@ -98,6 +97,8 @@ def combine(allocations, space, shortfall, backup_size=5, used=None, boundlst=No
                             return combos5,init1
     if backup4==0 and six4==0:
         return combos5,init1
+
+    return [],[]
 
 def combine1(allocations, space, shortfall, backup_size=5, used=None, boundlst=None):
     if used is None:
@@ -218,29 +219,31 @@ def combine1(allocations, space, shortfall, backup_size=5, used=None, boundlst=N
     return [],[]
 
 def compared_combine(allocations,space,shortfall,backupsize=5,used=None,boundlst=None):
-    results=combine(allocations.copy(),space,shortfall,backupsize,used,boundlst)
-    results1=combine1(allocations.copy(),space,shortfall,backupsize,used,boundlst)
+    results=combine(allocations,space,shortfall,backupsize,used,boundlst)
+    results1=combine1(allocations,space,shortfall,backupsize,used,boundlst)
     maxnow=0
     maxnow1=0
-    if results1==([],[]) and results==([],[]):
+    if results==([],[]) and results1==([],[]):
         return [],[]
-    if results1==([],[]):
+    elif results1==([],[]):
+        print(results)
         return results[0],results[1]
-    if results==([],[]):
-        return results1[0],results1[1]
-    for elem in results[0]:
-        runningsum=0
-        for item in elem:
-            runningsum+=sum(allocations[item-1])
-        if runningsum>maxnow:
-            maxnow=runningsum
-    for elem in results1[0]:
-        runningsum1=0
-        for item in elem:
-            runningsum1+=sum(allocations[item-1])
-        if runningsum1>maxnow1:
-            maxnow1=runningsum1
-    if maxnow1<maxnow:
+    elif results==([],[]):
         return results1[0],results1[1]
     else:
-        return results[0],results[1]
+        for elem in results[0]:
+            runningsum=0
+            for item in elem:
+                runningsum+=sum(allocations[item-1])
+            if runningsum>maxnow:
+                maxnow=runningsum
+        for elem in results1[0]:
+            runningsum1=0
+            for item in elem:
+                runningsum1+=sum(allocations[item-1])
+            if runningsum1>maxnow1:
+                maxnow1=runningsum1
+        if maxnow1<maxnow:
+            return results1[0],results1[1]
+        else:
+            return results[0],results[1]

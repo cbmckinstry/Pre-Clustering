@@ -556,6 +556,8 @@ def fives(shortfall, allocations1, spaces1, backupsize=5, used5=None, boundlst=N
     if backup13 == 0 and six13 == 0:
         return fives13, init13
 
+    return [],[]
+
 def fives1(shortfall, allocations1, spaces1, backupsize=5, used5=None, boundlst=None):
 
     if used5 is None:

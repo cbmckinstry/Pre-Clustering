@@ -345,6 +345,8 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
     if six14==0 and backup14==0:
         return fours14,init8
 
+    return [],[]
+
 def fours1(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
     if used5 is None:
         used5=set()
