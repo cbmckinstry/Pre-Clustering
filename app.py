@@ -30,6 +30,7 @@ def index():
 
             # Validate inputs
             validate_inputs(vehlist, pers5, pers6, pers7)
+            vehlist.sort(reverse=True)
 
             backup_group = pers7 if pers7 != 0 else pers5
             backupsize = 5 if pers7 == 0 else 7
@@ -64,15 +65,14 @@ def index():
                 [sorted_sizes[i], sorted_allocations[i], sorted_spaces[i], number[i]]
                 for i in range(len(sorted_sizes))
             ]
-            bounds=sort_by_sum(sorted_allocations.copy())
 
             # Store sorted allocations and results in session
             session["sorted_allocations"] = combined_sorted_data
             use_alternative="assignTogether" in request.form
             if use_alternative:
-                combos,listing=assigntogether(sorted_allocations,sorted_spaces,results[1].copy(),backupsize,bounds)
+                combos,listing=assigntogether(sorted_allocations,sorted_spaces,results[1].copy(),backupsize)
             else:
-                combos,listing=threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None,bounds)
+                combos,listing=threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None)
 
             alllist=alltogether(combos,listing)
 
