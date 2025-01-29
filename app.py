@@ -73,7 +73,7 @@ def index():
             if use_alternative:
                 combos,listing=assigntogether(sorted_allocations,sorted_spaces,results[1].copy(),backupsize,boundlst)
             else:
-                combos,listing=threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None,boundlst)
+                combos,listing=compared_threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None,boundlst)
 
             alllist=alltogether(combos,listing)
 

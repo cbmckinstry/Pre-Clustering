@@ -11,7 +11,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
             allocations.append(allocations1[i])
             spaces.append(spaces1[i])
 
-    a=threes(shortfall.copy(),allocations,spaces,backupsize,used5,boundlst)
+    a=compared_threes(shortfall.copy(),allocations,spaces,backupsize,used5,boundlst)
     if a[1]:
         return a
     lower=boundlst[2][0]
@@ -49,7 +49,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init.append([0,3])
                                 if six6==0 and backup6==0:
                                     return fours6,init
-                                trial=threes([backup6,six6],allocations,spaces,backupsize,used6,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup6,six6],allocations,spaces,backupsize,used6,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours6,trial[1]+init
     six7=six6
@@ -86,7 +86,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init1.append([1,2])
                                 if six7==0 and backup7==0:
                                     return fours7,init1
-                                trial=threes([backup7,six7],allocations,spaces,backupsize,used7,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup7,six7],allocations,spaces,backupsize,used7,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours7,trial[1]+init1
     six8=six7
@@ -123,7 +123,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init2.append([2,1])
                                 if six8==0 and backup8==0:
                                     return fours8,init2
-                                trial=threes([backup8,six8],allocations,spaces,backupsize,used8,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup8,six8],allocations,spaces,backupsize,used8,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours8,trial[1]+init2
     six9=six8
@@ -158,7 +158,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init3.append([3,0])
                                 if six9==0 and backup9==0:
                                     return fours9,init3
-                                trial=threes([backup9,six9],allocations,spaces,backupsize,used9,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup9,six9],allocations,spaces,backupsize,used9,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours9,trial[1]+init3
 
@@ -198,7 +198,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init4.append([0,2])
                                 if six10==0 and backup10==0:
                                     return fours10,init4
-                                trial=threes([backup10,six10],allocations,spaces,backupsize,used10,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup10,six10],allocations,spaces,backupsize,used10,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours10,trial[1]+init4
     six11=six10
@@ -229,7 +229,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init5.append([1,1])
                                 if six11==0 and backup11==0:
                                     return fours11,init5
-                                trial=threes([backup11,six11],allocations,spaces,backupsize,used11,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup11,six11],allocations,spaces,backupsize,used11,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours11,trial[1]+init5
     six12=six11
@@ -264,7 +264,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init6.append([2,0])
                                 if six12==0 and backup12==0:
                                     return fours12,init6
-                                trial=threes([backup12,six12],allocations,spaces,backupsize,used12,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup12,six12],allocations,spaces,backupsize,used12,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours12,trial[1]+init6
 
@@ -303,7 +303,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init7.append([0,1])
                                 if six13==0 and backup13==0:
                                     return fours13,init7
-                                trial=threes([backup13,six13],allocations,spaces,backupsize,used13,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup13,six13],allocations,spaces,backupsize,used13,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours13,trial[1]+init7
     six14=six13
@@ -338,13 +338,30 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init8.append([1,0])
                                 if six14==0 and backup14==0:
                                     return fours14,init8
-                                trial=threes([backup14,six14],allocations,spaces,backupsize,used14,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup14,six14],allocations,spaces,backupsize,used14,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours14,trial[1]+init8
 
     if six14==0 and backup14==0:
         return fours14,init8
 
+def fours1(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
+    if used5 is None:
+        used5=set()
+    if boundlst is None:
+        boundlst = [[0,0], [0,0], [0,0],[0,0]]
+    allocations=[]
+    spaces=[]
+    for i in range(len(spaces1)):
+        if spaces1[i]!=0:
+            allocations.append(allocations1[i])
+            spaces.append(spaces1[i])
+
+    a=compared_threes(shortfall.copy(),allocations,spaces,backupsize,used5,boundlst)
+    if a[1]:
+        return a
+    lower=boundlst[2][0]
+    upperbound=boundlst[2][1]
 
     six6=shortfall[1]
     backup6=shortfall[0]
@@ -383,7 +400,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init.append([0,3])
                                 if six6==0 and backup6==0:
                                     return fours6,init
-                                trial=threes([backup6,six6],allocations,spaces,backupsize,used6,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup6,six6],allocations,spaces,backupsize,used6,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours6,trial[1]+init
     six7=six6
@@ -425,7 +442,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init1.append([1,2])
                                 if six7==0 and backup7==0:
                                     return fours7,init1
-                                trial=threes([backup7,six7],allocations,spaces,backupsize,used7,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup7,six7],allocations,spaces,backupsize,used7,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours7,trial[1]+init1
     six8=six7
@@ -467,7 +484,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init2.append([2,1])
                                 if six8==0 and backup8==0:
                                     return fours8,init2
-                                trial=threes([backup8,six8],allocations,spaces,backupsize,used8,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup8,six8],allocations,spaces,backupsize,used8,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours8,trial[1]+init2
     six9=six8
@@ -507,7 +524,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init3.append([3,0])
                                 if six9==0 and backup9==0:
                                     return fours9,init3
-                                trial=threes([backup9,six9],allocations,spaces,backupsize,used9,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup9,six9],allocations,spaces,backupsize,used9,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours9,trial[1]+init3
 
@@ -552,7 +569,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init4.append([0,2])
                                 if six10==0 and backup10==0:
                                     return fours10,init4
-                                trial=threes([backup10,six10],allocations,spaces,backupsize,used10,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup10,six10],allocations,spaces,backupsize,used10,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours10,trial[1]+init4
     six11=six10
@@ -588,7 +605,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init5.append([1,1])
                                 if six11==0 and backup11==0:
                                     return fours11,init5
-                                trial=threes([backup11,six11],allocations,spaces,backupsize,used11,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup11,six11],allocations,spaces,backupsize,used11,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours11,trial[1]+init5
     six12=six11
@@ -628,7 +645,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init6.append([2,0])
                                 if six12==0 and backup12==0:
                                     return fours12,init6
-                                trial=threes([backup12,six12],allocations,spaces,backupsize,used12,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup12,six12],allocations,spaces,backupsize,used12,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours12,trial[1]+init6
 
@@ -672,7 +689,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init7.append([0,1])
                                 if six13==0 and backup13==0:
                                     return fours13,init7
-                                trial=threes([backup13,six13],allocations,spaces,backupsize,used13,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup13,six13],allocations,spaces,backupsize,used13,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours13,trial[1]+init7
     six14=six13
@@ -712,7 +729,7 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
                                     init8.append([1,0])
                                 if six14==0 and backup14==0:
                                     return fours14,init8
-                                trial=threes([backup14,six14],allocations,spaces,backupsize,used14,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
+                                trial=compared_threes([backup14,six14],allocations,spaces,backupsize,used14,[[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1],[boundlst[0][0],bound+1]])
                                 if trial[1]:
                                     return trial[0]+fours14,trial[1]+init8
 
@@ -720,3 +737,31 @@ def fours(shortfall,allocations1,spaces1,backupsize=5,used5=None,boundlst=None):
         return fours14,init8
 
     return [],[]
+
+def compared_fours(shortfall,allocations,spaces,backupsize=5,used=None,boundlst=None):
+    results=fours(shortfall,allocations,spaces,backupsize,used,boundlst)
+    results1=fours1(shortfall,allocations,spaces,backupsize,used,boundlst)
+    maxnow=0
+    maxnow1=0
+    if results1==([],[]) and results==([],[]):
+        return [],[]
+    if results1==([],[]):
+        return results
+    if results==([],[]):
+        return results1
+    for elem in results[0]:
+        runningsum=0
+        for item in elem:
+            runningsum+=sum(allocations[item-1])
+        if runningsum>maxnow:
+            maxnow=runningsum
+    for elem in results1[0]:
+        runningsum1=0
+        for item in elem:
+            runningsum1+=sum(allocations[item-1])
+        if runningsum1>maxnow1:
+            maxnow1=runningsum1
+    if maxnow1<maxnow:
+        return results1
+    else:
+        return results

@@ -36,13 +36,13 @@ def alltogether(combos,allist):
 def assigntogether(allocations,spaces,shortfall,backupsize,boundlst):
     round1=[],[]
     if len(allocations)>=5:
-        round1=fives(shortfall,allocations,spaces,backupsize,None,boundlst)
+        round1=compared_fives(shortfall,allocations,spaces,backupsize,None,boundlst)
     elif len(allocations)>=4:
-        round1=fours(shortfall,allocations,spaces,backupsize,None,boundlst)
+        round1=compared_fours(shortfall,allocations,spaces,backupsize,None,boundlst)
     elif len(allocations)>=3:
-        round1=threes(shortfall,allocations,spaces,backupsize,None,boundlst)
+        round1=compared_threes(shortfall,allocations,spaces,backupsize,None,boundlst)
     elif len(allocations)>=2:
-        round1=combine(allocations,spaces,shortfall,backupsize,None,boundlst)
+        round1=compared_combine(allocations,spaces,shortfall,backupsize,None,boundlst)
     return round1
 
 def compute_ranges(people):

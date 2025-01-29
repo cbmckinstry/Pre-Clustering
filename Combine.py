@@ -99,7 +99,19 @@ def combine(allocations, space, shortfall, backup_size=5, used=None, boundlst=No
     if backup4==0 and six4==0:
         return combos5,init1
 
-
+def combine1(allocations, space, shortfall, backup_size=5, used=None, boundlst=None):
+    if used is None:
+        used = set()
+    if boundlst is None:
+        boundlst=[[0,0],[0,0],[0,0],[0,0]]
+    allocations0=[]
+    space0=[]
+    for i in range(len(space)):
+        if space[i]!=0:
+            allocations0.append(allocations[i])
+            space0.append(space[i])
+    lower=boundlst[0][0]
+    upper=boundlst[0][1]
 
     backup=shortfall[0]
     six=shortfall[1]
@@ -204,3 +216,31 @@ def combine(allocations, space, shortfall, backup_size=5, used=None, boundlst=No
         return combos5,init1
 
     return [],[]
+
+def compared_combine(allocations,space,shortfall,backupsize=5,used=None,boundlst=None):
+    results=combine(allocations.copy(),space,shortfall,backupsize,used,boundlst)
+    results1=combine1(allocations.copy(),space,shortfall,backupsize,used,boundlst)
+    maxnow=0
+    maxnow1=0
+    if results1==([],[]) and results==([],[]):
+        return [],[]
+    if results1==([],[]):
+        return results
+    if results==([],[]):
+        return results1
+    for elem in results[0]:
+        runningsum=0
+        for item in elem:
+            runningsum+=sum(allocations[item-1])
+        if runningsum>maxnow:
+            maxnow=runningsum
+    for elem in results1[0]:
+        runningsum1=0
+        for item in elem:
+            runningsum1+=sum(allocations[item-1])
+        if runningsum1>maxnow1:
+            maxnow1=runningsum1
+    if maxnow1<maxnow:
+        return results1
+    else:
+        return results
