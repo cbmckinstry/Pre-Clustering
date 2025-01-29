@@ -100,3 +100,33 @@ def sort_by_sum(lst):
         fiveup=sum(x[1])+sum(x[2])+sum(x[3])+sum(x[0])+sum(x[4])+1
         fivelow=sum(x[-1])+sum(x[-2])+sum(x[-3])+sum(x[-4])+sum(x[-5])
     return [[twolow,twoup],[threelow,threeup],[fourlow,fourup],[fivelow,fiveup]]
+
+def pickbest(allocations,spaces,sizes,combos,listings,backupsize):
+    unused=[]
+    unused1=[]
+    used=[]
+    for elem in combos:
+        for veh in elem:
+            used.append(veh-1)
+    for item in range(len(sizes)):
+        if item not in used:
+            unused.append(item)
+    progress=True
+    while progress:
+        runningsum=0
+        for elem in unused:
+            for combo in range(len(combos)):
+                for k in range(len(combos[combo])):
+                    total=0
+                    diffvers=combos[combo][:k]+[elem]+combos[combo][k+1:]
+                    takenout_allocation=sum(allocations[combos[combos][k]])
+                    for index in diffvers:
+                        total+=spaces[index]
+                    if total>=backupsize*listings[combo][0]+6*listings[combo][0] and sum(allocations[elem])<takenout_allocation:
+                        unused1.append(combos[combo][k])
+                        used.append(elem)
+                        combos[combo][k]=elem
+                        runningsum+=1
+        if runningsum==0:
+            progress=False
+    return used,unused, combos

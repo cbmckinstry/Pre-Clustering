@@ -35,6 +35,7 @@ def index():
             backupsize = 5 if pers7 == 0 else 7
             primary_group = pers6
             use_backup = pers7 != 0
+            vehlist.sort(reverse=True)
 
             allocations = []
             for priority in range(2):
