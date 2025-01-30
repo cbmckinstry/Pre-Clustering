@@ -72,8 +72,10 @@ def index():
             combos,listing=compared_threes(results[1].copy(),sorted_allocations,sorted_spaces,backupsize,None,boundlst)
 
             alllist=alltogether(combos,listing)
+            rem_vehs=unused(sorted_allocations.copy(),combos.copy())
 
             session["alllist"]=alllist
+            session["rem_vehs"]=rem_vehs
             session["backupsize"]=backupsize
             session["vehlist"] = vehlist
             session["pers5"] = pers5
@@ -93,6 +95,7 @@ def index():
                 pers7=pers7_input,
                 results=None,
                 sorted_allocations=None,
+                rem_vehs=None,
                 alllist=None,
                 backupsize=None,
                 matrices_result=session.get("matrices_result"),
@@ -113,6 +116,7 @@ def index():
         pers7=session.get("pers7", ""),
         results=session.get("results"),
         sorted_allocations=session.get("sorted_allocations"),
+        rem_vehs=session.get("rem_vehs"),
         error_message=None,
         backupsize=session.get("backupsize"),
         alllist=session.get("alllist"),
@@ -155,6 +159,7 @@ def matrices():
             pers6=session.get("pers6", ""),
             pers7=session.get("pers7", ""),
             results=session.get("results"),
+            rem_vehs=session.get("rem_vehs"),
             sorted_allocations=session.get("sorted_allocations"),
             alllist=session.get("alllist"),
             backupsize=session.get("backupsize"),
@@ -175,6 +180,7 @@ def matrices():
         pers6=session.get("pers6", ""),
         pers7=session.get("pers7", ""),
         results=session.get("results"),
+        rem_vehs=session.get("rem_vehs"),
         sorted_allocations=session.get("sorted_allocations"),
         alllist=session.get("alllist"),
         backupsize=session.get("backupsize"),
@@ -212,6 +218,7 @@ def ranges():
             pers5=session.get("pers5", ""),
             pers6=session.get("pers6", ""),
             pers7=session.get("pers7", ""),
+            rem_vehs=session.get("rem_vehs"),
             results=session.get("results"),
             sorted_allocations=session.get("sorted_allocations"),
             backupsize=session.get("backupsize"),
@@ -233,6 +240,7 @@ def ranges():
         pers6=session.get("pers6", ""),
         pers7=session.get("pers7", ""),
         results=session.get("results"),
+        rem_vehs=session.get("rem_vehs"),
         sorted_allocations=session.get("sorted_allocations"),
         backupsize=session.get("backupsize"),
         alllist=session.get("alllist"),

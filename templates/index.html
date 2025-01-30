@@ -228,6 +228,9 @@
                             {% if len(alllist[0])==0 and len(alllist[1])==0%}
                                 <p>No Combinations Available</p>
                             {% endif %}
+                            {% if rem_vehs and (len(alllist[0])!=0 or len(alllist[1])!=0)%}
+                                <p><strong>Remaining Vehicles:</strong> Vehicle {{ rem_vehs | join(", Vehicle ") }}</p>
+                            {% endif %}
                     {% endif %}
 
                     <!-- Allocations Matrix -->

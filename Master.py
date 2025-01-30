@@ -24,6 +24,17 @@ def alltogether(combos,allist):
         if len(item[0])==3:
             threes.append(item)
     return twos,threes
+def unused(allocations,combos):
+    indeces=list(range(len(allocations)))
+    unused=[]
+    used=[]
+    for combo in combos:
+        for index in combo:
+            used.append(index)
+    for elem in indeces:
+        if elem+1 not in used:
+            unused.append(elem+1)
+    return unused
 
 def compute_ranges(people):
     final=[]
